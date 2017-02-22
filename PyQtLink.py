@@ -335,46 +335,46 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
 
     def autofit(self):
         global mesh_ref
-        min_x = min_y = min_z = 99999
-        max_x = max_y = max_z = 0.0
+        min_x = min_y = min_z = None
+        max_x = max_y = max_z = None
         
         for meshes in range(0, len(mesh_ref)):
             for index in range(0, len(mesh_ref[meshes][1])):
-                if min_x > mesh_ref[meshes][1].points[index][0]:
+                if min_x > mesh_ref[meshes][1].points[index][0] or min_x is None:
                     min_x = mesh_ref[meshes][1].points[index][0]
-                if min_x > mesh_ref[meshes][1].points[index][3]:
+                if min_x > mesh_ref[meshes][1].points[index][3] or min_x is None:
                     min_x = mesh_ref[meshes][1].points[index][3]
-                if min_x > mesh_ref[meshes][1].points[index][6]:
+                if min_x > mesh_ref[meshes][1].points[index][6] or min_x is None:
                     min_x = mesh_ref[meshes][1].points[index][6]
-                if min_y > mesh_ref[meshes][1].points[index][1]:
+                if min_y > mesh_ref[meshes][1].points[index][1] or min_y is None:
                     min_y = mesh_ref[meshes][1].points[index][1]
-                if min_y > mesh_ref[meshes][1].points[index][4]:
+                if min_y > mesh_ref[meshes][1].points[index][4] or min_y is None:
                     min_y = mesh_ref[meshes][1].points[index][4]
-                if min_y > mesh_ref[meshes][1].points[index][7]:
+                if min_y > mesh_ref[meshes][1].points[index][7] or min_y is None:
                     min_y = mesh_ref[meshes][1].points[index][7]
-                if min_z > mesh_ref[meshes][1].points[index][2]:
+                if min_z > mesh_ref[meshes][1].points[index][2] or min_z is None:
                     min_z = mesh_ref[meshes][1].points[index][2]
-                if min_z > mesh_ref[meshes][1].points[index][5]:
+                if min_z > mesh_ref[meshes][1].points[index][5] or min_z is None:
                     min_z = mesh_ref[meshes][1].points[index][5]
-                if min_z > mesh_ref[meshes][1].points[index][8]:
+                if min_z > mesh_ref[meshes][1].points[index][8] or min_z is None:
                     min_z = mesh_ref[meshes][1].points[index][8]
-                if max_x < mesh_ref[meshes][1].points[index][0]:
+                if max_x < mesh_ref[meshes][1].points[index][0] or max_x is None:
                     max_x = mesh_ref[meshes][1].points[index][0]
-                if max_x < mesh_ref[meshes][1].points[index][3]:
+                if max_x < mesh_ref[meshes][1].points[index][3] or max_x is None:
                     max_x = mesh_ref[meshes][1].points[index][3]
-                if max_x < mesh_ref[meshes][1].points[index][6]:
+                if max_x < mesh_ref[meshes][1].points[index][6] or max_x is None:
                     max_x = mesh_ref[meshes][1].points[index][6]
-                if max_y < mesh_ref[meshes][1].points[index][1]:
+                if max_y < mesh_ref[meshes][1].points[index][1] or max_y is None:
                     max_y = mesh_ref[meshes][1].points[index][1]
-                if max_y < mesh_ref[meshes][1].points[index][4]:
+                if max_y < mesh_ref[meshes][1].points[index][4] or max_y is None:
                     max_y = mesh_ref[meshes][1].points[index][4]
-                if max_y < mesh_ref[meshes][1].points[index][7]:
+                if max_y < mesh_ref[meshes][1].points[index][7] or max_y is None:
                     max_y = mesh_ref[meshes][1].points[index][7]
-                if max_z < mesh_ref[meshes][1].points[index][2]:
+                if max_z < mesh_ref[meshes][1].points[index][2] or max_z is None:
                     max_z = mesh_ref[meshes][1].points[index][2]
-                if max_z < mesh_ref[meshes][1].points[index][5]:
+                if max_z < mesh_ref[meshes][1].points[index][5] or max_z is None:
                     max_z = mesh_ref[meshes][1].points[index][5]
-                if max_z < mesh_ref[meshes][1].points[index][8]:
+                if max_z < mesh_ref[meshes][1].points[index][8] or max_z is None:
                     max_z = mesh_ref[meshes][1].points[index][8]
 #                GL.glVertex3d(mesh_ref[meshes][1].points[index][0],
 #                              mesh_ref[meshes][1].points[index][1],
@@ -1458,7 +1458,8 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             self.currentMeshType = len(self.meshProperties)-1
             self.stack_geometry_meshes.setCurrentIndex(1)
             self.loadmeshproperties(tempChild)
-#        root.destroy()
+            return 1
+        root.destroy()
 
     def renewparticlenames(self):
         for x in range(0, len(self.insertionList[
@@ -1847,7 +1848,7 @@ class GLWidget(QtOpenGL.QGLWidget):
         GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
         GL.glLoadIdentity()
         GL.glTranslated(0., 0., -10.0)
-        print self.zRot
+#        print self.zRot
         GL.glRotated(self.xRot / 16.0, 1.0, 0.0, 0.0)
         GL.glRotated(self.yRot / 16.0, 0.0, 1.0, 0.0)
         GL.glRotated(self.zRot / 16.0, 0.0, 0.0, 1.0)
@@ -1900,8 +1901,8 @@ class GLWidget(QtOpenGL.QGLWidget):
 
         if event.buttons() & QtCore.Qt.LeftButton:
             # TODO: Add a condition for xRot and yRot
-            print (self.xRot%2880)/2880.0
-            print ((dx*((self.xRot%2880)/2880.0))*720)
+#            print (self.xRot%2880)/2880.0
+#            print ((dx*((self.xRot%2880)/2880.0))*720)
 #            factor = -5.
 #            if self.xRot <= 2880:
 #                if self.xRot%2880 <= 1440:
