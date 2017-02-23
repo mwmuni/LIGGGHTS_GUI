@@ -119,7 +119,6 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         self.btn_geometry_autofit.clicked.connect(self.autofit)
         self.pushButton_Browse.clicked.connect(self.browse)
         self.btn_geometry_stl.clicked.connect(self.openstl)
-        self.treeTest.itemClicked.connect(self.treeclick)
         self.tree_casesetup.itemClicked.connect(self.treecasesetup)
         self.tree_solve.itemClicked.connect(self.treesolve)
         self.tree_geometry.itemClicked.connect(self.treegeometry)
@@ -324,6 +323,9 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                               for x in range(0, 4)]
         self.contactParams.append([1.0 for y in range(0, self.totalTypes**2)])
         self.gmt = [[0.00, 0.00] for x in range(0, self.totalTypes)]
+        self.insertionList = []
+        self.spnbox_insertionindex.setValue(0)
+        self.stack_insertionsettings.setCurrentIndex(0)
         self.listcedupdate()
         self.listcorupdate()
         self.listkwearupdate()
@@ -1369,7 +1371,6 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                 break
 
     def materialdataini(self):
-        self.currentMaterialType = 0
         self.combo_particlelist.clear()
         curVal = self.combo_conty.currentIndex()
         self.line_youngsmodulus.setText(str(self.gmt[curVal][0]))
@@ -1387,16 +1388,15 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         inFile = open('pickleTest.txt', 'rb')
         vars = pickle.load(inFile)
         self.contactParams = vars[0]
-        self.currentMaterialType = vars[1]
-        self.currentMeshType = vars[2]
-        self.fileName = vars[3]
-        self.gmt = vars[4]
-        self.insertionList = vars[5]
-        self.meshProperties = vars[6]
-        self.meshTypeData = vars[7]
-        self.origPath = vars[8]
-        self.stlFilesLoaded = vars[9]
-        self.totalTypes = vars[10]
+        self.currentMeshType = vars[1]
+        self.fileName = vars[2]
+        self.gmt = vars[3]
+        self.insertionList = vars[4]
+        self.meshProperties = vars[5]
+        self.meshTypeData = vars[6]
+        self.origPath = vars[7]
+        self.stlFilesLoaded = vars[8]
+        self.totalTypes = vars[9]
 #                vars = [self.contactParams, self.currentMaterialType,
 #                self.currentMeshType, self.fileName, self.gmt,
 #                self.insertionList, self.meshProperties, self.meshTypeData,
@@ -1527,7 +1527,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         settings = QtCore.QSettings('myorg', 'myapp')
         settings.setValue('geometry', self.saveGeometry())
         settings.setValue('windowState', self.saveState())
-        vars = [self.contactParams, self.currentMaterialType,
+        vars = [self.contactParams,
                 self.currentMeshType, self.fileName, self.gmt,
                 self.insertionList, self.meshProperties, self.meshTypeData,
                 self.origPath, self.stlFilesLoaded,
@@ -1640,10 +1640,6 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
     def treecasesetup(self):
         self.stack_casesetup.setCurrentIndex(self.tree_casesetup.indexFromItem(
                 self.tree_casesetup.currentItem()).row())
-
-    def treeclick(self):
-        self.stackTest.setCurrentIndex(self.treeTest.indexFromItem(
-                self.treeTest.currentItem()).row())
 
     def treegeometry(self):
         if self.tree_geometry.currentItem().parent() is None:

@@ -32,7 +32,7 @@
    <string>LIGGGHTS DEM</string>
   </property>
   <property name="windowIcon">
-   <iconset>
+   <iconset resource="Icons.qrc">
     <normaloff>:/newPrefix/main_icon.png</normaloff>:/newPrefix/main_icon.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
@@ -46,7 +46,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -65,7 +65,7 @@
        </rect>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="page_14">
        <widget class="QLabel" name="label_28">
@@ -185,7 +185,7 @@
          <string/>
         </property>
         <property name="icon">
-         <iconset>
+         <iconset resource="Icons.qrc">
           <normaloff>:/newPrefix/cylinder.png</normaloff>:/newPrefix/cylinder.png</iconset>
         </property>
         <property name="iconSize">
@@ -211,7 +211,7 @@
          <string/>
         </property>
         <property name="icon">
-         <iconset>
+         <iconset resource="Icons.qrc">
           <normaloff>:/newPrefix/sphere.png</normaloff>:/newPrefix/sphere.png</iconset>
         </property>
         <property name="iconSize">
@@ -234,7 +234,7 @@
          <string/>
         </property>
         <property name="icon">
-         <iconset>
+         <iconset resource="Icons.qrc">
           <normaloff>:/newPrefix/stl.png</normaloff>:/newPrefix/stl.png</iconset>
         </property>
         <property name="iconSize">
@@ -289,7 +289,7 @@
          <string/>
         </property>
         <property name="icon">
-         <iconset>
+         <iconset resource="Icons.qrc">
           <normaloff>:/newPrefix/cube.png</normaloff>:/newPrefix/cube.png</iconset>
         </property>
         <property name="iconSize">
@@ -945,7 +945,6 @@
           <zorder>chk_meshes_sav</zorder>
           <zorder>chk_meshes_mm</zorder>
           <zorder>stack_meshes_sv</zorder>
-          <zorder>stackedWidget_3</zorder>
           <zorder>stack_meshes_sav</zorder>
           <zorder>chk_meshes_cm</zorder>
           <zorder>chk_dumpmesh</zorder>
@@ -3627,25 +3626,6 @@
               <string>Create Face</string>
              </property>
             </widget>
-            <zorder>label_137</zorder>
-            <zorder>label_138</zorder>
-            <zorder>label_139</zorder>
-            <zorder>spnbox_insertion_diameter</zorder>
-            <zorder>label_140</zorder>
-            <zorder>spnbox_insertion_circle_centre_z</zorder>
-            <zorder>spnbox_insertion_circle_centre_y</zorder>
-            <zorder>label_141</zorder>
-            <zorder>spnbox_insertion_circle_centre_x</zorder>
-            <zorder>label_142</zorder>
-            <zorder>spnbox_insertion_circle_normal_z</zorder>
-            <zorder>label_143</zorder>
-            <zorder>label_144</zorder>
-            <zorder>spnbox_insertion_circle_normal_y</zorder>
-            <zorder>spnbox_insertion_circle_normal_x</zorder>
-            <zorder>label_145</zorder>
-            <zorder>label_146</zorder>
-            <zorder>btn_insertion_circle_create</zorder>
-            <zorder>line_2</zorder>
            </widget>
           </widget>
          </widget>
@@ -4575,321 +4555,278 @@
      <attribute name="title">
       <string>Solve</string>
      </attribute>
-     <widget class="QPushButton" name="btn_solve_run">
+     <widget class="QStackedWidget" name="stackedWidget">
       <property name="geometry">
        <rect>
-        <x>0</x>
-        <y>20</y>
-        <width>93</width>
-        <height>28</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Run</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="btn_solve_paraview">
-      <property name="geometry">
-       <rect>
-        <x>100</x>
-        <y>20</y>
-        <width>93</width>
-        <height>28</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Paraview</string>
-      </property>
-     </widget>
-     <widget class="QTreeWidget" name="tree_solve">
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>60</y>
-        <width>191</width>
-        <height>561</height>
-       </rect>
-      </property>
-      <column>
-       <property name="text">
-        <string>Select item from list</string>
-       </property>
-      </column>
-      <item>
-       <property name="text">
-        <string>Run Option</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Rayleigh Time</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Meshes</string>
-       </property>
-      </item>
-     </widget>
-     <widget class="QStackedWidget" name="stack_solve">
-      <property name="geometry">
-       <rect>
-        <x>210</x>
-        <y>40</y>
-        <width>361</width>
-        <height>581</height>
+        <x>10</x>
+        <y>10</y>
+        <width>751</width>
+        <height>611</height>
        </rect>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
-      <widget class="QWidget" name="page_9">
-       <widget class="QLabel" name="label_25">
+      <widget class="QWidget" name="page_4">
+       <widget class="QPushButton" name="btn_solve_run">
         <property name="geometry">
          <rect>
-          <x>0</x>
+          <x>10</x>
           <y>10</y>
-          <width>121</width>
-          <height>21</height>
-         </rect>
-        </property>
-        <property name="font">
-         <font>
-          <family>DejaVu Sans Condensed</family>
-          <pointsize>13</pointsize>
-          <weight>75</weight>
-          <bold>true</bold>
-         </font>
-        </property>
-        <property name="text">
-         <string>Run Options</string>
-        </property>
-        <property name="textFormat">
-         <enum>Qt::RichText</enum>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="pushButton">
-        <property name="geometry">
-         <rect>
-          <x>0</x>
-          <y>60</y>
-          <width>80</width>
-          <height>25</height>
+          <width>93</width>
+          <height>28</height>
          </rect>
         </property>
         <property name="text">
          <string>Run</string>
         </property>
        </widget>
-       <widget class="QPushButton" name="pushButton_2">
+       <widget class="QTreeWidget" name="tree_solve">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>50</y>
+          <width>191</width>
+          <height>561</height>
+         </rect>
+        </property>
+        <column>
+         <property name="text">
+          <string>Select item from list</string>
+         </property>
+        </column>
+        <item>
+         <property name="text">
+          <string>Run Option</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Rayleigh Time</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Meshes</string>
+         </property>
+        </item>
+       </widget>
+       <widget class="QPushButton" name="btn_solve_paraview">
         <property name="geometry">
          <rect>
           <x>110</x>
-          <y>60</y>
-          <width>80</width>
-          <height>25</height>
+          <y>10</y>
+          <width>93</width>
+          <height>28</height>
          </rect>
         </property>
         <property name="text">
-         <string>Edit Script</string>
+         <string>Paraview</string>
         </property>
        </widget>
-       <widget class="QGroupBox" name="groupBox_7">
+       <widget class="QStackedWidget" name="stack_solve">
         <property name="geometry">
          <rect>
-          <x>0</x>
-          <y>110</y>
-          <width>341</width>
-          <height>91</height>
+          <x>220</x>
+          <y>30</y>
+          <width>361</width>
+          <height>581</height>
          </rect>
         </property>
-        <property name="title">
-         <string>Properties</string>
+        <property name="currentIndex">
+         <number>0</number>
         </property>
-        <widget class="QLabel" name="label_118">
-         <property name="geometry">
-          <rect>
-           <x>10</x>
-           <y>40</y>
-           <width>54</width>
-           <height>17</height>
-          </rect>
-         </property>
-         <property name="text">
-          <string>Log File</string>
-         </property>
+        <widget class="QWidget" name="page_10">
+         <widget class="QLabel" name="label_25">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>10</y>
+            <width>121</width>
+            <height>21</height>
+           </rect>
+          </property>
+          <property name="font">
+           <font>
+            <family>DejaVu Sans Condensed</family>
+            <pointsize>13</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>Run Options</string>
+          </property>
+          <property name="textFormat">
+           <enum>Qt::RichText</enum>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="pushButton">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>60</y>
+            <width>80</width>
+            <height>25</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Run</string>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="pushButton_2">
+          <property name="geometry">
+           <rect>
+            <x>110</x>
+            <y>60</y>
+            <width>80</width>
+            <height>25</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Edit Script</string>
+          </property>
+         </widget>
+         <widget class="QGroupBox" name="groupBox_7">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>110</y>
+            <width>341</width>
+            <height>91</height>
+           </rect>
+          </property>
+          <property name="title">
+           <string>Properties</string>
+          </property>
+          <widget class="QLabel" name="label_118">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>40</y>
+             <width>54</width>
+             <height>17</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Log File</string>
+           </property>
+          </widget>
+          <widget class="QLineEdit" name="lineEdit">
+           <property name="geometry">
+            <rect>
+             <x>80</x>
+             <y>40</y>
+             <width>211</width>
+             <height>25</height>
+            </rect>
+           </property>
+          </widget>
+         </widget>
         </widget>
-        <widget class="QLineEdit" name="lineEdit">
-         <property name="geometry">
-          <rect>
-           <x>80</x>
-           <y>40</y>
-           <width>211</width>
-           <height>25</height>
-          </rect>
-         </property>
-        </widget>
-       </widget>
-      </widget>
-      <widget class="QWidget" name="page_11">
-       <widget class="QTextEdit" name="textEdit_7">
-        <property name="geometry">
-         <rect>
-          <x>30</x>
-          <y>70</y>
-          <width>104</width>
-          <height>70</height>
-         </rect>
-        </property>
-        <property name="html">
-         <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+        <widget class="QWidget" name="page_11">
+         <widget class="QTextEdit" name="textEdit_7">
+          <property name="geometry">
+           <rect>
+            <x>30</x>
+            <y>70</y>
+            <width>104</width>
+            <height>70</height>
+           </rect>
+          </property>
+          <property name="html">
+           <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Page 2&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-       </widget>
-       <widget class="QLabel" name="label_26">
-        <property name="geometry">
-         <rect>
-          <x>0</x>
-          <y>10</y>
-          <width>141</width>
-          <height>21</height>
-         </rect>
-        </property>
-        <property name="font">
-         <font>
-          <family>DejaVu Sans Condensed</family>
-          <pointsize>13</pointsize>
-          <weight>75</weight>
-          <bold>true</bold>
-         </font>
-        </property>
-        <property name="text">
-         <string>Rayleigh Time</string>
-        </property>
-        <property name="textFormat">
-         <enum>Qt::RichText</enum>
-        </property>
-       </widget>
-      </widget>
-      <widget class="QWidget" name="page_10">
-       <widget class="QTextEdit" name="textEdit_8">
-        <property name="geometry">
-         <rect>
-          <x>20</x>
-          <y>60</y>
-          <width>104</width>
-          <height>70</height>
-         </rect>
-        </property>
-        <property name="html">
-         <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+          </property>
+         </widget>
+         <widget class="QLabel" name="label_26">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>10</y>
+            <width>141</width>
+            <height>21</height>
+           </rect>
+          </property>
+          <property name="font">
+           <font>
+            <family>DejaVu Sans Condensed</family>
+            <pointsize>13</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>Rayleigh Time</string>
+          </property>
+          <property name="textFormat">
+           <enum>Qt::RichText</enum>
+          </property>
+         </widget>
+        </widget>
+        <widget class="QWidget" name="page_27">
+         <widget class="QTextEdit" name="textEdit_8">
+          <property name="geometry">
+           <rect>
+            <x>20</x>
+            <y>60</y>
+            <width>104</width>
+            <height>70</height>
+           </rect>
+          </property>
+          <property name="html">
+           <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Page 3&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-       </widget>
-       <widget class="QLabel" name="label_27">
-        <property name="geometry">
-         <rect>
-          <x>0</x>
-          <y>10</y>
-          <width>111</width>
-          <height>17</height>
-         </rect>
-        </property>
-        <property name="font">
-         <font>
-          <family>DejaVu Sans Condensed</family>
-          <pointsize>13</pointsize>
-          <weight>75</weight>
-          <bold>true</bold>
-         </font>
-        </property>
-        <property name="text">
-         <string>Meshes</string>
-        </property>
-        <property name="textFormat">
-         <enum>Qt::RichText</enum>
-        </property>
+          </property>
+         </widget>
+         <widget class="QLabel" name="label_27">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>10</y>
+            <width>111</width>
+            <height>17</height>
+           </rect>
+          </property>
+          <property name="font">
+           <font>
+            <family>DejaVu Sans Condensed</family>
+            <pointsize>13</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>Meshes</string>
+          </property>
+          <property name="textFormat">
+           <enum>Qt::RichText</enum>
+          </property>
+         </widget>
+        </widget>
        </widget>
       </widget>
-     </widget>
-    </widget>
-    <widget class="QWidget" name="tab_6">
-     <attribute name="title">
-      <string>Testing</string>
-     </attribute>
-     <widget class="QStackedWidget" name="stackTest">
-      <property name="geometry">
-       <rect>
-        <x>210</x>
-        <y>20</y>
-        <width>181</width>
-        <height>171</height>
-       </rect>
-      </property>
-      <property name="currentIndex">
-       <number>1</number>
-      </property>
-      <widget class="QWidget" name="page">
-       <widget class="QPushButton" name="pushButton_8">
+      <widget class="QWidget" name="page_9">
+       <widget class="QLabel" name="label_20">
         <property name="geometry">
          <rect>
-          <x>50</x>
-          <y>10</y>
-          <width>80</width>
-          <height>25</height>
+          <x>180</x>
+          <y>170</y>
+          <width>381</width>
+          <height>211</height>
          </rect>
         </property>
         <property name="text">
-         <string>PushButton</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:24pt;&quot;&gt;This page is still&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:24pt;&quot;&gt;under development&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
        </widget>
       </widget>
-      <widget class="QWidget" name="page_2">
-       <widget class="QPushButton" name="pushButton_9">
-        <property name="geometry">
-         <rect>
-          <x>50</x>
-          <y>110</y>
-          <width>80</width>
-          <height>25</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>PushButton</string>
-        </property>
-       </widget>
-      </widget>
-     </widget>
-     <widget class="QTreeWidget" name="treeTest">
-      <property name="geometry">
-       <rect>
-        <x>30</x>
-        <y>20</y>
-        <width>181</width>
-        <height>181</height>
-       </rect>
-      </property>
-      <column>
-       <property name="text">
-        <string>1</string>
-       </property>
-      </column>
-      <item>
-       <property name="text">
-        <string>page1</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>page2</string>
-       </property>
-      </item>
      </widget>
     </widget>
    </widget>
@@ -4906,7 +4843,7 @@ p, li { white-space: pre-wrap; }
      <string>New</string>
     </property>
     <property name="icon">
-     <iconset>
+     <iconset resource="Icons.qrc">
       <normaloff>:/newPrefix/new.png</normaloff>:/newPrefix/new.png</iconset>
     </property>
    </widget>
@@ -4923,7 +4860,7 @@ p, li { white-space: pre-wrap; }
      <string>Open</string>
     </property>
     <property name="icon">
-     <iconset>
+     <iconset resource="Icons.qrc">
       <normaloff>:/newPrefix/open.png</normaloff>:/newPrefix/open.png</iconset>
     </property>
    </widget>
@@ -4940,7 +4877,7 @@ p, li { white-space: pre-wrap; }
      <string>Save</string>
     </property>
     <property name="icon">
-     <iconset>
+     <iconset resource="Icons.qrc">
       <normaloff>:/newPrefix/Save.png</normaloff>:/newPrefix/Save.png</iconset>
     </property>
    </widget>
@@ -4957,7 +4894,7 @@ p, li { white-space: pre-wrap; }
      <string>Save As</string>
     </property>
     <property name="icon">
-     <iconset>
+     <iconset resource="Icons.qrc">
       <normaloff>:/newPrefix/save_as.png</normaloff>:/newPrefix/save_as.png</iconset>
     </property>
    </widget>
@@ -4974,7 +4911,7 @@ p, li { white-space: pre-wrap; }
      <string>Terminal</string>
     </property>
     <property name="icon">
-     <iconset>
+     <iconset resource="Icons.qrc">
       <normaloff>:/newPrefix/terminal.png</normaloff>:/newPrefix/terminal.png</iconset>
     </property>
    </widget>
@@ -4991,7 +4928,7 @@ p, li { white-space: pre-wrap; }
      <string>Browse</string>
     </property>
     <property name="icon">
-     <iconset>
+     <iconset resource="Icons.qrc">
       <normaloff>:/newPrefix/browse.png</normaloff>:/newPrefix/browse.png</iconset>
     </property>
    </widget>
@@ -5008,7 +4945,7 @@ p, li { white-space: pre-wrap; }
      <string>Support</string>
     </property>
     <property name="icon">
-     <iconset>
+     <iconset resource="Icons.qrc">
       <normaloff>:/newPrefix/support.png</normaloff>:/newPrefix/support.png</iconset>
     </property>
    </widget>
@@ -5145,7 +5082,7 @@ p, li { white-space: pre-wrap; }
       <x>700</x>
       <y>10</y>
       <width>80</width>
-      <height>31</height>
+      <height>51</height>
      </rect>
     </property>
     <property name="text">
@@ -5186,7 +5123,7 @@ p, li { white-space: pre-wrap; }
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources>
-  <include location="Matt/Project/LIGGGHTS_GUI/Icons.qrc"/>
+  <include location="Icons.qrc"/>
  </resources>
  <connections/>
 </ui>
