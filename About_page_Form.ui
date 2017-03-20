@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>support_page</class>
+ <widget class="QMainWindow" name="support_page">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>431</width>
+    <height>159</height>
+   </rect>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QPushButton" name="btn_ok">
+    <property name="geometry">
+     <rect>
+      <x>170</x>
+      <y>120</y>
+      <width>80</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>OK</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="tunra_pix">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>33</y>
+      <width>51</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap>CBSPT4.png</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="uon_pix">
+    <property name="geometry">
+     <rect>
+      <x>80</x>
+      <y>30</y>
+      <width>71</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap>UON_ALT_MONO-v10.png</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>170</x>
+      <y>30</y>
+      <width>241</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;LIGGGHTS GUI: &lt;span style=&quot; color:#8ec5c9;&quot;&gt;BETA v0.1&lt;/span&gt;&lt;br/&gt;Developed by The University of Newcastle,&lt;br/&gt;in association with Tunra Bulk Solids&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+   </widget>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
