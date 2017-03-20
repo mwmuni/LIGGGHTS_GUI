@@ -1515,6 +1515,9 @@
            <property name="text">
             <string>Contact Model</string>
            </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
           </widget>
           <widget class="QCheckBox" name="chk_dumpmesh">
            <property name="geometry">
@@ -1527,6 +1530,9 @@
            </property>
            <property name="text">
             <string>Dump Mesh</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
            </property>
           </widget>
           <widget class="QCheckBox" name="chk_meshes_sw">
@@ -3624,7 +3630,7 @@
          </rect>
         </property>
         <property name="currentIndex">
-         <number>0</number>
+         <number>1</number>
         </property>
         <widget class="QWidget" name="page_23">
          <widget class="QLabel" name="label_157">
@@ -3714,7 +3720,7 @@
             </rect>
            </property>
            <property name="currentIndex">
-            <number>0</number>
+            <number>1</number>
            </property>
            <widget class="QWidget" name="page_28">
             <widget class="QLabel" name="label_124">
@@ -3754,6 +3760,32 @@
              </property>
              <property name="text">
               <string>STL Load Page</string>
+             </property>
+            </widget>
+            <widget class="QPushButton" name="btn_import_ins_mesh">
+             <property name="geometry">
+              <rect>
+               <x>30</x>
+               <y>70</y>
+               <width>80</width>
+               <height>25</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>Import STL</string>
+             </property>
+            </widget>
+            <widget class="QLabel" name="lbl_loaded_insertion">
+             <property name="geometry">
+              <rect>
+               <x>120</x>
+               <y>80</y>
+               <width>301</width>
+               <height>17</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>...</string>
              </property>
             </widget>
            </widget>
@@ -4371,7 +4403,7 @@
           <widget class="QLabel" name="label_149">
            <property name="geometry">
             <rect>
-             <x>350</x>
+             <x>390</x>
              <y>60</y>
              <width>131</width>
              <height>17</height>
@@ -4384,7 +4416,7 @@
           <widget class="QLabel" name="lbl_PSDFractionTotal">
            <property name="geometry">
             <rect>
-             <x>470</x>
+             <x>510</x>
              <y>60</y>
              <width>41</width>
              <height>17</height>
@@ -4399,7 +4431,7 @@
             <rect>
              <x>220</x>
              <y>60</y>
-             <width>72</width>
+             <width>101</width>
              <height>25</height>
             </rect>
            </property>
@@ -4527,7 +4559,7 @@
           <widget class="QPushButton" name="btn_addptcl">
            <property name="geometry">
             <rect>
-             <x>300</x>
+             <x>330</x>
              <y>60</y>
              <width>21</width>
              <height>21</height>
@@ -4540,7 +4572,7 @@
           <widget class="QPushButton" name="btn_delptcl">
            <property name="geometry">
             <rect>
-             <x>320</x>
+             <x>350</x>
              <y>60</y>
              <width>21</width>
              <height>21</height>
@@ -4754,19 +4786,6 @@
           </widget>
          </widget>
         </widget>
-       </widget>
-       <widget class="QLabel" name="label_92">
-        <property name="geometry">
-         <rect>
-          <x>210</x>
-          <y>40</y>
-          <width>341</width>
-          <height>17</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Note: Only one insertion is supported currently</string>
-        </property>
        </widget>
       </widget>
       <widget class="QWidget" name="page_7">
@@ -5193,19 +5212,6 @@
        <number>0</number>
       </property>
       <widget class="QWidget" name="page_4">
-       <widget class="QPushButton" name="btn_solve_run">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>10</y>
-          <width>93</width>
-          <height>28</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Run</string>
-        </property>
-       </widget>
        <widget class="QTreeWidget" name="tree_solve">
         <property name="geometry">
          <rect>
@@ -5225,29 +5231,6 @@
           <string>Run Option</string>
          </property>
         </item>
-        <item>
-         <property name="text">
-          <string>Rayleigh Time</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Meshes</string>
-         </property>
-        </item>
-       </widget>
-       <widget class="QPushButton" name="btn_solve_paraview">
-        <property name="geometry">
-         <rect>
-          <x>110</x>
-          <y>10</y>
-          <width>93</width>
-          <height>28</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Paraview</string>
-        </property>
        </widget>
        <widget class="QStackedWidget" name="stack_solve">
         <property name="geometry">
@@ -5289,7 +5272,7 @@
          <widget class="QPushButton" name="run_prog">
           <property name="geometry">
            <rect>
-            <x>0</x>
+            <x>100</x>
             <y>110</y>
             <width>80</width>
             <height>25</height>
@@ -5299,13 +5282,13 @@
            <string>Run</string>
           </property>
          </widget>
-         <widget class="QPushButton" name="pushButton_2">
+         <widget class="QPushButton" name="btn_edit_script">
           <property name="enabled">
-           <bool>false</bool>
+           <bool>true</bool>
           </property>
           <property name="geometry">
            <rect>
-            <x>110</x>
+            <x>200</x>
             <y>110</y>
             <width>80</width>
             <height>25</height>
@@ -5314,42 +5297,6 @@
           <property name="text">
            <string>Edit Script</string>
           </property>
-         </widget>
-         <widget class="QGroupBox" name="groupBox_7">
-          <property name="geometry">
-           <rect>
-            <x>0</x>
-            <y>160</y>
-            <width>341</width>
-            <height>91</height>
-           </rect>
-          </property>
-          <property name="title">
-           <string>Properties</string>
-          </property>
-          <widget class="QLabel" name="label_118">
-           <property name="geometry">
-            <rect>
-             <x>10</x>
-             <y>40</y>
-             <width>54</width>
-             <height>17</height>
-            </rect>
-           </property>
-           <property name="text">
-            <string>Log File</string>
-           </property>
-          </widget>
-          <widget class="QLineEdit" name="lineEdit">
-           <property name="geometry">
-            <rect>
-             <x>80</x>
-             <y>40</y>
-             <width>211</width>
-             <height>25</height>
-            </rect>
-           </property>
-          </widget>
          </widget>
          <widget class="QLabel" name="label_176">
           <property name="geometry">
@@ -5380,7 +5327,7 @@
          <widget class="QSpinBox" name="num_proc_y">
           <property name="geometry">
            <rect>
-            <x>150</x>
+            <x>160</x>
             <y>70</y>
             <width>45</width>
             <height>26</height>
@@ -5393,7 +5340,7 @@
          <widget class="QSpinBox" name="num_proc_z">
           <property name="geometry">
            <rect>
-            <x>210</x>
+            <x>230</x>
             <y>70</y>
             <width>45</width>
             <height>26</height>
@@ -5419,7 +5366,7 @@
          <widget class="QLabel" name="label_178">
           <property name="geometry">
            <rect>
-            <x>140</x>
+            <x>150</x>
             <y>70</y>
             <width>16</width>
             <height>17</height>
@@ -5432,7 +5379,7 @@
          <widget class="QLabel" name="label_179">
           <property name="geometry">
            <rect>
-            <x>200</x>
+            <x>220</x>
             <y>70</y>
             <width>16</width>
             <height>17</height>
@@ -5440,6 +5387,58 @@
           </property>
           <property name="text">
            <string>z</string>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="btn_makefile">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>110</y>
+            <width>80</width>
+            <height>25</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Make File</string>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="btn_log_file">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>170</y>
+            <width>91</width>
+            <height>25</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Open Log File</string>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="btn_solve_paraview">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>220</y>
+            <width>101</width>
+            <height>28</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>&lt;!&gt; Paraview</string>
+          </property>
+         </widget>
+         <widget class="QLabel" name="label_92">
+          <property name="geometry">
+           <rect>
+            <x>110</x>
+            <y>225</y>
+            <width>111</width>
+            <height>17</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#000000;&quot;&gt;To be added soon&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
          </widget>
         </widget>
@@ -5665,7 +5664,7 @@ p, li { white-space: pre-wrap; }
    </widget>
    <widget class="QPushButton" name="pushButton_Support">
     <property name="enabled">
-     <bool>false</bool>
+     <bool>true</bool>
     </property>
     <property name="geometry">
      <rect>
@@ -5810,19 +5809,6 @@ p, li { white-space: pre-wrap; }
      <string>+zoom</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="btn_makefile">
-    <property name="geometry">
-     <rect>
-      <x>700</x>
-      <y>10</y>
-      <width>80</width>
-      <height>51</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Make File</string>
-    </property>
-   </widget>
    <widget class="QLabel" name="label_93">
     <property name="geometry">
      <rect>
@@ -5836,7 +5822,7 @@ p, li { white-space: pre-wrap; }
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap resource="Icons.qrc">:/newPrefix/CBSPT4.png</pixmap>
+     <pixmap>CBSPT4.png</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
@@ -5855,7 +5841,7 @@ p, li { white-space: pre-wrap; }
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap resource="Icons.qrc">:/newPrefix/UON_ALT_MONO-v10.jpg</pixmap>
+     <pixmap>UON_ALT_MONO-v10.png</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
@@ -5864,14 +5850,14 @@ p, li { white-space: pre-wrap; }
    <widget class="QLabel" name="label_95">
     <property name="geometry">
      <rect>
-      <x>0</x>
+      <x>10</x>
       <y>710</y>
       <width>71</width>
       <height>21</height>
      </rect>
     </property>
     <property name="text">
-     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; color:#888a85;&quot;&gt;Beta v0.1&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; color:#888a85;&quot;&gt;Release v1.0&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
    </widget>
   </widget>
@@ -5881,22 +5867,23 @@ p, li { white-space: pre-wrap; }
      <x>0</x>
      <y>0</y>
      <width>1606</width>
-     <height>19</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
     <property name="enabled">
-     <bool>false</bool>
+     <bool>true</bool>
     </property>
     <property name="title">
      <string>File</string>
     </property>
     <addaction name="separator"/>
     <addaction name="separator"/>
+    <addaction name="actionNew"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="enabled">
-     <bool>false</bool>
+     <bool>true</bool>
     </property>
     <property name="title">
      <string>Edit</string>
@@ -5904,17 +5891,34 @@ p, li { white-space: pre-wrap; }
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="enabled">
-     <bool>false</bool>
+     <bool>true</bool>
     </property>
     <property name="title">
      <string>Help</string>
     </property>
+    <addaction name="actionSupport"/>
+    <addaction name="actionAbout"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionNew">
+   <property name="text">
+    <string>New</string>
+   </property>
+  </action>
+  <action name="actionSupport">
+   <property name="text">
+    <string>Support</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="text">
+    <string>About</string>
+   </property>
+  </action>
  </widget>
  <resources>
   <include location="Icons.qrc"/>

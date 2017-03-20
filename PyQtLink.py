@@ -66,6 +66,10 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         global mesh_ref
 
         mesh_ref = []
+        
+        global ins_mesh_ref
+        
+        ins_mesh_ref = []
 
 #        new_mesh.normals
 #
@@ -83,8 +87,11 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         self.zSlider = self.createSlider()
 
 #        print 'slider ini marker'
+#        self.connect(self.pushButton_Support, QtCore.SIGNAL("clicked()"), self.popupSupport)
         self.xSlider.valueChanged.connect(self.glWidget.setXRotation)
+#        self.connect(self.xSlider, QtCore.SIGNAL('valueChanged()'), self.glWidget, QtCore.SLOT('setXRotation()'))
         self.glWidget.xRotationChanged.connect(self.xSlider.setValue)
+#        self.connect(self.glWidget, QtCore.SIGNAL('xRotationChanged()'), self.xSlider.setValue)
         self.ySlider.valueChanged.connect(self.glWidget.setYRotation)
         self.glWidget.yRotationChanged.connect(self.ySlider.setValue)
         self.zSlider.valueChanged.connect(self.glWidget.setZRotation)
@@ -159,6 +166,11 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         self.run_prog.clicked.connect(self.run_prog_clicked)
         self.btn_solve_paraview.clicked.connect(self.btn_solve_paraview_clicked)
         self.btn_mm_del.clicked.connect(self.btn_mm_del_clicked)
+        self.btn_edit_script.clicked.connect(self.btn_edit_script_clicked)
+        self.btn_import_ins_mesh.clicked.connect(self.btn_import_ins_mesh_clicked)
+        self.btn_log_file.clicked.connect(self.btn_log_file_clicked)
+#        self.pushButton_Support.connect(self.popup)
+        self.connect(self.pushButton_Support, QtCore.SIGNAL("clicked()"), self.popupSupport)
 
         self.btn_x_align.clicked.connect(self.btn_x_align_clicked)
         self.btn_y_align.clicked.connect(self.btn_y_align_clicked)
@@ -173,6 +185,9 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         self.chk_meshes_sav.stateChanged.connect(self.chk_meshes_sav_clicked)
         self.chk_meshes_mm.stateChanged.connect(self.chk_meshes_mm_clicked)
         self.chk_meshes_sw.stateChanged.connect(self.savemeshproperties)
+        
+        self.actionSupport.triggered.connect(self.popupSupport)
+        self.actionAbout.triggered.connect(self.popupAbout)
 
         self.trolltechYellow = QtGui.QColor.fromCmykF(.00, .02, .20, .0)
         self.trolltechGrey = QtGui.QColor.fromCmykF(.4, .4, .4, 0)
@@ -481,7 +496,8 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         for n in range(0, self.spnbox_geometry_contacttypes_totalgranulartypes.value()):
             self.insertionList[self.spnbox_insertionindex.value()-1][0][
                      self.spnbox_psd.value()-1].append(
-                        [[str(self.spnbox_psd.value())+'_'+'p'+str(n+1)+
+                        [[str(self.spnbox_insertionindex.value())+'_'+
+                          str(self.spnbox_psd.value())+'_'+'p'+str(n+1)+
                          '_1', 0.0, 0.0, 0.0]])
         self.combo_particlelist.clear()
         for n in range(0, len(self.insertionList[
@@ -570,7 +586,8 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             for n in range(0, self.spnbox_geometry_contacttypes_totalgranulartypes.value()):
                     self.insertionList[self.spnbox_insertionindex.value()-1][0][
                          self.spnbox_psd.value()-1].append(
-                            [[str(self.spnbox_psd.value())+'_'+'p'+str(n+1)+
+                            [[str(self.spnbox_insertionindex.value())+'_'+
+                              str(self.spnbox_psd.value())+'_'+'p'+str(n+1)+
                              '_1', 0.0, 0.0, 0.0]])
             self.combo_particlelist.clear()
             for n in range(0, len(self.insertionList[
@@ -595,7 +612,8 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                 self.spnbox_insertionindex.value()-1][0][
                 self.spnbox_psd.value()-1][
                 self.spnbox_granulartypeindex.value()-1
-                ].append([str(self.spnbox_psd.value())+
+                ].append([str(self.spnbox_insertionindex.value())+'_'+
+                    str(self.spnbox_psd.value())+
                     '_p'+str(self.spnbox_granulartypeindex.value())+
                     '_'+str(len(self.insertionList[
                     self.spnbox_insertionindex.value()-1][0][
@@ -617,6 +635,40 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                 self.combo_particlelist.currentIndex()]
             self.renewparticlenames()
 
+    def btn_edit_script_clicked(self):
+        os.system('gedit script.s')
+
+    def btn_import_ins_mesh_clicked(self):
+        global ins_mesh_ref
+        root = Tk()
+        self.fileName = tkFileDialog.askopenfilename(
+                        filetypes=(('STereoLithography files', '.stl'),
+                                   ('All Files', '.*')))
+        if self.fileName not in self.stlFilesLoaded and \
+                        os.path.exists(self.fileName):
+            tempVar = load_mesh(self.fileName)
+            ins_mesh_ref.append([self.fileName, tempVar, [.4, .4, .4, 1.0]])
+            self.insertionList[self.spnbox_insertionindex.value()-1][1][0] = 0
+            self.insertionList[self.spnbox_insertionindex.value()-1][1][1] = \
+                self.fileName
+            self.lbl_loaded_insertion.setText(basename(self.fileName))
+            self.remove_unused_insertion_faces()
+            self.glWidget.initializeGL()
+            self.glWidget.updateGL()
+            self.glWidget.paintGL()
+#        for m in ins_mesh_ref:
+#            print m
+        root.destroy()
+
+    def remove_unused_insertion_faces(self):
+        global ins_mesh_ref
+        toKeep = []
+        for n in self.insertionList:
+            for m in ins_mesh_ref:
+                if n[1][1] == m[0]:
+                    toKeep.append(m)
+                    break
+        ins_mesh_ref = toKeep
 
     def btn_insertion_circle_clicked(self):
         self.stack_insertion_face.setCurrentIndex(3)
@@ -631,6 +683,9 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
 
 #    def btn_makefile_clicked(self):
 #        self.fileGen()
+
+    def btn_log_file_clicked(self):
+        os.system('gedit log.liggghts')
 
     def btn_mm_del_clicked(self):
         n = self.currentMeshType
@@ -767,7 +822,8 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         self.loading = True
         self.stack_geometry_meshes.setCurrentIndex(0)
         # TODO: self.combo_meshes_ct {SELECT CHOSEN ITEM INDEX}
-        self.chk_meshes_cm.setCheckState(0)
+        self.chk_meshes_cm.setCheckState(2)
+        self.chk_dumpmesh.setCheckState(2)
         self.chk_meshes_sv.setCheckState(0)
         self.spnbox_meshes_sv_x.setValue(0.00)
         self.spnbox_meshes_sv_y.setValue(0.00)
@@ -865,29 +921,31 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
 #                        '\t\t\tequal\t\t'+'40'+  # TODO: REPLACE WITH PARTICLE DIAMETER
 #                        '\t# d='+'40'+'mm\n')  # TODO: REPLACE WITH PARTICLE DIAMETER
 #        f.write('\n')
-        for x in range(0, len(self.insertionList[0][0])):
-            for y in range(0, len(self.insertionList[0][0][x])):
-                for z in range(0, len(self.insertionList[0][0][x][y])):
-                    f.write('variable\td')
-                    f.write(self.insertionList[0][0][x][y][z][0])
-                    f.write('\t\t\tequal\t\t')
-                    f.write(str(self.insertionList[0][0][x][y][z][2]))
-                    f.write('\n')
-        f.write('\n')
+        for n in range(0, len(self.insertionList)):
+            for x in range(0, len(self.insertionList[n][0])):
+                for y in range(0, len(self.insertionList[n][0][x])):
+                    for z in range(0, len(self.insertionList[n][0][x][y])):
+                        f.write('variable\td')
+                        f.write(self.insertionList[n][0][x][y][z][0])
+                        f.write('\t\t\tequal\t\t')
+                        f.write(str(self.insertionList[n][0][x][y][z][2]))
+                        f.write('\n')
+            f.write('\n')
 #        for x in range(0, self.spnbox_geometry_contacttypes_totalgranulartypes.value()):
 #            for y in range(x, self.totalTypes):
 #                f.write('variable\tr'+ str(x+1) + '_' + str(y+1) +  # TODO: REPLACE WITH PARTICLE
 #                        '\t\t\tequal\t\t${d'+ str(x+1) + '_' + str(y+1) +  # TODO: REPLACE WITH PARTICLE
 #                        '}/2000\n')
-        for x in range(0, len(self.insertionList[0][0])):
-            for y in range(0, len(self.insertionList[0][0][x])):
-                for z in range(0, len(self.insertionList[0][0][x][y])):
-                    f.write('variable\tr')
-                    f.write(self.insertionList[0][0][x][y][z][0])
-                    f.write('\t\t\tequal\t\t${d')
-                    f.write(self.insertionList[0][0][x][y][z][0])
-                    f.write('}/2000\n')
-        f.write('\n')
+        for n in range(0, len(self.insertionList)):
+            for x in range(0, len(self.insertionList[n][0])):
+                for y in range(0, len(self.insertionList[n][0][x])):
+                    for z in range(0, len(self.insertionList[n][0][x][y])):
+                        f.write('variable\tr')
+                        f.write(self.insertionList[n][0][x][y][z][0])
+                        f.write('\t\t\tequal\t\t${d')
+                        f.write(self.insertionList[n][0][x][y][z][0])
+                        f.write('}/2000\n')
+            f.write('\n')
 
         # TODO: Add support for multiple insertions
         f.write('\n# Variable - particle size fractions\n')
@@ -896,21 +954,22 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
 #                f.write('variable\tfrac'+ str(x+1) + '_' + str(y+1) +  # TODO: REPLACE WITH PARTICLE
 #                        '\t\t\tequal\t\t'+ str(self.insertionList[0][0][x+y][1]) +
 #                        '\n')
-        largestVal = 0.0
-        largestName = ''
-        for x in range(0, len(self.insertionList[0][0])):
-            for y in range(0, len(self.insertionList[0][0][x])):
-                for z in range(0, len(self.insertionList[0][0][x][y])):
-                    f.write('variable\tfrac')
-                    f.write(self.insertionList[0][0][x][y][z][0])
-                    f.write('\t\t\tequal\t\t')
-                    f.write(str(self.insertionList[0][0][x][y][z][1]))
-                    if largestVal < self.insertionList[0][0][x][y][z][1] or \
-                        largestName == '':
-                        largestVal = self.insertionList[0][0][x][y][z][1]
-                        largestName = self.insertionList[0][0][x][y][z][0]
-                    f.write('\n')
-        f.write('\n')
+        for n in range(0, len(self.insertionList)):
+            largestVal = 0.0
+            largestName = ''
+            for x in range(0, len(self.insertionList[n][0])):
+                for y in range(0, len(self.insertionList[n][0][x])):
+                    for z in range(0, len(self.insertionList[n][0][x][y])):
+                        f.write('variable\tfrac')
+                        f.write(self.insertionList[n][0][x][y][z][0])
+                        f.write('\t\t\tequal\t\t')
+                        f.write(str(self.insertionList[n][0][x][y][z][1]))
+                        if largestVal < self.insertionList[n][0][x][y][z][1] or \
+                            largestName == '':
+                            largestVal = self.insertionList[n][0][x][y][z][1]
+                            largestName = self.insertionList[n][0][x][y][z][0]
+                        f.write('\n')
+            f.write('\n')
         # TODO: FOLLOW UP CUTOFF
         f.write('\n# Define contact searching distance\n')
         f.write('variable\tcutoff\t\t\tequal\t\t${d'+
@@ -970,15 +1029,18 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                     edMtx[x][y] = 'AED' + str(x+1) + '_' + str(y+1)
 
         f.write('# Variables - Mass flow rate\n')
-        f.write('variable\tm\t\tequal\t\t' +
-                str(self.insertionList[self.spnbox_insertionindex.value()-1][2][0])+
-                '\t\t\t# Total Mass to be inserted\n')
-        f.write('variable\ttfill\tequal\t\t'+
-                str(self.insertionList[self.spnbox_insertionindex.value()-1][2][0]/
-                self.insertionList[self.spnbox_insertionindex.value()-1][2][1])
-                +'\t\t\t\t# Time for generating particles [s]\n')
-        f.write('variable\tQ\t\tequal\t\t${m}/${tfill}\t# Mass flow rate @ ~2000 t/h\n\n')
+        for n in range(0, len(self.insertionList)):
+            f.write('variable\tm'+str(n+1)+'\t\tequal\t\t' +
+                    str(self.insertionList[n][2][0])+
+                    '\t\t\t# Total Mass to be inserted\n')
+            f.write('variable\ttfill'+str(n+1)+'\tequal\t\t'+
+                    str(self.insertionList[n][2][0]/
+                    self.insertionList[n][2][1])
+                    +'\t\t\t\t# Time for generating particles [s]\n')
+            f.write('variable\tQ'+str(n+1)+'\t\tequal\t\t${m'+str(n)+'}/${tfill'+
+                    str(n+1)+'}\t# Mass flow rate @ ~2000 t/h\n')
 
+        f.write('\n')
         f.write('# Variables - Definition of times (points when simulation behaviour changes)\n')
         f.write('variable\tt1\t\tequal\t${tfill}\t\t\t\t# Time for inserting particles\n')
         if not self.line_totaltime.text().isEmpty():
@@ -1170,26 +1232,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         f.write('############# ADD LOADED MESHES ##############\n\n')
 
         # Relative directory file locator
-        relDir = []
-        cwd = os.path.split(os.getcwd())[1]
-        for paths in self.stlFilesLoaded:
-            prev = []
-            split = os.path.split(paths)
-            dir = split[0]
-            searcher = split[1]
-            while searcher != cwd:
-                prev.append(searcher)
-                split = os.path.split(dir)
-                dir = split[0]
-                searcher = split[1]
-            prev.reverse()
-            strbuild = ''
-            for n in range(0, len(prev)):
-                if(n == len(prev)-1):
-                    strbuild += prev[n]
-                else:
-                    strbuild += prev[n] + '/'
-            relDir.append(strbuild)
+        relDir = self.relDirSolver(self.stlFilesLoaded)
 
         for n in range(0, len(relDir)):
             f.write('fix\t\t' +
@@ -1238,45 +1281,51 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         f.write('\n\n')
 
         f.write('# Particle distributions for insertion\n')
-        for x in range(0, len(self.insertionList[0][0])):
-            for y in range(0, len(self.insertionList[0][0][x])):
-                for z in range(0, len(self.insertionList[0][0][x][y])):
-                    f.write('fix\t\tpts')
-                    f.write(self.insertionList[0][0][x][y][z][0])
-                    f.write(' all particletemplate/sphere 1 atom_type 1 ')
-                    f.write('density constant ${dens')
-                    f.write(self.insertionList[0][0][x][y][z][0])
-                    f.write('} radius constant ${r')
-                    f.write(self.insertionList[0][0][x][y][z][0])
-                    f.write('}\n')
-        f.write('\n')
-
-        for x in range(0, len(self.insertionList[0][0])):
-            numParticles = 0
-            f.write('fix\t\tpdd'+'1'+'_'+str(x+1))
-            f.write(' all particledistribution/discrete 1. ')
-            strbuild = ''
-            for y in range(0, len(self.insertionList[0][0][x])):
-                for z in range(0, len(self.insertionList[0][0][x][y])):
-                    numParticles += 1
-                    strbuild += ' pts' + self.insertionList[0][0][x][y][z][0]
-                    strbuild += ' ${frac' + self.insertionList[0][0][x][y][z][0] + '}'
-                if y == len(self.insertionList[0][0][x])-1:
-                    f.write(str(numParticles) + strbuild + '\n')
-        f.write('\n')
+        for n in range(0, len(self.insertionList)):
+            for x in range(0, len(self.insertionList[n][0])):
+                for y in range(0, len(self.insertionList[n][0][x])):
+                    for z in range(0, len(self.insertionList[n][0][x][y])):
+                        f.write('fix\t\tpts')
+                        f.write(self.insertionList[n][0][x][y][z][0])
+                        f.write(' all particletemplate/sphere 1 atom_type 1 ')
+                        f.write('density constant ${dens')
+                        f.write(self.insertionList[n][0][x][y][z][0])
+                        f.write('} radius constant ${r')
+                        f.write(self.insertionList[n][0][x][y][z][0])
+                        f.write('}\n')
+            f.write('\n')
+        for n in range (0, len(self.insertionList)):
+            for x in range(0, len(self.insertionList[n][0])):
+                numParticles = 0
+                f.write('fix\t\tpdd'+str(n+1)+'_'+str(x+1))
+                f.write(' all particledistribution/discrete 1. ')
+                strbuild = ''
+                for y in range(0, len(self.insertionList[n][0][x])):
+                    for z in range(0, len(self.insertionList[n][0][x][y])):
+                        numParticles += 1
+                        strbuild += ' pts' + self.insertionList[n][0][x][y][z][0]
+                        strbuild += ' ${frac' + self.insertionList[n][0][x][y][z][0] + '}'
+                    if y == len(self.insertionList[n][0][x])-1:
+                        f.write(str(numParticles) + strbuild + '\n')
+            f.write('\n')
 
         # TODO: Change this when Insertion Face has been implemented
-        f.write('#######DEFAULT########\n\n')
-        f.write('fix\t\tins_mesh1 all mesh/surface file stl_files/gen_face.stl type '+
-                str(1+self.spnbox_geometry_contacttypes_totalgranulartypes.value())+
-                ' curvature 1e-6\n\n')
-        f.write('fix\t\tins1 all insert/stream seed 5330 distributiontemplate pdd1 &\n')
-        f.write('\t\tmaxattempt 100 mass ${m} massrate ${Q} overlapcheck yes vel constant '+
-                str(self.insertionList[self.spnbox_insertionindex.value()-1][2][2])+' '+
-                str(self.insertionList[self.spnbox_insertionindex.value()-1][2][3])+' '+
-                str(self.insertionList[self.spnbox_insertionindex.value()-1][2][4])+' '+'.&\n')
-        f.write('\t\tinsertion_face ins_mesh1 extrude_length '+
-                str(self.insertionList[self.spnbox_insertionindex.value()-1][2][5])+'\n\n')
+        self.insertionList[self.spnbox_insertionindex.value()-1][1][0] = 0
+        self.insertionList[self.spnbox_insertionindex.value()-1][1][1] = \
+            self.fileName
+        f.write('#######NEEDS TESTING########\n\n')
+        for n in range(0, len(self.insertionList)):
+            relDir2 = self.relDirSolver([self.insertionList[n][1][1]])
+            f.write('fix\t\tins_mesh'+str(n+1)+' all mesh/surface file '+relDir2[0]+' type '+
+                    str(1+self.spnbox_geometry_contacttypes_totalgranulartypes.value())+
+                    ' curvature 1e-6\n\n')
+            f.write('fix\t\tins'+str(n+1)+' all insert/stream seed 5330 distributiontemplate pdd'+str(n+1)+' &\n')
+            f.write('\t\tmaxattempt 100 mass ${m'+str(n+1)+'} massrate ${Q'+str(n+1)+'} overlapcheck yes vel constant '+
+                    str(self.insertionList[n][2][2])+' '+
+                    str(self.insertionList[n][2][3])+' '+
+                    str(self.insertionList[n][2][4])+' '+'.&\n')
+            f.write('\t\tinsertion_face ins_mesh'+str(n+1)+' extrude_length '+
+                    str(self.insertionList[n][2][5])+'\n\n')
         f.write('######################\n\n')
 
         f.write('fix\t\tintegr all nve/sphere\n\n')
@@ -1290,7 +1339,10 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         f.write('thermo_modify\tlost ignore norm no\n')
         f.write('compute_modify\tthermo_temp dynamic yes\n\n')
 
-        f.write('dump\t\tdmpstl1 all mesh/stl 1 post/static.stl')
+        f.write('shell rm post')
+        f.write('shell mkdir post')
+
+        f.write('dump\t\tdmpstl1 all mesh/stl 1 post/static*.stl')
         for n in range(0, len(relDir)):
             f.write(' ' + os.path.splitext(os.path.basename(relDir[n]))[0])
         f.write('\n\n')
@@ -1301,7 +1353,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                 ('ix iy iz ' if self.chk_inertia.checkState() == 2 else '') +
                 ('vx vy vz ' if self.chk_velocity.checkState() == 2 else '') +
                 ('fx fy fz ' if self.chk_force.checkState() == 2 else '') +
-                ('omegax omegay omegaz ' if self.chk_angularvelocity.checkState == 2 else '') +
+                ('omegax omegay omegaz ' if self.chk_angularvelocity.checkState() == 2 else '') +
                 'radius ' +
                 ('mass' if self.chk_mass.checkState() == 2 else '') + '\n\n')
 
@@ -1310,12 +1362,16 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                 tempstr = os.path.splitext(i[0])[0]
                 f.write('dump\t\tdumpstress_'+tempstr)
                 f.write(' all mesh/gran/VTK ${dumpstep} post/dump_')
-                f.write(tempstr + '*.vtk stress wear ')
+                f.write(tempstr + '_*.vtk stress wear ')
                 f.write(tempstr + '\n\n')
 
         f.write('run\t\t1\n\n')
 
         for x in range(0, len(self.meshProperties)):
+            f.write('run\t'+(str(self.meshProperties[x][12]/1e-4) if
+                    self.line_timestep.text().isEmpty() else
+                    str(int(self.meshProperties[x][12] /
+                    float(self.line_timestep.text())))) + '\n\n')
             for y in range(0, len(self.meshProperties[x][19])):
                 if self.mmList[x][y] == 0:
                     f.write('fix move all move/mesh mesh ' +
@@ -1509,7 +1565,11 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                 self.stack_insertion_face.setCurrentIndex(0)
             elif currSettings[1][0] == 0:
                 self.stack_insertion_face.setCurrentIndex(1)
-                # TODO: Add STL functionality
+                if currSettings[1][1] is not None:
+                    self.lbl_loaded_insertion.setText(
+                            basename(currSettings[1][1]))
+                else:
+                    self.lbl_loaded_insertion.setText('...')
             elif currSettings[1][0] == 1:
                 self.loading = True
                 self.stack_insertion_face.setCurrentIndex(2)
@@ -1767,16 +1827,45 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             return 1
         root.destroy()
 
+    def popupAbout(self):
+        self.pua = MyPopupAbout(self)
+        self.pua.show()
+
+    def popupSupport(self):
+        self.pus = MyPopupSupport(self)
+        self.pus.show()
+
+    def relDirSolver(self, dirList):
+        relDir = []
+        cwd = os.path.split(os.getcwd())[1]
+        for paths in dirList:
+            prev = []
+            split = os.path.split(paths)
+            dir = split[0]
+            searcher = split[1]
+            while searcher != cwd:
+                prev.append(searcher)
+                split = os.path.split(dir)
+                dir = split[0]
+                searcher = split[1]
+            prev.reverse()
+            strbuild = ''
+            for n in range(0, len(prev)):
+                if(n == len(prev)-1):
+                    strbuild += prev[n]
+                else:
+                    strbuild += prev[n] + '/'
+            relDir.append(strbuild)
+        return relDir
+
     def renewparticlenames(self):
-        for x in range(0, len(self.insertionList[
-                self.spnbox_insertionindex.value()-1][0])):
-                for y in range(0, len(self.insertionList[
-                self.spnbox_insertionindex.value()-1][0][x])):
-                    for z in range(0, len(self.insertionList[
-                self.spnbox_insertionindex.value()-1][0][x][y])):
-                        self.insertionList[
-                self.spnbox_insertionindex.value()-1][0][x][y][z][0] = \
-                                str(x+1)+'_p'+str(y+1)+'_'+str(z+1)
+        for n in range(0, len(self.insertionList)):
+            for x in range(0, len(self.insertionList[n][0])):
+                    for y in range(0, len(self.insertionList[n][0][x])):
+                        for z in range(0, len(self.insertionList[n][0][x][y])):
+                            self.insertionList[n][0][x][y][z][0] = \
+                                    str(n+1)+'_'+str(x+1)+ \
+                                    '_p'+str(y+1)+'_'+str(z+1)
         self.updateparticlelist()
 
     def resetinsertionface(self):
@@ -2296,7 +2385,9 @@ class GLWidget(QtOpenGL.QGLWidget):
 #            else:
 #                print 'out of range'
             self.setXRotation(self.xRot + 8.0 * dy)
+#            self.setZRotation(self.zRot + 8.0 * dy)
             self.setYRotation(self.yRot + 8.0 * -dx)
+#            self.setZRotation(self.zRot + 8.0 * -dx)
 #            print str(self.xRot) + ' - xRot'
 #            print str(self.yRot) + ' - yRot'
 #            print str(dx) + ' - dx'
@@ -2345,8 +2436,9 @@ class GLWidget(QtOpenGL.QGLWidget):
     def makeObject(self):
 
         global mesh_ref
+        global ins_mesh_ref
 
-        if len(mesh_ref) > 0:
+        if len(mesh_ref) > 0 or len(ins_mesh_ref) > 0:
 
             genList = GL.glGenLists(1)
             GL.glNewList(genList, GL.GL_COMPILE)
@@ -2401,6 +2493,7 @@ class GLWidget(QtOpenGL.QGLWidget):
 
     #        GL.glBegin(GL.GL_QUADS)
             GL.glBegin(GL.GL_TRIANGLES)
+#            GL.glBegin(GL.GL_LINES)
 
 #            self.qglColor(self.trolltechGreen)
 #            print mesh_ref
@@ -2441,6 +2534,44 @@ class GLWidget(QtOpenGL.QGLWidget):
 
 
             GL.glEnd()
+
+            GL.glBegin(GL.GL_LINE_STRIP)
+            
+            tuple(ins_mesh_ref)
+            for meshes in range(0, len(ins_mesh_ref)):
+                GL.glColor4f(ins_mesh_ref[meshes][2][0],
+                             ins_mesh_ref[meshes][2][1],
+                             ins_mesh_ref[meshes][2][2],
+                             ins_mesh_ref[meshes][2][3])
+                v = ins_mesh_ref[meshes][1].vertices
+                v = tuple(v)
+                f = ins_mesh_ref[meshes][1].faces
+                f = tuple(f)
+                for index in range(0, len(f)):
+                    face = f[index]
+                    U = (v[face[1]][0] - v[face[0]][0],
+                         v[face[1]][1] - v[face[0]][1],
+                         v[face[1]][2] - v[face[0]][2])
+                    V = (v[face[2]][0] - v[face[0]][0],
+                         v[face[2]][1] - v[face[0]][1],
+                         v[face[2]][2] - v[face[0]][2])
+                    Nx = U[1]*V[2] - U[2]*V[1]
+                    Ny = U[2]*V[0] - U[0]*V[2]
+                    Nz = U[0]*V[1] - U[1]*V[0]
+                    GL.glNormal3d(Nx, Ny, Nz)
+                    GL.glVertex3d(v[face[0]][0],
+                                  v[face[0]][1],
+                                  v[face[0]][2])
+                    GL.glVertex3d(v[face[1]][0],
+                                  v[face[1]][1],
+                                  v[face[1]][2])
+                    GL.glVertex3d(v[face[2]][0],
+                                  v[face[2]][1],
+                                  v[face[2]][2])
+            list(ins_mesh_ref)
+            
+            GL.glEnd()
+            
             GL.glEndList()
 
             return genList
@@ -2500,6 +2631,26 @@ class GLWidget(QtOpenGL.QGLWidget):
 #                             self.cameraLookAt[8]]  # facing v[2] (z) DEF: 0
         self.scale = [self.scale[0]/1.1,self.scale[1]/1.1,self.scale[2]/1.1]
         self.updateGL()
+
+class MyPopupAbout(QtGui.QMainWindow, QtGui.QWidget, Ui_MainWindow):
+    def __init__(self, parent=None):
+        super(QtGui.QMainWindow, self).__init__()
+        uic.loadUi('About_page_Form.ui', self)
+        self.btn_ok.clicked.connect(self.closeDialog)
+        self.setWindowTitle('About; LIGGGHTS GUI')
+
+    def closeDialog(self):
+        self.hide()
+
+class MyPopupSupport(QtGui.QMainWindow, QtGui.QWidget, Ui_MainWindow):
+    def __init__(self, parent=None):
+        super(QtGui.QMainWindow, self).__init__()
+        uic.loadUi('Support_page_Form.ui', self)
+        self.btn_ok.clicked.connect(self.closeDialog)
+        self.setWindowTitle('Support; LIGGGHTS GUI')
+
+    def closeDialog(self):
+        self.hide()
 
 #class GLWidget(QtOpenGL.QGLWidget):
 #    xRotationChanged = QtCore.pyqtSignal(int)
