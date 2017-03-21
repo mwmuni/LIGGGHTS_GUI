@@ -1037,17 +1037,17 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                     str(self.insertionList[n][2][0]/
                     self.insertionList[n][2][1])
                     +'\t\t\t\t# Time for generating particles [s]\n')
-            f.write('variable\tQ'+str(n+1)+'\t\tequal\t\t${m'+str(n)+'}/${tfill'+
+            f.write('variable\tQ'+str(n+1)+'\t\tequal\t\t${m'+str(n+1)+'}/${tfill'+
                     str(n+1)+'}\t# Mass flow rate @ ~2000 t/h\n')
 
         f.write('\n')
         f.write('# Variables - Definition of times (points when simulation behaviour changes)\n')
-        f.write('variable\tt1\t\tequal\t${tfill}\t\t\t\t# Time for inserting particles\n')
+        for n in range(0, len(self.insertionList)):
+            f.write('variable\tt'+str(n+1)+'\t\tequal\t${tfill'+str(n+1)+'}\t\t\t\t# Time for inserting particles\n')
+            f.write('variable\tsteps1\tequal\t${t'+str(n+1)+'}*${factor}\t\t# Convert time to computational steps\n')
         if not self.line_totaltime.text().isEmpty():
-            f.write('variable\tt2\t\tequal\t'+self.line_totaltime.text()+'\n')
-        f.write('variable\tsteps1\tequal\t${t1}*${factor}\t\t# Convert time to computational steps\n')
-        if not self.line_totaltime.text().isEmpty():
-            f.write('variable\tsteps2\tequal\t${t2}*${factor}\n\n')
+            f.write('variable\ttt\t\tequal\t'+self.line_totaltime.text()+'\n')
+            f.write('variable\tstepst\tequal\t${tt}*${factor}\n\n')
 
         f.write('######################################################################################################################\n\n')
 
@@ -1255,9 +1255,10 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                         str(self.meshProperties[n][8]) + ' ' +
                         str(self.meshProperties[n][9]) + ' ' +
                         str(self.meshProperties[n][10]) + ' ')
-            f.write('curvature 1e-6\n\n')
+            f.write('curvature 1e-6 ')
             if self.meshProperties[n][14]:
                 f.write('wear finnie ')
+            f.write('\n\n')
 
         f.write('fix\t\twall all wall/gran model hertz tangential history')
         if self.cbox_mesh_cohesionmodel.currentIndex() == 1:
@@ -1415,10 +1416,11 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
 
         f.write('undump\t\tdumpstl1\n\n')
 
-        f.write('run\t\t${steps1}\n\n')
+        for n in range(0, len(self.insertionList)):
+            f.write('run\t\t${steps'+str(n+1)+'}\n\n')
 
         if not self.line_totaltime.text().isEmpty():
-            f.write('run\t\t${steps2}\n\n')
+            f.write('run\t\t${stepst}\n\n')
         
         f.write('write_restart	anyname.restart\n')
 
@@ -1561,6 +1563,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             else:
                 self.spnbox_psd.setValue(0)
             self.resetinsertionface()
+            self.loading = True
             if currSettings[1][0] == -1:
                 self.stack_insertion_face.setCurrentIndex(0)
             elif currSettings[1][0] == 0:
