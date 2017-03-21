@@ -4,6 +4,7 @@ import sys
 import os
 #import numpy
 #import trimesh
+import random
 from trimesh import load_mesh
 from Tkinter import *
 import tkFileDialog
@@ -986,10 +987,10 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                 f.write('variable\tcor'+ str(x+1) + '_' + str(y+1) +
                         '\t\tequal\t\t'+str(self.contactParams[0][x+y])+'\n')
                 corMtx[x][y] = 'cor' + str(x+1) + '_' + str(y+1)
-        for x in range (0, self.spnbox_geometry_contacttypes_totalgranulartypes.value()):
-            for y in range(x, self.totalTypes):
-                f.write('variable\tdens'+ str(x+1) + '_' + str(y+1) +  # TODO: REPLACE WITH PARTICLE
-                        '\t\tequal\t\t'+'4400'+'\n')  # TODO: REPLACE WITH PARTICLE DENSITY
+#        for x in range (0, self.spnbox_geometry_contacttypes_totalgranulartypes.value()):
+#            for y in range(x, self.totalTypes):
+#                f.write('variable\tdens'+ str(x+1) + '_' + str(y+1) +  # TODO: REPLACE WITH PARTICLE
+#                        '\t\tequal\t\t'+'4400'+'\n')  # TODO: REPLACE WITH PARTICLE DENSITY
         wffMtx = [[] for _ in range(0, self.totalTypes)]
         for n in range(0, self.totalTypes):
             for _ in range(0, self.totalTypes):
@@ -1117,7 +1118,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             f.write(' ' + str(self.gmt[n][0]))
         f.write('\n\n')
 
-        f.write('fix\t\tm2 all property/global poissonsRatio peratomtype ')
+        f.write('fix\t\tm2 all property/global poissonsRatio peratomtype')
         for n in range(0, len(self.gmt)):
             f.write(' ' + str(self.gmt[n][1]))
         f.write('\n\n')
@@ -1270,7 +1271,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         elif self.cbox_mesh_cohesionmodel.currentIndex() == 4:
             f.write(' cohesion washino')
         if self.cbox_mesh_rollingfrictionmodel.currentIndex() == 1:
-            f.write(' rolling_friction CDT')
+            f.write(' rolling_friction cdt')
         elif self.cbox_mesh_rollingfrictionmodel.currentIndex() == 2:
             f.write(' rolling_friction epsd')
         elif self.cbox_mesh_rollingfrictionmodel.currentIndex() == 3:
@@ -1281,6 +1282,10 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             f.write(' ' + os.path.splitext(os.path.basename(items))[0])
         f.write('\n\n')
 
+        primef = open('primes.txt', 'r')
+        primes = [n for n in primef.read().split()]
+        primef.close()
+
         f.write('# Particle distributions for insertion\n')
         for n in range(0, len(self.insertionList)):
             for x in range(0, len(self.insertionList[n][0])):
@@ -1288,8 +1293,9 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                     for z in range(0, len(self.insertionList[n][0][x][y])):
                         f.write('fix\t\tpts')
                         f.write(self.insertionList[n][0][x][y][z][0])
-                        f.write(' all particletemplate/sphere 1 atom_type 1 ')
-                        f.write('density constant ${dens')
+                        f.write(' all particletemplate/sphere ' +
+                                self.randomElement(primes)+' atom_type 1 ')
+                        f.write('density constant ${d')
                         f.write(self.insertionList[n][0][x][y][z][0])
                         f.write('} radius constant ${r')
                         f.write(self.insertionList[n][0][x][y][z][0])
@@ -1299,7 +1305,8 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             for x in range(0, len(self.insertionList[n][0])):
                 numParticles = 0
                 f.write('fix\t\tpdd'+str(n+1)+'_'+str(x+1))
-                f.write(' all particledistribution/discrete 1. ')
+                f.write(' all particledistribution/discrete ' +
+                                self.randomElement(primes)+' ')
                 strbuild = ''
                 for y in range(0, len(self.insertionList[n][0][x])):
                     for z in range(0, len(self.insertionList[n][0][x][y])):
@@ -1320,11 +1327,12 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             f.write('fix\t\tins_mesh'+str(n+1)+' all mesh/surface file '+relDir2[0]+' type '+
                     str(1+self.spnbox_geometry_contacttypes_totalgranulartypes.value())+
                     ' curvature 1e-6\n\n')
-            f.write('fix\t\tins'+str(n+1)+' all insert/stream seed 5330 distributiontemplate pdd'+str(n+1)+' &\n')
+            f.write('fix\t\tins'+str(n+1)+' all insert/stream seed ' +
+                                self.randomElement(primes)+' distributiontemplate pdd'+str(n+1)+'_1 &\n')
             f.write('\t\tmaxattempt 100 mass ${m'+str(n+1)+'} massrate ${Q'+str(n+1)+'} overlapcheck yes vel constant '+
                     str(self.insertionList[n][2][2])+' '+
                     str(self.insertionList[n][2][3])+' '+
-                    str(self.insertionList[n][2][4])+' '+'.&\n')
+                    str(self.insertionList[n][2][4])+' '+'&\n')
             f.write('\t\tinsertion_face ins_mesh'+str(n+1)+' extrude_length '+
                     str(self.insertionList[n][2][5])+'\n\n')
         f.write('######################\n\n')
@@ -1837,6 +1845,11 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
     def popupSupport(self):
         self.pus = MyPopupSupport(self)
         self.pus.show()
+
+    def randomElement(self, listIn):
+        rand = listIn[int(len(listIn)*random.random())]
+        listIn.remove(rand)
+        return rand
 
     def relDirSolver(self, dirList):
         relDir = []
