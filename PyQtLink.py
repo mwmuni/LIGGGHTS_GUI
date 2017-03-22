@@ -1377,10 +1377,11 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         f.write('run\t\t1\n\n')
 
         for x in range(0, len(self.meshProperties)):
-            f.write('run\t'+(str(self.meshProperties[x][12]/1e-4) if
-                    self.line_timestep.text().isEmpty() else
-                    str(int(self.meshProperties[x][12] /
-                    float(self.line_timestep.text())))) + '\n\n')
+            if len(self.meshProperties[x][19]) > 0:
+                f.write('run\t'+(str(self.meshProperties[x][12]/1e-4) if
+                        self.line_timestep.text().isEmpty() else
+                        str(self.meshProperties[x][12] /
+                        float(self.line_timestep.text()))) + '\n\n')
             for y in range(0, len(self.meshProperties[x][19])):
                 if self.mmList[x][y] == 0:
                     f.write('fix move all move/mesh mesh ' +
@@ -1799,7 +1800,9 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         self.fileName = tkFileDialog.askopenfilename(
                 filetypes=(('STereoLithography files', '.stl'),
                            ('All Files', '.*')))
-        if self.fileName not in self.stlFilesLoaded and \
+#        print repr(self.fileName)
+#        print repr(self.fileName) == '()'
+        if self.fileName not in self.stlFilesLoaded and not repr(self.fileName) == '()' and \
                 os.path.exists(self.fileName):
             #Load model into opengl viewer
 #            file_name = os.path.dirname(os.path.realpath(__file__))+"/Example/" + \
