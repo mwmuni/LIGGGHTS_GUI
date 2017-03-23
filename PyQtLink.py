@@ -1311,7 +1311,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                         f.write(self.insertionList[n][0][x][y][z][0])
                         f.write(' all particletemplate/sphere ' +
                                 self.randomElement(primes)+' atom_type 1 ')
-                        f.write('density constant ${dist')
+                        f.write('density constant ${dens')
                         f.write(self.insertionList[n][0][x][y][z][0])
                         f.write('} radius constant ${r')
                         f.write(self.insertionList[n][0][x][y][z][0])
