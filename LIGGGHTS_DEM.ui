@@ -18,7 +18,13 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>1024</width>
+    <width>1606</width>
+    <height>768</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>1606</width>
     <height>768</height>
    </size>
   </property>
@@ -66,6 +72,12 @@
         <width>551</width>
         <height>581</height>
        </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
       </property>
       <property name="currentIndex">
        <number>0</number>
@@ -146,6 +158,9 @@
         <property name="minimum">
          <number>1</number>
         </property>
+        <property name="maximum">
+         <number>200</number>
+        </property>
        </widget>
        <widget class="QSpinBox" name="spnbox_geometry_contacttypes_totalmeshtypes">
         <property name="geometry">
@@ -159,15 +174,27 @@
         <property name="minimum">
          <number>1</number>
         </property>
+        <property name="maximum">
+         <number>200</number>
+        </property>
        </widget>
        <widget class="QLineEdit" name="line_geometry_contacttypes_totaltypes">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="geometry">
          <rect>
           <x>190</x>
           <y>130</y>
-          <width>81</width>
+          <width>41</width>
           <height>25</height>
          </rect>
+        </property>
+        <property name="mouseTracking">
+         <bool>true</bool>
+        </property>
+        <property name="acceptDrops">
+         <bool>true</bool>
         </property>
        </widget>
       </widget>
@@ -2873,7 +2900,7 @@
        </rect>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="page_3">
        <widget class="QLabel" name="label_12">
@@ -3520,6 +3547,15 @@
           <width>101</width>
           <height>26</height>
          </rect>
+        </property>
+        <property name="decimals">
+         <number>3</number>
+        </property>
+        <property name="minimum">
+         <double>-99999999999999.000000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>99999999999999.000000000000000</double>
         </property>
         <property name="singleStep">
          <double>0.100000000000000</double>
@@ -5852,7 +5888,7 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>10</x>
       <y>710</y>
-      <width>71</width>
+      <width>91</width>
       <height>21</height>
      </rect>
     </property>

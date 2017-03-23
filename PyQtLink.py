@@ -420,10 +420,14 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                     if n == self.currentMeshType:
                         self.combo_meshes_ct.setCurrentIndex(0)
         self.loading = False
-        self.contactParams = [[0.0 for y in range(0, self.totalTypes**2)]
-                              for x in range(0, 4)]
-        self.contactParams.append([1.0 for y in range(0, self.totalTypes**2)])
-        self.gmt = [[0.00, 0.00] for x in range(0, self.totalTypes)]
+#        self.contactParams = [[0.0 for y in range(0, self.totalTypes**2)]
+#                              for x in range(0, 4)]
+        self.contactParams = [[0.2 for x in range(0, self.totalTypes**2)]]  # COR
+        self.contactParams.append([0.5 for x in range(0, self.totalTypes**2)])  # ff
+        self.contactParams.append([0.3 for x in range(0, self.totalTypes**2)])  # frf
+        self.contactParams.append([0.0 for x in range(0, self.totalTypes**2)])  # CED
+        self.contactParams.append([1.0 for x in range(0, self.totalTypes**2)])  # KWear
+        self.gmt = [['1e7', 0.3] for x in range(0, self.totalTypes)]
         self.insertionList = []
         self.spnbox_insertionindex.setValue(0)
         self.stack_insertionsettings.setCurrentIndex(0)
@@ -645,7 +649,8 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         self.fileName = tkFileDialog.askopenfilename(
                         filetypes=(('STereoLithography files', '.stl'),
                                    ('All Files', '.*')))
-        if self.fileName not in self.stlFilesLoaded and \
+        root.destroy()
+        if self.fileName not in self.stlFilesLoaded and not repr(self.fileName) == '()' and \
                         os.path.exists(self.fileName):
             tempVar = load_mesh(self.fileName)
             ins_mesh_ref.append([self.fileName, tempVar, [.4, .4, .4, 1.0]])
@@ -659,7 +664,6 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             self.glWidget.paintGL()
 #        for m in ins_mesh_ref:
 #            print m
-        root.destroy()
 
     def remove_unused_insertion_faces(self):
         global ins_mesh_ref
@@ -922,6 +926,18 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
 #                        '\t\t\tequal\t\t'+'40'+  # TODO: REPLACE WITH PARTICLE DIAMETER
 #                        '\t# d='+'40'+'mm\n')  # TODO: REPLACE WITH PARTICLE DIAMETER
 #        f.write('\n')
+
+        for n in range(0, len(self.insertionList)):
+            for x in range(0, len(self.insertionList[n][0])):
+                for y in range(0, len(self.insertionList[n][0][x])):
+                    for z in range(0, len(self.insertionList[n][0][x][y])):
+                        f.write('variable\tdens')
+                        f.write(self.insertionList[n][0][x][y][z][0])
+                        f.write('\t\t\tequal\t\t')
+                        f.write(str(self.insertionList[n][0][x][y][z][2]))
+                        f.write('\n')
+            f.write('\n')
+
         for n in range(0, len(self.insertionList)):
             for x in range(0, len(self.insertionList[n][0])):
                 for y in range(0, len(self.insertionList[n][0][x])):
@@ -929,7 +945,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                         f.write('variable\td')
                         f.write(self.insertionList[n][0][x][y][z][0])
                         f.write('\t\t\tequal\t\t')
-                        f.write(str(self.insertionList[n][0][x][y][z][2]))
+                        f.write(str(self.insertionList[n][0][x][y][z][3]))
                         f.write('\n')
             f.write('\n')
 #        for x in range(0, self.spnbox_geometry_contacttypes_totalgranulartypes.value()):
@@ -1045,10 +1061,10 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         f.write('# Variables - Definition of times (points when simulation behaviour changes)\n')
         for n in range(0, len(self.insertionList)):
             f.write('variable\tt'+str(n+1)+'\t\tequal\t${tfill'+str(n+1)+'}\t\t\t\t# Time for inserting particles\n')
-            f.write('variable\tsteps1\tequal\t${t'+str(n+1)+'}*${factor}\t\t# Convert time to computational steps\n')
+            f.write('variable\tsteps'+str(n+1)+'\tequal\t${t'+str(n+1)+'}*${factor}\t\t# Convert time to computational steps\n')
         if not self.line_totaltime.text().isEmpty():
-            f.write('variable\ttt\t\tequal\t'+self.line_totaltime.text()+'\n')
-            f.write('variable\tstepst\tequal\t${tt}*${factor}\n\n')
+            f.write('variable\tt'+len(self.insertionList)+'\t\tequal\t'+self.line_totaltime.text()+'\n')
+            f.write('variable\tsteps'+len(self.insertionList)+'\tequal\t${t'+len(self.insertionList)+'}*${factor}\n\n')
 
         f.write('######################################################################################################################\n\n')
 
@@ -1295,7 +1311,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                         f.write(self.insertionList[n][0][x][y][z][0])
                         f.write(' all particletemplate/sphere ' +
                                 self.randomElement(primes)+' atom_type 1 ')
-                        f.write('density constant ${d')
+                        f.write('density constant ${dist')
                         f.write(self.insertionList[n][0][x][y][z][0])
                         f.write('} radius constant ${r')
                         f.write(self.insertionList[n][0][x][y][z][0])
@@ -1346,10 +1362,10 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         f.write('thermo_style\tcustom step atoms ke c_rke f_ts[1] f_ts[2] vol\n')
         f.write('thermo\t\t\t1000\n')
         f.write('thermo_modify\tlost ignore norm no\n')
-        f.write('compute_modify\tthermo_temp dynamic yes\n\n')
+#        f.write('compute_modify\tthermo_temp dynamic yes\n\n')
 
-        f.write('shell rm post')
-        f.write('shell mkdir post')
+        f.write('shell rm post\n')
+        f.write('shell mkdir post\n\n')
 
         f.write('dump\t\tdmpstl1 all mesh/stl 1 post/static*.stl')
         for n in range(0, len(relDir)):
@@ -1429,7 +1445,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             f.write('run\t\t${steps'+str(n+1)+'}\n\n')
 
         if not self.line_totaltime.text().isEmpty():
-            f.write('run\t\t${stepst}\n\n')
+            f.write('run\t\t${steps'+len(self.insertionList)+'}\n\n')
         
         f.write('write_restart	anyname.restart\n')
 
@@ -1794,52 +1810,43 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
     def openstl(self):
         global mesh_ref
         root = Tk()
-#        root.style = ttk.Style()
-#        root.style.theme_use("default")
-        # ('clam', 'alt', 'default', 'classic')
-        self.fileName = tkFileDialog.askopenfilename(
+        self.fileName = tkFileDialog.askopenfilenames(
                 filetypes=(('STereoLithography files', '.stl'),
                            ('All Files', '.*')))
-#        print repr(self.fileName)
-#        print repr(self.fileName) == '()'
-        if self.fileName not in self.stlFilesLoaded and not repr(self.fileName) == '()' and \
-                os.path.exists(self.fileName):
-            #Load model into opengl viewer
-#            file_name = os.path.dirname(os.path.realpath(__file__))+"/Example/" + \
-#                                       "deliver_belt_2.stl"
-#            new_mesh = mesh.Mesh.from_file(file_name)
-            self.origPath.append([self.fileName,basename(self.fileName)])
-#            tempVar = mesh.Mesh.from_file(self.fileName)
-            tempVar = load_mesh(self.fileName)
-            for n in range(0, len(mesh_ref)):
-                mesh_ref[n][2] = [.4, .4, .4, 0]
-            mesh_ref.append([self.fileName, tempVar, [1., .98, .80, 1.0]])
-            self.glWidget.initializeGL()
-            self.glWidget.updateGL()
-            self.glWidget.paintGL()
-            root.destroy()
-            #Create tree element
-            tempChild = QtGui.QTreeWidgetItem(self.objHolder)
-            tempChild.setText(0, QtCore.QString(basename(self.fileName)))
-            #Store name to prevent duplicates
-            self.stlFilesLoaded.append(self.fileName)
-            #Expand the parent in the tree
-            self.objHolder.setExpanded(True)
-            #Sort the children
-            self.objHolder.sortChildren(0, 0)  # (0, 0) = ASC, (0, 1) = DESC
-            #Make a new list for storing mesh data
-            self.meshProperties.append([basename(self.fileName), 0, False,
-                                        False, 0.00, 0.00, 0.00,
-                                        False, 0.00, 0.00, 0.00,
-                                        False, 0.00, False, False,
-                                        0.00, 0.00, 0.00, 0.00, []])
-            # self.currentMeshType = basename(root.fileName)
-            self.mmList.append([])
-            self.currentMeshType = len(self.meshProperties)-1
-            self.stack_geometry_meshes.setCurrentIndex(1)
-            self.loadmeshproperties(tempChild)
-            return 1
         root.destroy()
+        for f in self.fileName:
+            if f not in self.stlFilesLoaded and \
+                    os.path.exists(f):
+                #Load model into opengl viewer
+                self.origPath.append([f,basename(f)])
+                tempVar = load_mesh(f)
+                for n in range(0, len(mesh_ref)):
+                    mesh_ref[n][2] = [.4, .4, .4, 0]
+                mesh_ref.append([f, tempVar, [1., .98, .80, 1.0]])
+                self.glWidget.initializeGL()
+                self.glWidget.updateGL()
+                self.glWidget.paintGL()
+                #Create tree element
+                tempChild = QtGui.QTreeWidgetItem(self.objHolder)
+                tempChild.setText(0, QtCore.QString(basename(f)))
+                #Store name to prevent duplicates
+                self.stlFilesLoaded.append(f)
+                #Expand the parent in the tree
+                self.objHolder.setExpanded(True)
+                #Sort the children
+                self.objHolder.sortChildren(0, 0)  # (0, 0) = ASC, (0, 1) = DESC
+                #Make a new list for storing mesh data
+                self.meshProperties.append([basename(f), 0, False,
+                                            False, 0.00, 0.00, 0.00,
+                                            False, 0.00, 0.00, 0.00,
+                                            False, 0.00, False, False,
+                                            0.00, 0.00, 0.00, 0.00, []])
+                # self.currentMeshType = basename(root.fileName)
+                self.mmList.append([])
+                self.currentMeshType = len(self.meshProperties)-1
+                self.stack_geometry_meshes.setCurrentIndex(1)
+                self.loadmeshproperties(tempChild)
+        
 
     def popupAbout(self):
         self.pua = MyPopupAbout(self)
