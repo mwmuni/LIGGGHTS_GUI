@@ -1445,7 +1445,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             f.write('run\t\t${steps'+str(n+1)+'}\n\n')
 
         if not self.line_totaltime.text().isEmpty():
-            f.write('run\t\t${steps'+len(self.insertionList)+'}\n\n')
+            f.write('run\t\t${steps'+len(self.insertionList+1)+'}\n\n')
         
         f.write('write_restart	anyname.restart\n')
 
