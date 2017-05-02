@@ -38,8 +38,8 @@
    <string>LIGGGHTS DEM</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="Icons.qrc">
-    <normaloff>:/newPrefix/main_icon.png</normaloff>:/newPrefix/main_icon.png</iconset>
+   <iconset>
+    <normaloff>wearx_icon.png</normaloff>wearx_icon.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QTabWidget" name="testPage">
@@ -2900,7 +2900,7 @@
        </rect>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="page_3">
        <widget class="QLabel" name="label_12">
@@ -2908,12 +2908,12 @@
          <rect>
           <x>30</x>
           <y>120</y>
-          <width>71</width>
+          <width>111</width>
           <height>31</height>
          </rect>
         </property>
         <property name="text">
-         <string>Pair Style</string>
+         <string>Particle Pair Style</string>
         </property>
        </widget>
        <widget class="QLabel" name="label_14">
@@ -2921,12 +2921,12 @@
          <rect>
           <x>30</x>
           <y>190</y>
-          <width>161</width>
+          <width>181</width>
           <height>31</height>
          </rect>
         </property>
         <property name="text">
-         <string>Rolling Friction Model</string>
+         <string>Particle Rolling Friction Model</string>
         </property>
        </widget>
        <widget class="QComboBox" name="cbox_ptcl_cohesionmodel">
@@ -2969,12 +2969,12 @@
          <rect>
           <x>30</x>
           <y>50</y>
-          <width>91</width>
+          <width>121</width>
           <height>31</height>
          </rect>
         </property>
         <property name="text">
-         <string>Atom Style</string>
+         <string>Particle Atom Style</string>
         </property>
        </widget>
        <widget class="QLabel" name="label_15">
@@ -2987,7 +2987,7 @@
          </rect>
         </property>
         <property name="text">
-         <string>Cohesion Model</string>
+         <string>Particle Cohesion Model</string>
         </property>
        </widget>
        <widget class="QComboBox" name="cbox_ptcl_pairstyle">
@@ -3155,7 +3155,7 @@
          </rect>
         </property>
         <property name="text">
-         <string>Wear Model</string>
+         <string>Mesh Wear Model</string>
         </property>
        </widget>
        <widget class="QComboBox" name="cbox_mesh_atomstyle">
@@ -3178,12 +3178,12 @@
          <rect>
           <x>310</x>
           <y>120</y>
-          <width>71</width>
+          <width>101</width>
           <height>31</height>
          </rect>
         </property>
         <property name="text">
-         <string>Pair Style</string>
+         <string>Mesh Pair Style</string>
         </property>
        </widget>
        <widget class="QComboBox" name="cbox_mesh_wearmodel">
@@ -3211,12 +3211,12 @@
          <rect>
           <x>310</x>
           <y>190</y>
-          <width>161</width>
+          <width>181</width>
           <height>31</height>
          </rect>
         </property>
         <property name="text">
-         <string>Rolling Friction Model</string>
+         <string>Mesh Rolling Friction Model</string>
         </property>
        </widget>
        <widget class="QLabel" name="label_82">
@@ -3229,7 +3229,7 @@
          </rect>
         </property>
         <property name="text">
-         <string>Cohesion Model</string>
+         <string>Mesh Cohesion Model</string>
         </property>
        </widget>
        <widget class="QComboBox" name="cbox_mesh_cohesionmodel">
@@ -3272,12 +3272,12 @@
          <rect>
           <x>310</x>
           <y>50</y>
-          <width>91</width>
+          <width>111</width>
           <height>31</height>
          </rect>
         </property>
         <property name="text">
-         <string>Atom Style</string>
+         <string>Mesh Atom Style</string>
         </property>
        </widget>
        <widget class="QGroupBox" name="groupBox_2">
@@ -3620,7 +3620,7 @@
         </property>
         <property name="font">
          <font>
-          <family>DejaVu Sans Condensed</family>
+          <family>DejaVu Sans</family>
           <pointsize>13</pointsize>
           <weight>75</weight>
           <bold>true</bold>
@@ -4836,7 +4836,7 @@
         </property>
         <property name="font">
          <font>
-          <family>DejaVu Sans Condensed</family>
+          <family>DejaVu Sans</family>
           <pointsize>13</pointsize>
           <weight>75</weight>
           <bold>true</bold>
@@ -5031,7 +5031,7 @@
         </property>
         <property name="font">
          <font>
-          <family>DejaVu Sans Condensed</family>
+          <family>DejaVu Sans</family>
           <pointsize>13</pointsize>
           <weight>75</weight>
           <bold>true</bold>
@@ -5248,31 +5248,11 @@
        <number>0</number>
       </property>
       <widget class="QWidget" name="page_4">
-       <widget class="QTreeWidget" name="tree_solve">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>50</y>
-          <width>191</width>
-          <height>561</height>
-         </rect>
-        </property>
-        <column>
-         <property name="text">
-          <string>Select item from list</string>
-         </property>
-        </column>
-        <item>
-         <property name="text">
-          <string>Run Option</string>
-         </property>
-        </item>
-       </widget>
        <widget class="QStackedWidget" name="stack_solve">
         <property name="geometry">
          <rect>
-          <x>220</x>
-          <y>30</y>
+          <x>20</x>
+          <y>10</y>
           <width>361</width>
           <height>581</height>
          </rect>
@@ -5292,7 +5272,7 @@
           </property>
           <property name="font">
            <font>
-            <family>DejaVu Sans Condensed</family>
+            <family>DejaVu Sans</family>
             <pointsize>13</pointsize>
             <weight>75</weight>
             <bold>true</bold>
@@ -5456,111 +5436,12 @@
            <rect>
             <x>0</x>
             <y>220</y>
-            <width>101</width>
+            <width>91</width>
             <height>28</height>
            </rect>
           </property>
           <property name="text">
-           <string>&lt;!&gt; Paraview</string>
-          </property>
-         </widget>
-         <widget class="QLabel" name="label_92">
-          <property name="geometry">
-           <rect>
-            <x>110</x>
-            <y>225</y>
-            <width>111</width>
-            <height>17</height>
-           </rect>
-          </property>
-          <property name="text">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#000000;&quot;&gt;To be added soon&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-          </property>
-         </widget>
-        </widget>
-        <widget class="QWidget" name="page_11">
-         <widget class="QTextEdit" name="textEdit_7">
-          <property name="geometry">
-           <rect>
-            <x>30</x>
-            <y>70</y>
-            <width>104</width>
-            <height>70</height>
-           </rect>
-          </property>
-          <property name="html">
-           <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Page 2&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-          </property>
-         </widget>
-         <widget class="QLabel" name="label_26">
-          <property name="geometry">
-           <rect>
-            <x>0</x>
-            <y>10</y>
-            <width>141</width>
-            <height>21</height>
-           </rect>
-          </property>
-          <property name="font">
-           <font>
-            <family>DejaVu Sans Condensed</family>
-            <pointsize>13</pointsize>
-            <weight>75</weight>
-            <bold>true</bold>
-           </font>
-          </property>
-          <property name="text">
-           <string>Rayleigh Time</string>
-          </property>
-          <property name="textFormat">
-           <enum>Qt::RichText</enum>
-          </property>
-         </widget>
-        </widget>
-        <widget class="QWidget" name="page_27">
-         <widget class="QTextEdit" name="textEdit_8">
-          <property name="geometry">
-           <rect>
-            <x>20</x>
-            <y>60</y>
-            <width>104</width>
-            <height>70</height>
-           </rect>
-          </property>
-          <property name="html">
-           <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Page 3&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-          </property>
-         </widget>
-         <widget class="QLabel" name="label_27">
-          <property name="geometry">
-           <rect>
-            <x>0</x>
-            <y>10</y>
-            <width>111</width>
-            <height>17</height>
-           </rect>
-          </property>
-          <property name="font">
-           <font>
-            <family>DejaVu Sans Condensed</family>
-            <pointsize>13</pointsize>
-            <weight>75</weight>
-            <bold>true</bold>
-           </font>
-          </property>
-          <property name="text">
-           <string>Meshes</string>
-          </property>
-          <property name="textFormat">
-           <enum>Qt::RichText</enum>
+           <string>Paraview</string>
           </property>
          </widget>
         </widget>
@@ -5586,7 +5467,7 @@ p, li { white-space: pre-wrap; }
    </widget>
    <widget class="QPushButton" name="pushButton_New">
     <property name="enabled">
-     <bool>false</bool>
+     <bool>true</bool>
     </property>
     <property name="geometry">
      <rect>
@@ -5606,7 +5487,7 @@ p, li { white-space: pre-wrap; }
    </widget>
    <widget class="QPushButton" name="btn_open">
     <property name="enabled">
-     <bool>false</bool>
+     <bool>true</bool>
     </property>
     <property name="geometry">
      <rect>
@@ -5626,7 +5507,7 @@ p, li { white-space: pre-wrap; }
    </widget>
    <widget class="QPushButton" name="pushButton_Save">
     <property name="enabled">
-     <bool>false</bool>
+     <bool>true</bool>
     </property>
     <property name="geometry">
      <rect>
@@ -5646,7 +5527,7 @@ p, li { white-space: pre-wrap; }
    </widget>
    <widget class="QPushButton" name="btn_saveas">
     <property name="enabled">
-     <bool>false</bool>
+     <bool>true</bool>
     </property>
     <property name="geometry">
      <rect>
@@ -5822,7 +5703,7 @@ p, li { white-space: pre-wrap; }
    <widget class="QPushButton" name="btn_zoom_out">
     <property name="geometry">
      <rect>
-      <x>1190</x>
+      <x>1220</x>
       <y>40</y>
       <width>51</width>
       <height>25</height>
@@ -5835,7 +5716,7 @@ p, li { white-space: pre-wrap; }
    <widget class="QPushButton" name="btn_zoom_in">
     <property name="geometry">
      <rect>
-      <x>1130</x>
+      <x>1160</x>
       <y>40</y>
       <width>51</width>
       <height>25</height>
@@ -5843,44 +5724,6 @@ p, li { white-space: pre-wrap; }
     </property>
     <property name="text">
      <string>+zoom</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_93">
-    <property name="geometry">
-     <rect>
-      <x>1530</x>
-      <y>0</y>
-      <width>61</width>
-      <height>71</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="pixmap">
-     <pixmap>CBSPT4.png</pixmap>
-    </property>
-    <property name="scaledContents">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_94">
-    <property name="geometry">
-     <rect>
-      <x>1460</x>
-      <y>0</y>
-      <width>71</width>
-      <height>71</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="pixmap">
-     <pixmap>UON_ALT_MONO-v10.png</pixmap>
-    </property>
-    <property name="scaledContents">
-     <bool>true</bool>
     </property>
    </widget>
    <widget class="QLabel" name="label_95">
@@ -5894,6 +5737,27 @@ p, li { white-space: pre-wrap; }
     </property>
     <property name="text">
      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#888a85;&quot;&gt;Release v1.0.1.1&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_92">
+    <property name="geometry">
+     <rect>
+      <x>1390</x>
+      <y>10</y>
+      <width>201</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Abyssinica SIL</family>
+     </font>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap>wearx_logo.png</pixmap>
     </property>
    </widget>
   </widget>
