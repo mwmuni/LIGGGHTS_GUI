@@ -15,7 +15,7 @@ import OpenGL.GLU
 from OpenGL.GLU import gluLookAt
 from PyQt4 import QtCore, QtGui, uic, QtOpenGL
 
-qtCreatorFile = 'LIGGGHTS_DEM.ui'  # ui file
+qtCreatorFile = 'resources/LIGGGHTS_DEM.ui'  # ui file
 
 # Imports OpenGl, otherwise throws an error
 
@@ -30,6 +30,7 @@ qtCreatorFile = 'LIGGGHTS_DEM.ui'  # ui file
 
 # Assign ui file <QtBaseClass is currently unused>
 (Ui_MainWindow, QtBaseClass) = uic.loadUiType(qtCreatorFile)
+
 
 def main():
     global app
@@ -380,6 +381,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             self.spnbox_geometry_contacttypes_totalgranulartypes.value() \
             + self.spnbox_geometry_contacttypes_totalmeshtypes.value()
         self.line_geometry_contacttypes_totaltypes.setText(str(self.totalTypes))
+        self.gmt = [['1e7', 0.3] for x in range(0, self.totalTypes)]
         self.combo_ced.clear()
         self.combo_cor.clear()
         self.combo_kwear.clear()
@@ -1303,7 +1305,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             f.write(' ' + os.path.splitext(os.path.basename(items))[0])
         f.write('\n\n')
 
-        primef = open('primes.txt', 'r')
+        primef = open('resources/primes.txt', 'r')
         primes = [n for n in primef.read().split()]
         primef.close()
 
@@ -1787,7 +1789,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         inFile = QtGui.QFileDialog.getOpenFileName(self,
                                                    'Single File',
                                                    ".",
-                                                   '*.*')
+                                                   '*')
         inFile = str(inFile)
         if os.path.exists(inFile):
             self.new_button_clicked(True)
@@ -1795,7 +1797,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
     #        inFile = open('pickleTest.txt', 'rb')
             storage = pickle.load(open(inFile, 'rb'))
             
-            print storage
+#            print storage
             self.spnbox_geometry_contacttypes_totalgranulartypes.setValue(storage[0])
             self.spnbox_geometry_contacttypes_totalmeshtypes.setValue(storage[1])
             self.origPath = storage[2]
@@ -1830,6 +1832,9 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             if len(self.insertionList) > 0:
                 self.stack_insertionsettings.setCurrentIndex(1)
                 self.spnbox_insertionindex.setValue(1)
+            else:
+                self.spnbox_insertionindex.setValue(0)
+                self.stack_insertionsettings.setCurrentIndex(0)
             self.chk_coordinates.setChecked(storage[10][0])
             self.chk_velocity.setChecked(storage[10][1])
             self.chk_force.setChecked(storage[10][2])
@@ -1844,6 +1849,15 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             self.num_proc_x.setValue(storage[12][0])
             self.num_proc_y.setValue(storage[12][1])
             self.num_proc_z.setValue(storage[12][2])
+            self.gmt = storage[13]
+            self.combo_conty.setCurrentIndex(storage[14])
+            
+            self.listcedupdate()
+            self.listcorupdate()
+            self.listkwearupdate()
+            self.listparticleupdate()
+            self.listrollingupdate()
+            self.loadMaterialData()
 
 #        self.contactParams = vars[0]
 ##        self.currentMeshType = vars[1]
@@ -1927,9 +1941,9 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
 #        self.fileName = tkFileDialog.askopenfilenames(
 #                filetypes=(('STereoLithography files', '.stl'),
 #                           ('All Files', '.*')))
-        print sig_catch
-        print fileName
-        print isNew
+#        print sig_catch
+#        print fileName
+#        print isNew
         if fileName is None:
             self.fileName = QtGui.QFileDialog.getOpenFileNames(self,
                                                               'Multiple File',
@@ -1946,9 +1960,9 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                 if f not in self.stlFilesLoaded and \
                         os.path.exists(f):
                     #Load model into opengl viewer
-                    print f
+#                    print f
                     self.origPath.append([f, basename(f)])
-                    print f
+#                    print f
                     tempVar = load_mesh(f)
                     for n in range(0, len(mesh_ref)):
                         mesh_ref[n][2] = [.4, .4, .4, 0]
@@ -2113,10 +2127,10 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                                       self.num_proc_z.value()) +
                         ' LIGGGHTS <' + os.getcwd() + '/script.s', shell=True)
 
-    def save(self):
+    def save(self, outFile=None):
         if self.currentFile is None:
             self.saveas(True)
-        if os.path.exists(self.currentFile):
+        if os.path.exists(self.currentFile) or self.currentFile is not None:
             storage = []
             storage.append(int(self.spnbox_geometry_contacttypes_totalgranulartypes.value()))
             storage.append(int(self.spnbox_geometry_contacttypes_totalmeshtypes.value()))
@@ -2162,6 +2176,8 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             storage.append((int(self.num_proc_x.value()),
                            int(self.num_proc_y.value()),
                            int(self.num_proc_z.value())))
+            storage.append(self.gmt)
+            storage.append(self.combo_conty.currentIndex())
             
             outFile = open(self.currentFile, 'wb')
     ##        currState = QtGui.QMainWindow.saveState()
@@ -2177,10 +2193,12 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
 
     def saveas(self, fromSave=False):
         outFile = QtGui.QFileDialog.getSaveFileName(self, 'Save As')
-        self.currentFile = str(outFile)
-        if not fromSave:
-            self.save()
-        print 'saveas'
+        outFile = str(outFile)
+        if outFile != '':
+            self.currentFile = outFile
+            if not fromSave:
+                self.save(outFile)
+#        print 'saveas'
 
     def saveMaterialData(self):
         if not self.loading:
@@ -2866,7 +2884,7 @@ class GLWidget(QtOpenGL.QGLWidget):
 class MyPopupAbout(QtGui.QMainWindow, QtGui.QWidget, Ui_MainWindow):
     def __init__(self, parent=None):
         super(QtGui.QMainWindow, self).__init__()
-        uic.loadUi('About_page_Form.ui', self)
+        uic.loadUi('resources/About_page_Form.ui', self)
         self.btn_ok.clicked.connect(self.closeDialog)
         self.setWindowTitle('About; LIGGGHTS GUI')
 
@@ -2876,7 +2894,7 @@ class MyPopupAbout(QtGui.QMainWindow, QtGui.QWidget, Ui_MainWindow):
 class MyPopupSupport(QtGui.QMainWindow, QtGui.QWidget, Ui_MainWindow):
     def __init__(self, parent=None):
         super(QtGui.QMainWindow, self).__init__()
-        uic.loadUi('Support_page_Form.ui', self)
+        uic.loadUi('resources/Support_page_Form.ui', self)
         self.btn_ok.clicked.connect(self.closeDialog)
         self.setWindowTitle('Support; LIGGGHTS GUI')
 
@@ -3069,7 +3087,7 @@ while out == -1:
     window.show()
     #print 'test 5'
     out = app.exec_()
-    print out
+#    print out
     #sys.exit(app.exec_())
 
 #if __name__ == '__main__':
