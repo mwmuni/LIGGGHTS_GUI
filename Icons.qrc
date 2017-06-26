@@ -1,21 +1,22 @@
 <RCC>
   <qresource prefix="newPrefix">
-    <file>img/cylinder.png</file>
-    <file>img/sphere.png</file>
-    <file>img/cube.png</file>
-    <file>img/stl.png</file>
-    <file>img/main_icon.png</file>
-    <file>img/support.png</file>
-    <file>img/browse.png</file>
-    <file>img/terminal.png</file>
-    <file>img/save_as.png</file>
-    <file>img/Save.png</file>
-    <file>img/open.png</file>
-    <file>img/new.png</file>
-	<file>img/CBSPT4.png</file>
-	<file>img/UON_ALT_MONO-v10.jpg</file>
-    <file>img/wearx.png</file>
-    <file>img/wearx_icon.png</file>
-    <file>img/wearx_logo.png</file>
+    <file>resources/img/cylinder.png</file>
+    <file>resources/img/sphere.png</file>
+    <file>resources/img/cube.png</file>
+    <file>resources/img/stl.png</file>
+    <file>resources/img/main_icon.png</file>
+    <file>resources/img/support.png</file>
+    <file>resources/img/browse.png</file>
+    <file>resources/img/terminal.png</file>
+    <file>resources/img/save_as.png</file>
+    <file>resources/img/Save.png</file>
+    <file>resources/img/open.png</file>
+    <file>resources/img/new.png</file>
+	<file>resources/img/CBSPT4.png</file>
+	<file>resources/img/UON_ALT_MONO-v10.jpg</file>
+    <file>resources/img/wearx.png</file>
+    <file>resources/img/wearx_icon.png</file>
+    <file>resources/img/wearx_logo.png</file>
+    <file>resources/img/moleculex_logo.png</file>
   </qresource>
 </RCC>
