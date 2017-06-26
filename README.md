@@ -4,8 +4,9 @@ MoleculeX Multi-physics Graphyical User Interface, released by
 Centre for Bulk Solids and Particulate Technologies,
 Newcastle Institute for Energy and Resources,
 The University of Newcastle, Australia
-www.newcastle.edu.au | www.moleculex.tech
-cbspt@newcastle.edu.au
+www.newcastle.edu.au/research-and-innovation/centre/cbspt,
+www.moleculex.tech
+moleculex@newcastle.edu.au
 
 Core Developer:
 Mr Matthew Muller, 
