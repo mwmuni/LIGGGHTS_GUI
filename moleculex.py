@@ -1256,16 +1256,16 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         f.write('############# ADD LOADED MESHES ##############\n\n')
 
         # Relative directory file locator
-        relDir = self.relDirSolver(self.stlFilesLoaded)
+#        relDir = self.relDirSolver(self.stlFilesLoaded)
 
-        for n in range(0, len(relDir)):
+        for n in range(0, len(self.stlFilesLoaded)):
             f.write('fix\t\t' +
-                    os.path.splitext(os.path.basename(relDir[n]))[0] +
+                    os.path.splitext(os.path.basename(self.stlFilesLoaded[n]))[0] +
                     ' all mesh/surface')
             if self.meshProperties[n][14]:
                 f.write('/stress')
             f.write(' file ' +
-                    relDir[n] +
+                    self.stlFilesLoaded[n] +
                     ' type '+ str(self.meshProperties[n][1]+
                                   (1+self.spnbox_geometry_contacttypes_totalgranulartypes.value())) +
                     ' ')

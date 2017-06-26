@@ -12,7 +12,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="Icons.qrc">
-    <normaloff>:/newPrefix/img/wearx_icon.png</normaloff>:/newPrefix/img/wearx_icon.png</iconset>
+    <normaloff>:/newPrefix/img/moleculex_logo.png</normaloff>:/newPrefix/img/moleculex_logo.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QPushButton" name="btn_ok">

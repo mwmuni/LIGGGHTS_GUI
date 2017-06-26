@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1606</width>
-    <height>768</height>
+    <height>778</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -19,13 +19,13 @@
   <property name="minimumSize">
    <size>
     <width>1606</width>
-    <height>768</height>
+    <height>778</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
     <width>1606</width>
-    <height>768</height>
+    <height>778</height>
    </size>
   </property>
   <property name="font">
@@ -39,7 +39,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="Icons.qrc">
-    <normaloff>:/newPrefix/img/wearx_icon.png</normaloff>:/newPrefix/img/wearx_icon.png</iconset>
+    <normaloff>:/newPrefix/img/moleculex_logo.png</normaloff>:/newPrefix/img/moleculex_logo.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QTabWidget" name="testPage">
@@ -80,7 +80,7 @@
        </sizepolicy>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="page_14">
        <widget class="QLabel" name="label_28">

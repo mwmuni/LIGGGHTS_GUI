@@ -3,17 +3,17 @@ The following is the steps involved in compiling a distributable version of Mole
 Note: If PyInstaller says any errors about permissions, try running as root (administrator on windows)
 
 1. Open a terminal in the directory of the GUI
-2. $ pyinstaller PyQtLink.py (*)
-3. copy (resources, OpenGL, trimesh, stl_files, Icons.qrc, Icons_rc.py, Icons.pyc) into dist/PyQtLink
-4. delete dist/PyQtLink/share (on linux)
-5 (Linux). navigate to dist/PyQtLink and run $ ./PyQtLink
-5 (Windows). navigate to dist/PyQtLink and double-click PyQtLink.exe
+2. $ pyinstaller moleculex.py (*)
+3. copy (resources, OpenGL, trimesh, stl_files, Icons.qrc, Icons_rc.py, Icons.pyc) into dist/moleculex
+4. delete dist/moleculex/share (on linux)
+5 (Linux). navigate to dist/moleculex and run $ ./moleculex
+5 (Windows). navigate to dist/moleculex and double-click moleculex.exe
 
 
 
-(*): If error "ValueError: script '/path/to/file/PyQtLink.py' not found" appears
+(*): If error "ValueError: script '/path/to/file/moleculex.py' not found" appears
 
-    1. delete PyQtLink.spec
+    1. delete moleculex.spec
     2. delete help.spec
     3. delete build folder
     4. delete dist folder
