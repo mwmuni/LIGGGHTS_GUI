@@ -34,12 +34,21 @@
     <pointsize>9</pointsize>
    </font>
   </property>
+  <property name="acceptDrops">
+   <bool>true</bool>
+  </property>
   <property name="windowTitle">
-   <string>MoleX</string>
+   <string>MoleculeX</string>
   </property>
   <property name="windowIcon">
    <iconset resource="Icons.qrc">
     <normaloff>:/newPrefix/img/moleculex_logo.png</normaloff>:/newPrefix/img/moleculex_logo.png</iconset>
+  </property>
+  <property name="dockOptions">
+   <set>QMainWindow::AllowTabbedDocks|QMainWindow::AnimatedDocks</set>
+  </property>
+  <property name="unifiedTitleAndToolBarOnMac">
+   <bool>true</bool>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QTabWidget" name="testPage">

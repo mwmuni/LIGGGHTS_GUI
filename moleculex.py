@@ -57,7 +57,6 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
 #        global app
 #        print 'set style test'
         app.setStyle(QtGui.QStyleFactory.create("cleanlooks"))
-
         self.ini_vars()
 
 #        new_mesh.normals
@@ -351,7 +350,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         # self.opengl_widget = GLWidget()
 
 #        print 'window title marker'
-        self.setWindowTitle('LIGGGHTS GUI')
+        self.setWindowTitle('MoleculeX')
 #        print 'ui setup end'
 
     def ini_vars(self):
