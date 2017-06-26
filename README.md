@@ -7,8 +7,8 @@ The University of Newcastle, Australia
 www.newcastle.edu.au | www.moleculex.tech
 cbspt@newcastle.edu.au
 
-Core Developer
-Mr Matthew Muller
+Core Developer:
+Mr Matthew Muller, 
 Dr Wei Chen
 
 LIGGGHTS® is open-source, distributed under the terms of the GNU Public 
