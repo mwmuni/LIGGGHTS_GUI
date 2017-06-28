@@ -1393,7 +1393,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                 ('omegax omegay omegaz ' if self.chk_angularvelocity.checkState() == 2 else '') +
                 'radius ' +
                 ('mass ' if self.chk_mass.checkState() == 2 else '') +
-                ('radius' if self.chl_radius.checkState() == 2 else '') + '\n\n')
+                ('radius' if self.chk_radius.checkState() == 2 else '') + '\n\n')
 
         for i in self.meshProperties:
             if i[13]:
@@ -2158,7 +2158,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         subprocess.call('mpirun -np ' + str(self.num_proc_x.value() *
                                       self.num_proc_y.value() *
                                       self.num_proc_z.value()) +
-                        ' LIGGGHTS <' + os.getcwd() + '/script.s', shell=True)
+                        ' LIGGGHTS <' + self.currentDir + 'script.s', shell=True)
 
     def save(self, outFile=None):
         if self.currentFile is None:
