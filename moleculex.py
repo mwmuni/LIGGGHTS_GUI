@@ -1069,9 +1069,19 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         for n in range(0, len(self.insertionList)):
             f.write('variable\tt'+str(n+1)+'\t\tequal\t${tfill'+str(n+1)+'}\t\t\t\t# Time for inserting particles\n')
             f.write('variable\tsteps'+str(n+1)+'\tequal\t${t'+str(n+1)+'}*${factor}\t\t# Convert time to computational steps\n')
+        addTempStr = '('
+        for n in range(0, len(self.insertionList)):
+            if n > 0:
+                addTempStr += ' + ${tsteps' + str(n+1) + '}'
+            else:
+                addTempStr += '${tsteps' + str(n+1) + '}'
+        if addTempStr != '(':
+            addTempStr += ')'
+        else:
+            addTempStr = ''
         if not self.line_totaltime.text().isEmpty():
-            f.write('variable\tt'+str(len(self.insertionList))+'\t\tequal\t'+self.line_totaltime.text()+'\n')
-            f.write('variable\tsteps'+str(len(self.insertionList))+'\tequal\t${t'+str(len(self.insertionList))+'}*${factor}\n\n')
+            f.write('variable\tt'+str(len(self.insertionList)+1)+'\t\tequal\t'+self.line_totaltime.text()+('- ' + addTempStr if addTempStr != '' else '')+'\n')
+            f.write('variable\tsteps'+str(len(self.insertionList)+1)+'\tequal\t${t'+str(len(self.insertionList)+1)+'}*${factor}\n\n')
 
         f.write('######################################################################################################################\n\n')
 
