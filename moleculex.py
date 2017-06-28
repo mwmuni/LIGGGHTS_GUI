@@ -1377,14 +1377,18 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         f.write('shell rm post\n')
         f.write('shell mkdir post\n\n')
 
-        f.write('dump\t\tdmpstl1 all mesh/stl 1 post/static*.stl')
+        f.write('dump\t\tdmpstl1 all mesh/stl 1 '+ self.currentDir +'post/static*.stl')
 #        for n in range(0, len(relDir)):
 #            f.write(' ' + os.path.splitext(os.path.basename(relDir[n]))[0])
+        print self.insertionList
         for n in range(0, len(self.insertionList)):
             f.write(' ' + os.path.splitext(os.path.basename(self.insertionList[n][1][1]))[0])
+        for i in self.meshProperties:
+            if i[13]:
+                f.write(' ' + os.path.splitext(i[0])[0])
         f.write('\n\n')
 
-        f.write('dump\t\tdmp_m all custom ${dumpstep} post/dump_*.liggghts '+
+        f.write('dump\t\tdmp_m all custom ${dumpstep} '+ self.currentDir +'post/dump_*.liggghts '+
                 'id type '+
                 ('x y z ' if self.chk_coordinates.checkState() == 2 else '') +
                 ('ix iy iz ' if self.chk_inertia.checkState() == 2 else '') +
@@ -1399,7 +1403,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             if i[13]:
                 tempstr = os.path.splitext(i[0])[0]
                 f.write('dump\t\tdumpstress_'+tempstr)
-                f.write(' all mesh/gran/VTK ${dumpstep} post/dump_')
+                f.write(' all mesh/gran/VTK ${dumpstep} '+ self.currentDir +'post/dump_')
                 f.write(tempstr + '_*.vtk stress wear ')
                 f.write(tempstr + '\n\n')
 

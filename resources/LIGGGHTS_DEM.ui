@@ -4837,7 +4837,7 @@
             </rect>
            </property>
            <property name="text">
-            <string>Extrude length (mm):</string>
+            <string>Extrude length (m):</string>
            </property>
           </widget>
           <widget class="QDoubleSpinBox" name="spnbox_insertion_extrude">
