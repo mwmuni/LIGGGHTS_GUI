@@ -38,7 +38,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;LIGGGHTS GUI: &lt;span style=&quot; color:#8ec5c9;&quot;&gt;BETA v0.1&lt;/span&gt;&lt;br/&gt;Developed by The University of Newcastle,&lt;br/&gt;in association with WearX&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;MoleculeX: &lt;span style=&quot; color:#8ec5c9;&quot;&gt;RELEASE v1.0.1.1&lt;/span&gt;&lt;br/&gt;Developed by The University of Newcastle,&lt;br/&gt;in association with WearX&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
