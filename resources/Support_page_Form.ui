@@ -38,7 +38,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;For all technical support and issues;&lt;br/&gt;please contact Dr Wei Chen at:&lt;br/&gt;&lt;span style=&quot; color:#3465a4;&quot;&gt;W.Chen@newcastle.edu.au&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;For all technical support,&lt;br/&gt;please contact MoleculeX at:&lt;br/&gt;&lt;span style=&quot; color:#3465a4;&quot;&gt;moleculex@newcastle.edu.au&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
    </widget>
    <widget class="QLabel" name="label">

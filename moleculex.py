@@ -1882,17 +1882,17 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
 #        root.destroy()
 
     def new_button_clicked(self, fromOpen=False):
+        confirmation = None
         if not fromOpen:
             if self.currentDir != None and self.currentFile != None:
                 confirmation = QtGui.QMessageBox.question(None, "New Project",
                                 "Are you sure you want to start a new project? "
                                 "Any unsaved changes will be lost.",
                                 QtGui.QMessageBox.Yes | QtGui.QMessageBox.No)
-            if (self.currentDir == None and self.currentFile == None) or \
-                                     confirmation == QtGui.QMessageBox.Yes:
+            if (self.currentDir == None or self.currentFile == None) or \
+                                     (confirmation == QtGui.QMessageBox.Yes):
                 self.saveas(False)
-            
-                return 0
+                confirmation = QtGui.QMessageBox.Yes
         if fromOpen or confirmation == QtGui.QMessageBox.Yes:
             self.currentFile = None
             self.spnbox_geometry_contacttypes_totalgranulartypes.setValue(1)
@@ -2910,7 +2910,7 @@ class MyPopupAbout(QtGui.QMainWindow, QtGui.QWidget, Ui_MainWindow):
         super(QtGui.QMainWindow, self).__init__()
         uic.loadUi('resources/About_page_Form.ui', self)
         self.btn_ok.clicked.connect(self.closeDialog)
-        self.setWindowTitle('About; LIGGGHTS GUI')
+        self.setWindowTitle('About; MoleculeX')
 
     def closeDialog(self):
         self.hide()
@@ -2920,7 +2920,7 @@ class MyPopupSupport(QtGui.QMainWindow, QtGui.QWidget, Ui_MainWindow):
         super(QtGui.QMainWindow, self).__init__()
         uic.loadUi('resources/Support_page_Form.ui', self)
         self.btn_ok.clicked.connect(self.closeDialog)
-        self.setWindowTitle('Support; LIGGGHTS GUI')
+        self.setWindowTitle('Support; MoleculeX')
 
     def closeDialog(self):
         self.hide()
