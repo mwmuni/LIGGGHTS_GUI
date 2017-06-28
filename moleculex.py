@@ -906,7 +906,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         return False
 
     def fileGen(self):
-        f = open('script.s', 'w')
+        f = open(self.currentDir+'script.s', 'w')
         f.write('# TUNRA BULK SOLIDS LIGGGHTS DEM Simulation File\n')
         f.write('# For technical support, please contact\n')
         f.write('# Wei Chen: W.Chen@newcastle.edu.au\n\n')
