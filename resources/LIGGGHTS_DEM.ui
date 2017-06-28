@@ -2,6 +2,9 @@
 <ui version="4.0">
  <class>GUI_MainWindow</class>
  <widget class="QMainWindow" name="GUI_MainWindow">
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -3786,7 +3789,7 @@
             </rect>
            </property>
            <property name="currentIndex">
-            <number>1</number>
+            <number>0</number>
            </property>
            <widget class="QWidget" name="page_28">
             <widget class="QLabel" name="label_124">
@@ -5265,233 +5268,194 @@
      <attribute name="title">
       <string>Solve</string>
      </attribute>
-     <widget class="QStackedWidget" name="stackedWidget">
+     <widget class="QLabel" name="label_324">
       <property name="geometry">
        <rect>
-        <x>10</x>
-        <y>10</y>
-        <width>751</width>
-        <height>611</height>
+        <x>190</x>
+        <y>100</y>
+        <width>16</width>
+        <height>17</height>
        </rect>
       </property>
-      <property name="currentIndex">
-       <number>0</number>
+      <property name="text">
+       <string>y</string>
       </property>
-      <widget class="QWidget" name="page_4">
-       <widget class="QStackedWidget" name="stack_solve">
-        <property name="geometry">
-         <rect>
-          <x>20</x>
-          <y>10</y>
-          <width>361</width>
-          <height>581</height>
-         </rect>
-        </property>
-        <property name="currentIndex">
-         <number>0</number>
-        </property>
-        <widget class="QWidget" name="page_10">
-         <widget class="QLabel" name="label_25">
-          <property name="geometry">
-           <rect>
-            <x>0</x>
-            <y>10</y>
-            <width>121</width>
-            <height>21</height>
-           </rect>
-          </property>
-          <property name="font">
-           <font>
-            <family>DejaVu Sans</family>
-            <pointsize>13</pointsize>
-            <weight>75</weight>
-            <bold>true</bold>
-           </font>
-          </property>
-          <property name="text">
-           <string>Run Options</string>
-          </property>
-          <property name="textFormat">
-           <enum>Qt::RichText</enum>
-          </property>
-         </widget>
-         <widget class="QPushButton" name="run_prog">
-          <property name="geometry">
-           <rect>
-            <x>100</x>
-            <y>110</y>
-            <width>80</width>
-            <height>25</height>
-           </rect>
-          </property>
-          <property name="text">
-           <string>Run</string>
-          </property>
-         </widget>
-         <widget class="QPushButton" name="btn_edit_script">
-          <property name="enabled">
-           <bool>true</bool>
-          </property>
-          <property name="geometry">
-           <rect>
-            <x>200</x>
-            <y>110</y>
-            <width>80</width>
-            <height>25</height>
-           </rect>
-          </property>
-          <property name="text">
-           <string>Edit Script</string>
-          </property>
-         </widget>
-         <widget class="QLabel" name="label_176">
-          <property name="geometry">
-           <rect>
-            <x>0</x>
-            <y>70</y>
-            <width>71</width>
-            <height>17</height>
-           </rect>
-          </property>
-          <property name="text">
-           <string>Processors</string>
-          </property>
-         </widget>
-         <widget class="QSpinBox" name="num_proc_x">
-          <property name="geometry">
-           <rect>
-            <x>90</x>
-            <y>70</y>
-            <width>45</width>
-            <height>26</height>
-           </rect>
-          </property>
-          <property name="minimum">
-           <number>1</number>
-          </property>
-         </widget>
-         <widget class="QSpinBox" name="num_proc_y">
-          <property name="geometry">
-           <rect>
-            <x>160</x>
-            <y>70</y>
-            <width>45</width>
-            <height>26</height>
-           </rect>
-          </property>
-          <property name="minimum">
-           <number>1</number>
-          </property>
-         </widget>
-         <widget class="QSpinBox" name="num_proc_z">
-          <property name="geometry">
-           <rect>
-            <x>230</x>
-            <y>70</y>
-            <width>45</width>
-            <height>26</height>
-           </rect>
-          </property>
-          <property name="minimum">
-           <number>1</number>
-          </property>
-         </widget>
-         <widget class="QLabel" name="label_177">
-          <property name="geometry">
-           <rect>
-            <x>80</x>
-            <y>70</y>
-            <width>16</width>
-            <height>17</height>
-           </rect>
-          </property>
-          <property name="text">
-           <string>x</string>
-          </property>
-         </widget>
-         <widget class="QLabel" name="label_178">
-          <property name="geometry">
-           <rect>
-            <x>150</x>
-            <y>70</y>
-            <width>16</width>
-            <height>17</height>
-           </rect>
-          </property>
-          <property name="text">
-           <string>y</string>
-          </property>
-         </widget>
-         <widget class="QLabel" name="label_179">
-          <property name="geometry">
-           <rect>
-            <x>220</x>
-            <y>70</y>
-            <width>16</width>
-            <height>17</height>
-           </rect>
-          </property>
-          <property name="text">
-           <string>z</string>
-          </property>
-         </widget>
-         <widget class="QPushButton" name="btn_makefile">
-          <property name="geometry">
-           <rect>
-            <x>0</x>
-            <y>110</y>
-            <width>80</width>
-            <height>25</height>
-           </rect>
-          </property>
-          <property name="text">
-           <string>Make File</string>
-          </property>
-         </widget>
-         <widget class="QPushButton" name="btn_log_file">
-          <property name="geometry">
-           <rect>
-            <x>0</x>
-            <y>170</y>
-            <width>91</width>
-            <height>25</height>
-           </rect>
-          </property>
-          <property name="text">
-           <string>Open Log File</string>
-          </property>
-         </widget>
-         <widget class="QPushButton" name="btn_solve_paraview">
-          <property name="geometry">
-           <rect>
-            <x>0</x>
-            <y>220</y>
-            <width>91</width>
-            <height>28</height>
-           </rect>
-          </property>
-          <property name="text">
-           <string>Paraview</string>
-          </property>
-         </widget>
-        </widget>
-       </widget>
-      </widget>
-      <widget class="QWidget" name="page_9">
-       <widget class="QLabel" name="label_20">
-        <property name="geometry">
-         <rect>
-          <x>180</x>
-          <y>170</y>
-          <width>381</width>
-          <height>211</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:24pt;&quot;&gt;This page is still&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:24pt;&quot;&gt;under development&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-       </widget>
-      </widget>
+     </widget>
+     <widget class="QPushButton" name="run_prog">
+      <property name="geometry">
+       <rect>
+        <x>140</x>
+        <y>140</y>
+        <width>80</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Run</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="btn_log_file">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>200</y>
+        <width>91</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Open Log File</string>
+      </property>
+     </widget>
+     <widget class="QSpinBox" name="num_proc_y">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>200</x>
+        <y>100</y>
+        <width>45</width>
+        <height>26</height>
+       </rect>
+      </property>
+      <property name="minimum">
+       <number>1</number>
+      </property>
+     </widget>
+     <widget class="QSpinBox" name="num_proc_x">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>130</x>
+        <y>100</y>
+        <width>45</width>
+        <height>26</height>
+       </rect>
+      </property>
+      <property name="minimum">
+       <number>1</number>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="btn_edit_script">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>240</x>
+        <y>140</y>
+        <width>80</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Edit Script</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_325">
+      <property name="geometry">
+       <rect>
+        <x>120</x>
+        <y>100</y>
+        <width>16</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>x</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="btn_makefile">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>140</y>
+        <width>80</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Make File</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="btn_solve_paraview">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>250</y>
+        <width>91</width>
+        <height>28</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Paraview</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_326">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>40</y>
+        <width>121</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>DejaVu Sans</family>
+        <pointsize>13</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Run Options</string>
+      </property>
+      <property name="textFormat">
+       <enum>Qt::RichText</enum>
+      </property>
+     </widget>
+     <widget class="QSpinBox" name="num_proc_z">
+      <property name="geometry">
+       <rect>
+        <x>270</x>
+        <y>100</y>
+        <width>45</width>
+        <height>26</height>
+       </rect>
+      </property>
+      <property name="minimum">
+       <number>1</number>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_327">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>100</y>
+        <width>71</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Processors</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_328">
+      <property name="geometry">
+       <rect>
+        <x>260</x>
+        <y>100</y>
+        <width>16</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>z</string>
+      </property>
      </widget>
     </widget>
    </widget>
@@ -5537,7 +5501,7 @@
    </widget>
    <widget class="QPushButton" name="pushButton_Save">
     <property name="enabled">
-     <bool>true</bool>
+     <bool>false</bool>
     </property>
     <property name="geometry">
      <rect>
@@ -5557,7 +5521,7 @@
    </widget>
    <widget class="QPushButton" name="btn_saveas">
     <property name="enabled">
-     <bool>true</bool>
+     <bool>false</bool>
     </property>
     <property name="geometry">
      <rect>
@@ -5576,6 +5540,9 @@
     </property>
    </widget>
    <widget class="QPushButton" name="btn_terminal">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>400</x>
@@ -5593,6 +5560,9 @@
     </property>
    </widget>
    <widget class="QPushButton" name="pushButton_Browse">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>500</x>
@@ -5611,7 +5581,7 @@
    </widget>
    <widget class="QPushButton" name="pushButton_Support">
     <property name="enabled">
-     <bool>true</bool>
+     <bool>false</bool>
     </property>
     <property name="geometry">
      <rect>
@@ -5643,6 +5613,9 @@
     </property>
    </widget>
    <widget class="QWidget" name="ogl" native="true">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>820</x>
@@ -5653,6 +5626,9 @@
     </property>
    </widget>
    <widget class="QPushButton" name="btn_x_align">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>820</x>
@@ -5666,6 +5642,9 @@
     </property>
    </widget>
    <widget class="QPushButton" name="btn_y_align">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>860</x>
@@ -5679,6 +5658,9 @@
     </property>
    </widget>
    <widget class="QPushButton" name="btn_z_align">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>900</x>
@@ -5692,6 +5674,9 @@
     </property>
    </widget>
    <widget class="QPushButton" name="btn_z_align_neg">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>1070</x>
@@ -5705,6 +5690,9 @@
     </property>
    </widget>
    <widget class="QPushButton" name="btn_y_align_neg">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>1030</x>
@@ -5718,6 +5706,9 @@
     </property>
    </widget>
    <widget class="QPushButton" name="btn_x_align_neg">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>990</x>
@@ -5731,6 +5722,9 @@
     </property>
    </widget>
    <widget class="QPushButton" name="btn_zoom_out">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>1220</x>
@@ -5744,6 +5738,9 @@
     </property>
    </widget>
    <widget class="QPushButton" name="btn_zoom_in">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>1160</x>

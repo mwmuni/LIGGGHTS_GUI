@@ -345,7 +345,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
 
         self.ogl.installEventFilter(self)
 
-        
+        self.testPage.setEnabled(False)
 
         # self.opengl_widget = GLWidget()
 
@@ -357,6 +357,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         self.gmt = []
         self.origPath = []
         self.currentFile = None
+        self.currentDir = None
         global mesh_ref
         mesh_ref = []
         global ins_mesh_ref
@@ -1793,6 +1794,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         if os.path.exists(inFile):
             self.new_button_clicked(True)
             self.currentFile = inFile
+            self.currentDir = os.path.dirname(inFile) + "/"
     #        inFile = open('pickleTest.txt', 'rb')
             storage = pickle.load(open(inFile, 'rb'))
             
@@ -1881,10 +1883,16 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
 
     def new_button_clicked(self, fromOpen=False):
         if not fromOpen:
-            confirmation = QtGui.QMessageBox.question(None, "New Project",
-                            "Are you sure you want to start a new project? "
-                            "Any unsaved changes will be lost.",
-                            QtGui.QMessageBox.Yes | QtGui.QMessageBox.No)
+            if self.currentDir != None and self.currentFile != None:
+                confirmation = QtGui.QMessageBox.question(None, "New Project",
+                                "Are you sure you want to start a new project? "
+                                "Any unsaved changes will be lost.",
+                                QtGui.QMessageBox.Yes | QtGui.QMessageBox.No)
+            if (self.currentDir == None and self.currentFile == None) or \
+                                     confirmation == QtGui.QMessageBox.Yes:
+                self.saveas(False)
+            
+                return 0
         if fromOpen or confirmation == QtGui.QMessageBox.Yes:
             self.currentFile = None
             self.spnbox_geometry_contacttypes_totalgranulartypes.setValue(1)
@@ -1924,6 +1932,22 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             self.num_proc_z.setValue(1)
             self.stack_geometry.setCurrentIndex(0)
             self.testPage.setCurrentIndex(0)
+            self.testPage.setEnabled(True)
+            self.stack_geometry.setEnabled(True)
+            self.pushButton_Save.setEnabled(True)
+            self.btn_saveas.setEnabled(True)
+            self.btn_terminal.setEnabled(True)
+            self.pushButton_Browse.setEnabled(True)
+            self.pushButton_Support.setEnabled(True)
+            self.btn_x_align.setEnabled(True)
+            self.btn_y_align.setEnabled(True)
+            self.btn_z_align.setEnabled(True)
+            self.btn_x_align_neg.setEnabled(True)
+            self.btn_y_align_neg.setEnabled(True)
+            self.btn_z_align_neg.setEnabled(True)
+            self.btn_zoom_in.setEnabled(True)
+            self.btn_zoom_out.setEnabled(True)
+            
         else:
             return 0
 
@@ -2195,6 +2219,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         outFile = str(outFile)
         if outFile != '':
             self.currentFile = outFile
+            self.currentDir = os.path.dirname(outFile) + "/"
             if not fromSave:
                 self.save(outFile)
 #        print 'saveas'
