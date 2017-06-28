@@ -915,7 +915,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         f.write('variable\tpi\t\tequal\t\t3.141592654\t\t# PI\n')
         f.write('variable\ta\t\tequal\t\t1\t\t\t\t# Test number\n\n')
         f.write('# Variables - Timestep & Dumpstep\n')
-        if self.chk_timestep.checkState() == 2 and not self.line_timestep.text().isEmpty():
+        if self.chk_timestep.checkState() == 2 or not self.line_timestep.text().isEmpty():
             f.write('variable\tdt\t\t\tequal\t'+self.line_timestep.text()+
                     '\t\t\t\t# Time step\n')
         else:
@@ -1392,7 +1392,8 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                 ('fx fy fz ' if self.chk_force.checkState() == 2 else '') +
                 ('omegax omegay omegaz ' if self.chk_angularvelocity.checkState() == 2 else '') +
                 'radius ' +
-                ('mass' if self.chk_mass.checkState() == 2 else '') + '\n\n')
+                ('mass ' if self.chk_mass.checkState() == 2 else '') +
+                ('radius' if self.chl_radius.checkState() == 2 else '') + '\n\n')
 
         for i in self.meshProperties:
             if i[13]:
@@ -1847,6 +1848,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             self.chk_angularvelocity.setChecked(storage[10][3])
             self.chk_inertia.setChecked(storage[10][4])
             self.chk_mass.setChecked(storage[10][5])
+            self.chk_radius.setChecked(storage[10][6])
             self.line_totaltime.setText(storage[11][0])
             self.line_timestep.setText(storage[11][1])
             self.line_dumpstep.setText(storage[11][2])
@@ -2198,7 +2200,8 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                             self.chk_force.isChecked(),
                             self.chk_angularvelocity.isChecked(),
                             self.chk_inertia.isChecked(),
-                            self.chk_mass.isChecked()))
+                            self.chk_mass.isChecked(),
+                            self.chk_radius.isChecked()))
             storage.append((str(self.line_totaltime.text()),
                            str(self.line_timestep.text()),
                            str(self.line_dumpstep.text()),
