@@ -1346,8 +1346,11 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             self.fileName
         f.write('#######NEEDS TESTING########\n\n')
         for n in range(0, len(self.insertionList)):
-            relDir2 = self.relDirSolver([self.insertionList[n][1][1]])
-            f.write('fix\t\tins_mesh'+str(n+1)+' all mesh/surface file '+relDir2[0]+' type '+
+#            relDir2 = self.relDirSolver([self.insertionList[n][1][1]])
+#            f.write('fix\t\tins_mesh'+str(n+1)+' all mesh/surface file '+relDir2[0]+' type '+
+#                    str(1+self.spnbox_geometry_contacttypes_totalgranulartypes.value())+
+#                    ' curvature 1e-6\n\n')
+            f.write('fix\t\tins_mesh'+str(n+1)+' all mesh/surface file '+self.insertionList[n][1][1]+' type '+
                     str(1+self.spnbox_geometry_contacttypes_totalgranulartypes.value())+
                     ' curvature 1e-6\n\n')
             f.write('fix\t\tins'+str(n+1)+' all insert/stream seed ' +
@@ -1375,8 +1378,10 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         f.write('shell mkdir post\n\n')
 
         f.write('dump\t\tdmpstl1 all mesh/stl 1 post/static*.stl')
-        for n in range(0, len(relDir)):
-            f.write(' ' + os.path.splitext(os.path.basename(relDir[n]))[0])
+#        for n in range(0, len(relDir)):
+#            f.write(' ' + os.path.splitext(os.path.basename(relDir[n]))[0])
+        for n in range(0, len(self.insertionList)):
+            f.write(' ' + os.path.splitext(os.path.basename(self.insertionList[n][1][1]))[0])
         f.write('\n\n')
 
         f.write('dump\t\tdmp_m all custom ${dumpstep} post/dump_*.liggghts '+
@@ -1891,8 +1896,11 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                                 QtGui.QMessageBox.Yes | QtGui.QMessageBox.No)
             if (self.currentDir == None or self.currentFile == None) or \
                                      (confirmation == QtGui.QMessageBox.Yes):
-                self.saveas(False)
-                confirmation = QtGui.QMessageBox.Yes
+                result = self.saveas(False)
+                if result != 0:
+                    confirmation = QtGui.QMessageBox.Yes
+                else:
+                    confirmation = QtGui.QMessageBox.No
         if fromOpen or confirmation == QtGui.QMessageBox.Yes:
             self.currentFile = None
             self.spnbox_geometry_contacttypes_totalgranulartypes.setValue(1)
@@ -2222,6 +2230,8 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             self.currentDir = os.path.dirname(outFile) + "/"
             if not fromSave:
                 self.save(outFile)
+        else:
+            return 0
 #        print 'saveas'
 
     def saveMaterialData(self):
