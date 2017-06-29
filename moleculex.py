@@ -17,18 +17,6 @@ from PyQt4 import QtCore, QtGui, uic, QtOpenGL
 
 qtCreatorFile = 'resources/LIGGGHTS_DEM.ui'  # ui file
 
-# Imports OpenGl, otherwise throws an error
-
-#try:
-#    from OpenGL import GL
-#except ImportError:
-#    app = QtGui.QApplication(sys.argv)
-#    QtGui.QMessageBox.critical(None, 'OpenGL PyQtLink',
-#                               'PyOpenGL must be installed' +
-#                               ' to run this program.')
-#    sys.exit(1)
-
-# Assign ui file <QtBaseClass is currently unused>
 (Ui_MainWindow, QtBaseClass) = uic.loadUiType(qtCreatorFile)
 
 
@@ -38,99 +26,48 @@ def main():
     window = PyQtLink()
     window.show()
     app.exec_()
-#    sys.exit(app.exec_())
 
 class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
-    global app
-    def __init__(self):
 
-#        print 'main window ini test'
+    global app
+
+    def __init__(self):
         QtGui.QMainWindow.__init__(self)  # Initialize the main windows
-#        app = QtGui.QApplication(sys.argv)
-#        print 'ui main window ini test'
         Ui_MainWindow.__init__(self)
-#        print 'setup ui test'
-        self.setupUi(self)  # Final ui initial setup
+        self.setupUi(self)
 
         # GUI Theme; options = {"plastique", "cde", "motif", "sgi", "windows",
         # "cleanlooks", "mac"}
-#        global app
-#        print 'set style test'
         app.setStyle(QtGui.QStyleFactory.create("cleanlooks"))
         self.ini_vars()
 
-#        new_mesh.normals
-#
-#        new_mesh.v0, new_mesh.v1, new_mesh.v2
-#
-#        print new_mesh.points
-
-        #Modify this for loading new files
-#        print 'glwidget marker'
         self.glWidget = GLWidget()
 
-#        print 'slider def marker'
         self.xSlider = self.createSlider()
         self.ySlider = self.createSlider()
         self.zSlider = self.createSlider()
-
-        #print 'slider ini marker'
-#        self.connect(self.pushButton_Support, QtCore.SIGNAL("clicked()"), self.popupSupport)
         self.xSlider.valueChanged.connect(self.glWidget.setXRotation)
-#        print 'lambda fix success!'
-#        self.connect(self.xSlider, QtCore.SIGNAL('valueChanged()'), self.glWidget, QtCore.SLOT('setXRotation()'))
         self.glWidget.xRotationChanged.connect(self.xSlider.setValue)
-#        self.connect(self.glWidget, QtCore.SIGNAL('xRotationChanged()'), self.xSlider.setValue)
         self.ySlider.valueChanged.connect(self.glWidget.setYRotation)
         self.glWidget.yRotationChanged.connect(self.ySlider.setValue)
         self.zSlider.valueChanged.connect(self.glWidget.setZRotation)
         self.glWidget.zRotationChanged.connect(self.zSlider.setValue)
-        #print 'lambda fix success!'
-#        print 'mainlayout marker'
         mainLayout = QtGui.QHBoxLayout()
         mainLayout.addWidget(self.glWidget)
         mainLayout.addWidget(self.xSlider)
         mainLayout.addWidget(self.ySlider)
         mainLayout.addWidget(self.zSlider)
-        #print 'lambda fix success!'
-#        central = self.centralWidget()
-#        print 'ogl marker'
         central = self.ogl
-#        print 'setlayout marker'
         central.setLayout(mainLayout)
 
-#        mainLayout = QtGui.QHBoxLayout()
-#        mainLayout.addWidget(self.glWidget)
-#        mainLayout.addWidget(self.xSlider)
-#        mainLayout.addWidget(self.ySlider)
-#        mainLayout.addWidget(self.zSlider)
-#        container = QtGui.QWidget()
-#        self.setCentralWidget(container)
-#        layout = QtGui.QVBoxLayout()
-#        container.setLayout(layout)
-        #self.setLayout(mainLayout)
-
-#        self.xSlider.setValue(15 * 16)
-#        self.ySlider.setValue(345 * 16)
-#        self.zSlider.setValue(0 * 16)
-
-#        print 'slider marker'
         self.xSlider.setValue(0)
         self.ySlider.setValue(0)
         self.zSlider.setValue(0)
 
-        # *.clicked is for a button click event
-        # *.itemClicked is used for QtTreeWidget entries
-        # *.*.connect(self.method) means that when the event happens,
-        # that method is called
-
-
-        
         self.btn_geometry_autofit.clicked.connect(self.autofit)
         self.pushButton_Browse.clicked.connect(self.browse)
         self.btn_geometry_stl.clicked.connect(self.openstl)
         self.tree_casesetup.itemClicked.connect(self.treecasesetup)
-#        self.tree_solve.itemClicked.connect(self.treesolve)
         self.tree_geometry.itemClicked.connect(self.treegeometry)
         self.btn_terminal.clicked.connect(self.terminal)
         self.btn_cube.clicked.connect(self.btn_cube_clicked)
@@ -159,7 +96,6 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         self.btn_log_file.clicked.connect(self.btn_log_file_clicked)
         self.pushButton_New.clicked.connect(self.new_button_clicked)
         self.pushButton_Save.clicked.connect(self.save)
-#        self.pushButton_Support.connect(self.popup)
         self.connect(self.pushButton_Support, QtCore.SIGNAL("clicked()"), self.popupSupport)
 
         self.btn_x_align.clicked.connect(self.btn_x_align_clicked)
@@ -337,21 +273,13 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         
         self.list_mm_type.itemClicked.connect(self.list_mm_type_clicked)
 
-        # If anything happens with the tree,
-        # check if it was expected and perform action
-
-#        print 'tree geo viewport marker'
         self.tree_geometry.viewport().installEventFilter(self)
 
         self.ogl.installEventFilter(self)
 
         self.testPage.setEnabled(False)
 
-        # self.opengl_widget = GLWidget()
-
-#        print 'window title marker'
         self.setWindowTitle('MoleculeX')
-#        print 'ui setup end'
 
     def ini_vars(self):
         self.gmt = []
@@ -412,14 +340,11 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                     if n == self.currentMeshType:
                         self.combo_meshes_ct.setCurrentIndex(0)
         self.loading = False
-#        self.contactParams = [[0.0 for y in range(0, self.totalTypes**2)]
-#                              for x in range(0, 4)]
         self.contactParams = [[0.2 for x in range(0, self.totalTypes**2)]]  # COR
         self.contactParams.append([0.5 for x in range(0, self.totalTypes**2)])  # ff
         self.contactParams.append([0.3 for x in range(0, self.totalTypes**2)])  # frf
         self.contactParams.append([0.0 for x in range(0, self.totalTypes**2)])  # CED
         self.contactParams.append([1.0 for x in range(0, self.totalTypes**2)])  # KWear
-#        self.gmt = [['1e7', 0.3] for x in range(0, self.totalTypes)]
         self.insertionList = []
         self.spnbox_insertionindex.setValue(0)
         self.stack_insertionsettings.setCurrentIndex(0)
@@ -429,7 +354,6 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         self.listparticleupdate()
         self.listrollingupdate()
         self.loadMaterialData()
-        # index = (int(totalTypes**2/list.getIndex()),list.getIndex()%totalTypes)
 
     def autofit(self):
         global mesh_ref
@@ -453,18 +377,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                         max_y = v[index][1]
                     if max_z < v[index][2] or max_z is None:
                         max_z = v[index][2]
-    
-    #                GL.glVertex3d(mesh_ref[meshes][1].points[index][0],
-    #                              mesh_ref[meshes][1].points[index][1],
-    #                              mesh_ref[meshes][1].points[index][2])
-    #                GL.glVertex3d(mesh_ref[meshes][1].points[index][3],
-    #                              mesh_ref[meshes][1].points[index][4],
-    #                              mesh_ref[meshes][1].points[index][5])
-    #                GL.glVertex3d(mesh_ref[meshes][1].points[index][6],
-    #                              mesh_ref[meshes][1].points[index][7],
-    #                              mesh_ref[meshes][1].points[index][8])
-    #        for n :
-    
+
             self.boundary_min_x.setValue(min_x)
             self.boundary_min_y.setValue(min_y)
             self.boundary_min_z.setValue(min_z)
@@ -485,17 +398,11 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         subprocess.Popen(['xdg-open',
                          os.path.dirname(os.path.realpath(__file__))])
 
-    #  insertionList = [([(particleType, particleFriction)],
-    #                    (faceType<-1 to 2>, (faceParams,,,))
-    #                    (massParams,,,))]
     def btn_addinsertion_clicked(self):
         self.loading = True
         self.stack_insertionsettings.setCurrentIndex(1)
-#        self.insertionList.append(([], (-1, None),
-#                                    (0.00, 0.00, 0, 0, 0, 0.00)))
         self.insertionList.append([[[]], [-1, None],
                                     [0.00, 0.00, 0.00, 0.00, 0.00, 0.00]])
-#        print self.insertionList
         self.spnbox_insertionindex.setValue(len(self.insertionList))
         self.loading = True
         self.spnbox_granulartypeindex.setValue(1)
@@ -522,7 +429,6 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                           ][0][self.spnbox_psd.value()-1][
                                   self.spnbox_granulartypeindex.value()-1][n][1]
         self.lbl_PSDFractionTotal.setText(str(adding))
-#        self.updateparticletypelist()
         self.loading = True
         self.resetinsertionface()
         self.loading = True
@@ -580,7 +486,6 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             toReturn = (0.00, 0.00, 0.00, 0.00)
         return toReturn
 
-    # TODO: EXTEND THIS
     def btn_addPSD_clicked(self):
         if not self.loading:
             self.loading = True
@@ -646,17 +551,12 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
 
     def btn_import_ins_mesh_clicked(self):
         global ins_mesh_ref
-#        root = Tk()
-#        self.fileName = tkFileDialog.askopenfilename(
-#                        filetypes=(('STereoLithography files', '.stl'),
-#                                   ('All Files', '.*')))
         self.fileName = QtGui.QFileDialog.getOpenFileName(self,
                                                           'Single File',
                                                           (self.currentDir if self.currentDir != None else '.'),
                                                           '*.stl')
         self.fileName = str(self.fileName)
-        
-#        root.destroy()
+
         if self.fileName not in self.stlFilesLoaded and not repr(self.fileName) == '()' and \
                         os.path.exists(self.fileName):
             tempVar = load_mesh(self.fileName)
@@ -669,8 +569,6 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             self.glWidget.initializeGL()
             self.glWidget.updateGL()
             self.glWidget.paintGL()
-#        for m in ins_mesh_ref:
-#            print m
 
     def remove_unused_insertion_faces(self):
         global ins_mesh_ref
@@ -692,9 +590,6 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
     def btn_insertion_rect_clicked(self):
         self.stack_insertion_face.setCurrentIndex(2)
         self.insertionrectsave()
-
-#    def btn_makefile_clicked(self):
-#        self.fileGen()
 
     def btn_log_file_clicked(self):
         os.system('gedit log.liggghts')
@@ -833,7 +728,6 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
     def  clearmeshproperties(self):
         self.loading = True
         self.stack_geometry_meshes.setCurrentIndex(0)
-        # TODO: self.combo_meshes_ct {SELECT CHOSEN ITEM INDEX}
         self.chk_meshes_cm.setCheckState(2)
         self.chk_dumpmesh.setCheckState(2)
         self.chk_meshes_sv.setCheckState(0)
@@ -851,15 +745,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         self.chk_meshes_mm.setCheckState(0)
         self.spnbox_meshes_starttime.setValue(0.00)
         self.combo_meshes_ct.setCurrentIndex(0)
-        # TODO: Load tree definitions
         self.loading = False
-
-# ....def contextMenuEvent(self, event):
-# ........self.menu = QtGui.QMenu(self)
-# ........renameAction = QtGui.QAction('Rename', self)
-# ........renameAction.triggered.connect(lambda: self.renameSlot(event))
-# ........self.menu.addAction(renameAction)
-# ........self.menu.popup(QtGui.QCursor.pos())
 
     def createSlider(self):
         slider = QtGui.QSlider(QtCore.Qt.Vertical)
@@ -893,13 +779,11 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             item = self.tree_geometry.itemAt(event.pos())
             if item is not None and type(item) is QtGui.QTreeWidgetItem \
                     and item.parent() is not None:
-                # print 'Double click'
                 self.tree_geometry.setCurrentItem(item)
                 self.loadmeshproperties(item)
             else:
                 self.tree_geometry.setCurrentItem(item)
                 self.treegeometry()
-#        self.ogl.viewport()
         elif event.type() == QtCore.QEvent.Wheel \
                 and str(target) == str(self.ogl):
             self.glWidget.zoomin() if event.delta() == 120 else self.glWidget.zoomout()
@@ -927,12 +811,6 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             f.write('variable\tdumpstep\tequal\t'+self.line_dumpstep.text()+
                     '*${factor}\n\n')
         f.write('# Variables - Particle size distribution\n')
-#        for x in range (0, self.spnbox_geometry_contacttypes_totalgranulartypes.value()):
-#            for y in range(x, self.totalTypes):
-#                f.write('variable\td'+ str(x+1) + '_' + str(y+1) +  # TODO: REPLACE WITH PARTICLE
-#                        '\t\t\tequal\t\t'+'40'+  # TODO: REPLACE WITH PARTICLE DIAMETER
-#                        '\t# d='+'40'+'mm\n')  # TODO: REPLACE WITH PARTICLE DIAMETER
-#        f.write('\n')
 
         for n in range(0, len(self.insertionList)):
             for x in range(0, len(self.insertionList[n][0])):
@@ -955,11 +833,6 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                         f.write(str(self.insertionList[n][0][x][y][z][3]))
                         f.write('\n')
             f.write('\n')
-#        for x in range(0, self.spnbox_geometry_contacttypes_totalgranulartypes.value()):
-#            for y in range(x, self.totalTypes):
-#                f.write('variable\tr'+ str(x+1) + '_' + str(y+1) +  # TODO: REPLACE WITH PARTICLE
-#                        '\t\t\tequal\t\t${d'+ str(x+1) + '_' + str(y+1) +  # TODO: REPLACE WITH PARTICLE
-#                        '}/2000\n')
         for n in range(0, len(self.insertionList)):
             for x in range(0, len(self.insertionList[n][0])):
                 for y in range(0, len(self.insertionList[n][0][x])):
@@ -971,13 +844,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                         f.write('}/2000\n')
             f.write('\n')
 
-        # TODO: Add support for multiple insertions
         f.write('\n# Variable - particle size fractions\n')
-#        for x in range (0, self.spnbox_geometry_contacttypes_totalgranulartypes.value()):
-#            for y in range(x, self.totalTypes):
-#                f.write('variable\tfrac'+ str(x+1) + '_' + str(y+1) +  # TODO: REPLACE WITH PARTICLE
-#                        '\t\t\tequal\t\t'+ str(self.insertionList[0][0][x+y][1]) +
-#                        '\n')
         for n in range(0, len(self.insertionList)):
             largestVal = 0.0
             largestName = ''
@@ -994,12 +861,10 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                             largestName = self.insertionList[n][0][x][y][z][0]
                         f.write('\n')
             f.write('\n')
-        # TODO: FOLLOW UP CUTOFF
         f.write('\n# Define contact searching distance\n')
         f.write('variable\tcutoff\t\t\tequal\t\t${d'+
                 largestName+'}/1000\n\n')
 
-        # TODO: FOLLOW UP THIS
         f.write('# Variables - Particle and wall properties\n')
         corMtx = [[] for _ in range(0, self.totalTypes)]
         for n in range(0, self.totalTypes):
@@ -1010,10 +875,6 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                 f.write('variable\tcor'+ str(x+1) + '_' + str(y+1) +
                         '\t\tequal\t\t'+str(self.contactParams[0][x+y])+'\n')
                 corMtx[x][y] = 'cor' + str(x+1) + '_' + str(y+1)
-#        for x in range (0, self.spnbox_geometry_contacttypes_totalgranulartypes.value()):
-#            for y in range(x, self.totalTypes):
-#                f.write('variable\tdens'+ str(x+1) + '_' + str(y+1) +  # TODO: REPLACE WITH PARTICLE
-#                        '\t\tequal\t\t'+'4400'+'\n')  # TODO: REPLACE WITH PARTICLE DENSITY
         wffMtx = [[] for _ in range(0, self.totalTypes)]
         for n in range(0, self.totalTypes):
             for _ in range(0, self.totalTypes):
@@ -1250,7 +1111,6 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
 
         f.write('timestep\t${dt}\n\n')
 
-        # TODO: Link gravity vector
         f.write('fix\t\tgravi all gravity 9.81 vector ')
         if self.rad_gravity_x.isChecked():
             f.write('-1.0 0.0 0.0')
@@ -1259,11 +1119,6 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         elif self.rad_gravity_z.isChecked():
             f.write('0.0 0.0 -1.0')
         f.write('\n\n')
-
-        f.write('############# ADD LOADED MESHES ##############\n\n')
-
-        # Relative directory file locator
-#        relDir = self.relDirSolver(self.stlFilesLoaded)
 
         for n in range(0, len(self.stlFilesLoaded)):
             f.write('fix\t\t' +
@@ -1346,18 +1201,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                     if y == len(self.insertionList[n][0][x])-1:
                         f.write(str(numParticles) + strbuild + '\n')
             f.write('\n')
-
-        # TODO: Change this when Insertion Face has been implemented
-#        self.insertionList[self.spnbox_insertionindex.value()-1][1][0] = 0
-#        self.insertionList[self.spnbox_insertionindex.value()-1][1][1] = \
-#            self.fileName
-        f.write('#######NEEDS TESTING########\n\n')
-        print self.insertionList
         for n in range(0, len(self.insertionList)):
-#            relDir2 = self.relDirSolver([self.insertionList[n][1][1]])
-#            f.write('fix\t\tins_mesh'+str(n+1)+' all mesh/surface file '+relDir2[0]+' type '+
-#                    str(1+self.spnbox_geometry_contacttypes_totalgranulartypes.value())+
-#                    ' curvature 1e-6\n\n')
             f.write('fix\t\tins_mesh'+str(n+1)+' all mesh/surface file '+self.insertionList[n][1][1]+' type '+
                     str(1+self.spnbox_geometry_contacttypes_totalgranulartypes.value())+
                     ' curvature 1e-6\n\n')
@@ -1369,7 +1213,6 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                     str(self.insertionList[n][2][4])+' '+'&\n')
             f.write('\t\tinsertion_face ins_mesh'+str(n+1)+' extrude_length '+
                     str(self.insertionList[n][2][5])+'\n\n')
-        f.write('######################\n\n')
 
         f.write('fix\t\tintegr all nve/sphere\n\n')
 
@@ -1380,15 +1223,11 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         f.write('thermo_style\tcustom step atoms ke c_rke f_ts[1] f_ts[2] vol\n')
         f.write('thermo\t\t\t1000\n')
         f.write('thermo_modify\tlost ignore norm no\n')
-#        f.write('compute_modify\tthermo_temp dynamic yes\n\n')
 
         f.write('shell rm '+ self.currentDir +'post\n')
         f.write('shell mkdir '+ self.currentDir +'post\n\n')
 
         f.write('dump\t\tdmpstl1 all mesh/stl 1 '+ self.currentDir +'post/static*.stl')
-#        for n in range(0, len(relDir)):
-#            f.write(' ' + os.path.splitext(os.path.basename(relDir[n]))[0])
-#        print self.insertionList
         for n in range(0, len(self.insertionList)):
             f.write(' ' + os.path.splitext(os.path.basename(self.insertionList[n][1][1]))[0])
         for i in self.meshProperties:
@@ -1511,7 +1350,6 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                 self.combo_ced.currentIndex()]))
 
     def listcorupdate(self):
-#        print self.contactParams
         self.line_cor.setText(str(self.contactParams[0][
                 self.combo_cor.currentIndex()]))
 
@@ -1531,7 +1369,6 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         index = self.list_mm_type.indexFromItem(item).row()
         n = self.currentMeshType
         self.loading = True
-#        print self.meshProperties[n][19]
         if self.mmList[n][index] == 0:
             self.stack_mm.setCurrentIndex(1)
             self.mm_velocity_x.setValue(self.meshProperties[n][19][index][0])
@@ -1596,7 +1433,6 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         self.loading = False
 
     def loadInsertionSettings(self):
-#        print len(self.insertionList)
         if self.spnbox_insertionindex.value() > len(self.insertionList):
             self.spnbox_insertionindex.setValue(len(self.insertionList))
             return -1
@@ -1673,25 +1509,12 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             self.loading = False
 
     def loadMaterialData(self):
-        # print self.gmt
         self.loading = True
-#        if(self.spnbox_casesetup_materialproperties_materialtype.value() >
-#           self.spnbox_geometry_contacttypes_totalgranulartypes.value()):
-#            (self.spnbox_casesetup_materialproperties_materialtype
-#                 .setValue(self.spnbox_geometry_contacttypes_totalgranulartypes.value()))
-        # save current page
-
-        # load selected page
         self.line_youngsmodulus.setText(str(self.gmt[
                 self.combo_conty.currentIndex()][0]))
         self.spnbox_poissonsratio.setValue(self.gmt[
                 self.combo_conty.currentIndex()][1])
-#        curVal = \
-#            self.spnbox_casesetup_materialproperties_materialtype.value()-1
-#        self.line_youngsmodulus.setText(str(self.gmt[curVal][0]))
-#        self.spnbox_poissonsratio.setValue(self.gmt[curVal][1])
         self.loading = False
-        #[((0.0, 0.0), [('1_1', 0.0, 0.0)]), ((0.0, 0.0), [('2_1', 0.0, 0.0)])]
 
     def loadmeshproperties(self, item):
         global mesh_ref
@@ -1700,23 +1523,18 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             if index[1] == item.text(0):
                 self.fileName = index[0]
                 break
-#        new_mesh.mesh.Mesh.from_file(self.fileName)
         for n in range(0, len(mesh_ref)):
             if mesh_ref[n][0] == self.fileName:
                 mesh_ref[n][2] = [1.00, .98, .80, 1.0]
             else:
                 mesh_ref[n][2] = [.4, .4, .4, 0]
         self.glWidget.initializeGL()
-#        self.glWidget.makeObject()
         self.glWidget.updateGL()
         self.glWidget.paintGL()
         self.loading = True
         for i in self.meshProperties:
-#            print i[0]
             if i[0] == item.text(0):
-                # Load data
                 self.currentMeshType = self.meshProperties.index(i)
-                # TODO: self.combo_meshes_ct {SELECT CHOSEN ITEM INDEX}
                 self.combo_meshes_ct.setCurrentIndex(i[1])
                 self.chk_meshes_cm.setCheckState(
                         2 if i[2] else 0)
@@ -1741,7 +1559,6 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                 self.spnbox_meshes_sav_a_y.setValue(i[16])
                 self.spnbox_meshes_sav_a_z.setValue(i[17])
                 self.spnbox_meshes_sav_omega.setValue(i[18])
-                # TODO: Load tree definitions
                 self.list_mm_type.clear()
                 for x in range(0, len(self.mmList[self.currentMeshType])):
                     if self.mmList[self.currentMeshType][x] == 0:
@@ -1794,15 +1611,6 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             self.spnbox_poissonsratio.setValue(self.gmt[curVal][1])
 
     def openFile(self):
-#        root = Tk()
-#        root.fileName = \
-#            tkFileDialog.askopenfilename(filetypes=(('LIGGGHTS_GUI File',
-#                                                     '.proj'), ('All Files',
-#                                                                '.*')))
-#        settings = QtCore.QSettings('myorg', 'myapp')
-#        self.restoreGeometry(settings.value('geometry').toByteArray())
-#        self.restoreState(settings.value('windowState').toByteArray())
-
         inFile = QtGui.QFileDialog.getOpenFileName(self,
                                                    'Single File',
                                                    (self.currentDir if self.currentDir != None else '.'),
@@ -1812,10 +1620,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             self.new_button_clicked(True)
             self.currentFile = inFile
             self.currentDir = os.path.dirname(inFile) + "/"
-    #        inFile = open('pickleTest.txt', 'rb')
             storage = pickle.load(open(inFile, 'rb'))
-            
-#            print storage
             self.spnbox_geometry_contacttypes_totalgranulartypes.setValue(storage[0])
             self.spnbox_geometry_contacttypes_totalmeshtypes.setValue(storage[1])
             self.origPath = storage[2]
@@ -1877,27 +1682,6 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             self.listparticleupdate()
             self.listrollingupdate()
             self.loadMaterialData()
-
-#        self.contactParams = vars[0]
-##        self.currentMeshType = vars[1]
-#        self.fileName = vars[2]
-#        self.gmt = vars[3]
-#        self.insertionList = vars[4]
-#        self.meshProperties = vars[5]
-#        self.meshTypeData = vars[6]
-#        self.origPath = vars[7]
-#        self.stlFilesLoaded = vars[8]
-#        self.totalTypes = vars[9]
-#                vars = [self.contactParams, self.currentMaterialType,
-#                self.currentMeshType, self.fileName, self.gmt,
-#                self.insertionList, self.meshProperties, self.meshTypeData,
-#                self.origPath, self.stlFilesLoaded,
-#                self.totalTypes]
-
-        # print(root.fileName)
-        # Load .proj file into variables
-
-#        root.destroy()
 
     def new_button_clicked(self, fromOpen=False):
         confirmation = None
@@ -1981,13 +1765,6 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
 
     def openstl(self, sig_catch=None, fileName=None, isNew=True):
         global mesh_ref
-#        root = Tk()
-#        self.fileName = tkFileDialog.askopenfilenames(
-#                filetypes=(('STereoLithography files', '.stl'),
-#                           ('All Files', '.*')))
-#        print sig_catch
-#        print fileName
-#        print isNew
         if fileName is None:
             self.fileName = QtGui.QFileDialog.getOpenFileNames(self,
                                                               'Multiple File',
@@ -1996,17 +1773,12 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             self.fileName = [str(item) for item in self.fileName]
         else:
             self.fileName = fileName
-#        for item in self.fileName:
-#            item = str(item)
-#        root.destroy()
         if isNew:
             for f in self.fileName:
                 if f not in self.stlFilesLoaded and \
                         os.path.exists(f):
                     #Load model into opengl viewer
-#                    print f
                     self.origPath.append([f, basename(f)])
-#                    print f
                     tempVar = load_mesh(f)
                     for n in range(0, len(mesh_ref)):
                         mesh_ref[n][2] = [.4, .4, .4, 0]
@@ -2029,7 +1801,6 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                                                 False, 0.00, 0.00, 0.00,
                                                 False, 0.00, False, False,
                                                 0.00, 0.00, 0.00, 0.00, []])
-                    # self.currentMeshType = basename(root.fileName)
                     self.mmList.append([])
                     self.currentMeshType = len(self.meshProperties)-1
                     self.stack_geometry_meshes.setCurrentIndex(1)
@@ -2140,32 +1911,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         self.spnbox_insertion_extrude.setValue(0.00)
         self.loading = False
 
-        # objHolder.addChild(self.tree_geometry.indexFromItem(objHolder).row(),QtGui.QTreeWidgetItem(QtCore.QString().startsWith(QtCore.QLatin1String("test1"))))
-        # objHolder.addChild(self.tree_geometry.indexFromItem(objHolder).row(),QtGui.QTreeWidgetItem(QtCore.QString().startsWith(QtGui.QLatin1String("test1"))))
-        # objHolder.addChild(QtGui.QTreeWidgetItem(QtCore.QString().startsWith(QtCore.QLatin1String("test1"))))
-        # objHolder.addChild(self.tree_geometry.indexFromItem(objHolder).row(),QtGui.QTreeWidgetItem(QtCore.QString("test")))
-        # objHolder.addChild(QtGui.QTreeWidgetItem(QtCore.QString("test")))
-        # objHolder.addChild(QtGui.QTreeWidgetItem(QtCore.QString("test"), QtCore.QString("test")))
-        # self.tree_geometry.currentItem().addChild("test1", "test2")
-
     def run_prog_clicked(self):
-#        self.fileGen()
-        
-#        s = subprocess.Popen(['gnome-terminal'], shell=True)
-
-#        subprocess.call('start /wait mpirun -np ' + str(self.num_proc_x.value() *
-#                                      self.num_proc_y.value() *
-#                                      self.num_proc_z.value()) +
-#                        ' liggghts <' + os.getcwd() + '/script.s', shell=True)
-    
-#        cmd_line = 'mpirun -np ' + str(self.num_proc_x.value() *
-#                                      self.num_proc_y.value() *
-#                                      self.num_proc_z.value()) + \
-#                        ' liggghts <' + os.getcwd() + '/script.s'
-#        p = subprocess.Popen(cmd_line, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-#        out = p.communicate()[0]
-#        print out
-
         subprocess.call('mpirun -np ' + str(self.num_proc_x.value() *
                                       self.num_proc_y.value() *
                                       self.num_proc_z.value()) +
@@ -2225,15 +1971,6 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             storage.append(self.combo_conty.currentIndex())
             
             outFile = open(self.currentFile, 'wb')
-    ##        currState = QtGui.QMainWindow.saveState()
-    #        settings = QtCore.QSettings('myorg', 'myapp')
-    #        settings.setValue('geometry', self.saveGeometry())
-    #        settings.setValue('windowState', self.saveState())
-    #        vars = [self.contactParams,
-    #                self.currentMeshType, self.fileName, self.gmt,
-    #                self.insertionList, self.meshProperties, self.meshTypeData,
-    #                self.origPath, self.stlFilesLoaded,
-    #                self.totalTypes]
             pickle.dump(storage, outFile)
 
     def saveas(self, fromSave=False):
@@ -2250,15 +1987,12 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
 
     def saveMaterialData(self):
         if not self.loading:
-#            curval = self.gmt[self.spnbox_casesetup_materialproperties_materialtype.value()-1]
             curval = self.gmt[self.combo_conty.currentIndex()]
             curval[0] = self.line_youngsmodulus.text()
             curval[1] = self.spnbox_poissonsratio.value()
 
     def savemeshproperties(self):
         if not self.loading:
-            # TODO: Save contact type
-            # self.currentMeshType = basename(root.fileName) | item.text(0)
             n = self.currentMeshType
             self.meshProperties[n][1] = self.combo_meshes_ct.currentIndex()
             self.meshProperties[n][2] = True if self.chk_meshes_cm.checkState() == 2 \
@@ -2326,7 +2060,6 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                          self.mm_wiggle_period.value())
 
     def savePSD(self):
-#        print str(self.spnbox_insertion_fraction.value())
         if self.spnbox_psd.value() is not 0 and self.loading is not True:
             self.insertionList[self.spnbox_insertionindex.value()-1][0][
                     self.spnbox_psd.value()-1][
@@ -2346,26 +2079,10 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             self.lbl_PSDFractionTotal.setText(str(adding))
 
     def terminal(self):
-
-        # print()
-        # os.startfile('/usr/bin/gnome-terminal')
-        # subprocess.Popen(['exo-open --launch TerminalEmulator'], shell=True)
-
         subprocess.Popen(['gnome-terminal'], shell=True)
-
-        # subprocess.call(['exo-open --launch TerminalEmulator'], shell=True)
-        # si = subprocess.STARTUPINFO()
-        # si.dwFlags = subprocess.STARTF_USESHOWWINDOW
-        # os.system("gnome-terminal -e 'sudo apt-get update'")
-        # proc = si.Popen(['/bin/bash'], shell=True)
-        # proc.wShowWindow();
-        # subprocess.Popen(["xdg-open", 'gnome-terminal'])
-        # subprocess.Popen(['gnome-terminal'], shell=True)
-        # os.popen('gnome-terminal')
 
     def tree_remove(self, item):
         global mesh_ref
-        # mesh_ref
         for f in self.stlFilesLoaded:
             if basename(f) == item.text(0):
                 for i in self.meshProperties:
@@ -2400,25 +2117,10 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             self.stack_geometry.setCurrentIndex(
                     self.tree_geometry.indexFromItem(
                             self.tree_geometry.currentItem()).row())
-#            print 'no parent, has index: ' \
-#                + str(self.tree_geometry.indexFromItem(
-#                        self.tree_geometry.currentItem()).row())
         elif self.tree_geometry.currentItem() is not None:
             (self.stack_geometry.setCurrentIndex(
                      self.tree_geometry.indexFromItem(
                              self.tree_geometry.currentItem().parent()).row()))
-#            print 'has parent at index: ' \
-#                + str(self.tree_geometry.indexFromItem(
-#                                self.tree_geometry.
-#                                currentItem().parent()).row()) \
-#                + ', has index: ' \
-#                + str(self.tree_geometry.indexFromItem(
-#                        self.tree_geometry.currentItem()).row())
-
-#    def treesolve(self):
-#        self.stack_solve.setCurrentIndex(
-#                self.tree_solve.indexFromItem(
-#                        self.tree_solve.currentItem()).row())
 
     def updateparticlelist(self):
         if not self.loading:
@@ -2490,54 +2192,12 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             self.loading = False
             self.updateparticlelist()
 
-#        if self.spnbox_psd.value() > len(self.insertionList[
-#                self.spnbox_insertionindex.value()-1][0]):
-#            self.spnbox_psd.setValue(len(self.insertionList[
-#                self.spnbox_insertionindex.value()-1][0]))
-#            return -1
-#        self.loading = True
-#        if len(self.insertionList[
-#                self.spnbox_insertionindex.value()-1][0]) > 0:
-#            self.spnbox_insertion_fraction.setValue(self.insertionList[
-#                    self.spnbox_insertionindex.value()-1][0][
-#                            self.spnbox_psd.value()-1][1])
-#        else:
-#            self.spnbox_insertion_fraction.setValue(0.00)
-#        self.combo_insertion_particleTypeList.clear()
-#        if self.spnbox_psd.value() is not 0:
-#            currParticles = []
-#            tempIndex = self.spnbox_insertionindex.value() - 1
-#            self.spnbox_insertion_fraction.setValue(
-#                    self.insertionList[tempIndex][0][
-#                            self.spnbox_psd.value()-1][1])
-#            for var in self.insertionList[tempIndex][0]:
-#                if var[0] is not '':
-#                    currParticles.append(var[0])
-#            for x in range(0, self.spnbox_geometry_contacttypes_totalgranulartypes.value()):
-#                for y in range(x, self.totalTypes):
-#                    tempStr = str(x+1)+'_'+str(y+1)
-#                    # print self.insertionList
-#                    if tempStr not in currParticles:
-#                        self.combo_insertion_particleTypeList.addItem(tempStr)
-#                    elif tempStr == self.insertionList[tempIndex][0][self.spnbox_psd.value()-1][0]:
-#                        self.combo_insertion_particleTypeList.addItem(tempStr)
-##                        self.spnbox_insertion_fraction.setValue(self.insertionList[tempIndex][0][self.spnbox_psd.value()-1][1])
-#            self.combo_insertion_particleTypeList.setCurrentIndex(
-#                self.combo_insertion_particleTypeList.findText(
-#                        self.insertionList[tempIndex][0][
-#                                self.spnbox_psd.value()-1][0]))
-#            self.loading = False
-#        elif len(self.insertionList[
-#                self.spnbox_insertionindex.value()-1][0]) > 0:
-#            self.spnbox_psd.setValue(1)
-
 class GLWidget(QtOpenGL.QGLWidget):
     xRotationChanged = QtCore.pyqtSignal(int)
     yRotationChanged = QtCore.pyqtSignal(int)
     zRotationChanged = QtCore.pyqtSignal(int)
 
     def __init__(self, parent=None):
-#        print 'qgl marker'
         super(GLWidget, self).__init__(parent)
 
         self.object = 0.
@@ -2555,7 +2215,6 @@ class GLWidget(QtOpenGL.QGLWidget):
         self.trolltechPurple = QtGui.QColor.fromCmykF(0.39, 0.39, 0.0, 0.0)
         self.trolltechParaview = QtGui.QColor.fromCmykF(.67, .66, .57, 0.0)
         self.trolltechYellow = QtGui.QColor.fromCmykF(.00, .02, .20, .0)
-#        print 'qgl ini finish'
 
     def minimumSizeHint(self):
         return QtCore.QSize(50, 50)
@@ -2565,7 +2224,6 @@ class GLWidget(QtOpenGL.QGLWidget):
 
     def setXRotation(self, angle):
         angle = self.normalizeAngle(angle)
-#        print angle
         if angle != self.xRot:
             self.xRot = angle
             self.xRotationChanged.emit(angle)
@@ -2573,7 +2231,6 @@ class GLWidget(QtOpenGL.QGLWidget):
 
     def setYRotation(self, angle):
         angle = self.normalizeAngle(angle)
-#        print angle
         if angle != self.yRot:
             self.yRot = angle
             self.yRotationChanged.emit(angle)
@@ -2581,26 +2238,21 @@ class GLWidget(QtOpenGL.QGLWidget):
 
     def setZRotation(self, angle):
         angle = self.normalizeAngle(angle)
-#        print angle
         if angle != self.zRot:
             self.zRot = angle
             self.zRotationChanged.emit(angle)
             self.updateGL()
 
     def initializeGL(self):
-#        self.qglClearColor(self.trolltechPurple.dark())
         self.qglClearColor(self.trolltechParaview)
         self.object = self.makeObject()
-#        GL.glShadeModel(GL.GL_FLAT)
         GL.glEnable(GL.GL_DEPTH_TEST)
-#        GL.glEnable(GL.GL_CULL_FACE)
         GL.glDisable(GL.GL_CULL_FACE)
 
     def paintGL(self):
         GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
         GL.glLoadIdentity()
         GL.glTranslated(0., 0., -10.0)
-#        print self.zRot
         GL.glRotated(self.xRot / 16.0, 1.0, 0.0, 0.0)
         GL.glRotated(self.yRot / 16.0, 0.0, 1.0, 0.0)
         GL.glRotated(self.zRot / 16.0, 0.0, 0.0, 1.0)
@@ -2614,22 +2266,6 @@ class GLWidget(QtOpenGL.QGLWidget):
                   self.cameraLookAt[7],
                   self.cameraLookAt[8])
         GL.glScaled(self.scale[0], self.scale[1], self.scale[2])
-#        height = OpenGL.GLUT.glutGet(OpenGL.GLUT.GLUT_WINDOWS_HEIGHT)
-#        GL.glBegin(GL.GL_QUADS);
-#        GL.glColor3f( 1.0, 0.0, 0.0 );
-#        GL.glVertex3f( 0.0, 0.0, 0.0 );
-#        GL.glVertex3f( GL.ofGetWidth(), 0.0, 0.0 );
-#        GL.glColor3f( 0.0, 0.0, 1.0 );
-#        GL.glVertex3f( GL.ofGetWidth(), GL.ofGetHeight(), 0.0 );
-#        GL.glVertex3f( 0.0, GL.ofGetHeight(), 0.0 );
-#        GL.glEnd();
-
-#        GL.glDisable(GL.GL_CLIP_PLANE0)
-#        GL.glDisable(GL.GL_CLIP_PLANE1)
-#        GL.glDisable(GL.GL_CLIP_PLANE2)
-#        GL.glDisable(GL.GL_CLIP_PLANE3)
-#        GL.glDisable(GL.GL_CLIP_PLANE4)
-#        GL.glDisable(GL.GL_CLIP_PLANE5)
         GL.glCallList(self.object)
 
     def resizeGL(self, width, height):
@@ -2652,55 +2288,8 @@ class GLWidget(QtOpenGL.QGLWidget):
         dy = 0.0 - (event.y() - self.lastPos.y())
 
         if event.buttons() & QtCore.Qt.LeftButton:
-            # TODO: Add a condition for xRot and yRot
-#            print (self.xRot%2880)/2880.0
-#            print ((dx*((self.xRot%2880)/2880.0))*720)
-#            factor = -5.
-#            if self.xRot <= 2880:
-#                if self.xRot%2880 <= 1440:
-#                    self.setXRotation(self.xRot + 8.0 * dy)
-#                    self.setXRotation(self.xRot +((dx*((self.xRot%2880.0)/1440))*factor))
-#                else:
-#                    self.setXRotation(self.xRot + 8.0 * dy)
-#                    self.setXRotation(self.xRot + ((dx*((2880-(self.xRot%2880.0))/1440))*factor))
-#            else:
-#                if self.xRot%2880 <= 1440:
-#                    self.setXRotation(self.xRot + 8.0 * dy)
-#                    self.setXRotation(self.xRot - ((dx*((self.xRot%2880.0)/1440))*factor))
-#                else:
-#                    self.setXRotation(self.xRot + 8.0 * dy)
-#                    self.setXRotation(self.xRot - ((dx*((2880-(self.xRot%2880.0))/1440))*factor))
-#            self.setXRotation(self.xRot + 8.00 * dy)
-#            if self.xRot <= 1440:
-#                self.setYRotation(self.yRot - ((8.00 * dx) * (1.00 - (self.xRot/1440.00))))
-#                self.setZRotation(self.zRot + ((8.00 * dx) * self.xRot/1440.00))
-#            elif self.xRot <= 2880:
-#                self.setYRotation(self.yRot + ((8.00 * dx) * (self.xRot%1440)/1440.00))
-#                self.setZRotation(self.zRot + ((8.00 * dx) * (1.00 - ((self.xRot%1440)/1440.00))))
-#            elif self.xRot <= 4320:
-#                print 'out of range'
-#            else:
-#                print 'out of range'
             self.setXRotation(self.xRot + 8.0 * dy)
-#            self.setZRotation(self.zRot + 8.0 * dy)
             self.setYRotation(self.yRot + 8.0 * -dx)
-#            self.setZRotation(self.zRot + 8.0 * -dx)
-#            print str(self.xRot) + ' - xRot'
-#            print str(self.yRot) + ' - yRot'
-#            print str(dx) + ' - dx'
-#            print str(dy) + ' - dy'
-#            self.setZRotation()
-#            self.setZRotation(self.zRot/(self.xRot+self.yRot))
-#            self.cameraLookAt = [self.cameraLookAt[0] + dx/1000.0,  # ???
-#                                 self.cameraLookAt[1] + dy/1000.0,  # ???
-#                                 self.cameraLookAt[2],  # ???
-#                                 self.cameraLookAt[3],  # move X
-#                                 self.cameraLookAt[4],  # move Y
-#                                 self.cameraLookAt[5],  # move Z (-(x/2 + y/2))
-#                                 self.cameraLookAt[6],  # facing v[0] (x) DEF: 0
-#                                 self.cameraLookAt[7],  # facing v[1] (y) DEF: 1
-#                                 self.cameraLookAt[8]]  # facing v[2] (z) DEF: 0
-#            self.updateGL()
         elif event.buttons() & QtCore.Qt.RightButton:
             dx = -(event.x() - self.lastPos.x())
             dy = -(event.y() - self.lastPos.y())
@@ -2715,18 +2304,7 @@ class GLWidget(QtOpenGL.QGLWidget):
                                  0.,  # facing v[0] (x) DEF: 0
                                  1.,  # facing v[1] (y) DEF: 1
                                  0.]  # facing v[2] (z) DEF: 0
-#            self.cameraLookAt = [self.cameraLookAt[0] + dx/1000.0,  # ???
-#                                 self.cameraLookAt[1] + dy/1000.0,  # ???
-#                                 self.cameraLookAt[2],  # ???
-#                                 self.cameraLookAt[3] + dx/1000.0,  # move X
-#                                 self.cameraLookAt[4] + dy/1000.0,  # move Y
-#                                 self.cameraLookAt[5],  # move Z (-(x/2 + y/2))
-#                                 self.cameraLookAt[6],  # facing v[0] (x) DEF: 0
-#                                 self.cameraLookAt[7],  # facing v[1] (y) DEF: 1
-#                                 self.cameraLookAt[8]]  # facing v[2] (z) DEF: 0
             self.updateGL()
-#            self.setXRotation(self.xRot + 8 * dy)
-#            self.setZRotation(self.zRot + 8 * dx)
 
         self.lastPos = event.pos()
 
@@ -2740,11 +2318,6 @@ class GLWidget(QtOpenGL.QGLWidget):
             genList = GL.glGenLists(1)
             GL.glNewList(genList, GL.GL_COMPILE)
 
-    #        GL.glMatrixMode(GL.GL_MODELVIEW)
-    #        GL.glLoadIdentity()
-
-    #        LightAmbient = [0.,0.,0.,1.5]
-    #        LightAmbient = [0.,0.,0.,1.5]
             LightAmbient = [0.,0.,0.,.1]
             LightDiffuse = [5.,5.,5.,1.]
             LightPosition = [0.,1.,1.,0.]
@@ -2753,7 +2326,6 @@ class GLWidget(QtOpenGL.QGLWidget):
             LightDiffuse2 = [2.,2.,2.,1.]
             LightPosition2 = [0.,-1.,-1.,0.]
 
-    #        GL.glEnable(GL.GL_CULL_FACE)
             GL.glEnable(GL.GL_LIGHTING)
             GL.glEnable(GL.GL_LIGHT0)
             GL.glEnable(GL.GL_LIGHT1)
@@ -2766,35 +2338,10 @@ class GLWidget(QtOpenGL.QGLWidget):
             GL.glLightfv( GL.GL_LIGHT1, GL.GL_DIFFUSE, LightDiffuse )
             GL.glLightfv( GL.GL_LIGHT1, GL.GL_POSITION, LightPosition )
 
-#            GL.glEnable( GL.GL_LIGHTING )
-
             GL.glColorMaterial(GL.GL_FRONT, GL.GL_DIFFUSE)
             GL.glEnable(GL.GL_COLOR_MATERIAL)
 
-    #        GL.glEnable(GL.GL_RESCALE_NORMAL)
-    #        GL.glEnable(GL.GL_AUTO_NORMAL)
-
-    #        GL.glLightModelf(GL.GL_LIGHT_MODEL_LOCAL_VIEWER, 0.5)
-#            GL.glShadeModel(GL.GL_SMOOTH)
-    #        GL.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_FILL)
-    #        GL.glColorMaterial(GL.GL_FRONT_AND_BACK, GL.GL_AMBIENT_AND_DIFFUSE)
-    #        GL.glEnable(GL.GL_LIGHT_MODEL_AMBIENT)
-    #        self.define_shader()
-    #        test = GL.glCreateProgram()
-    #        GL.glProgramParameteri
-    #        GL.glUseProgram()
-    #        GL.glEnable(GL.GL_DEPTH_TEST)
-    #        GL.glEnable(shaders.vertex_shader)
-    #        lightpos = (.5, 1., 1., 0.)
-    #        GL.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, lightpos)
-
-    #        GL.glBegin(GL.GL_QUADS)
             GL.glBegin(GL.GL_TRIANGLES)
-#            GL.glBegin(GL.GL_LINES)
-
-#            self.qglColor(self.trolltechGreen)
-#            print mesh_ref
-#            GL.glColor3f(.4, .0, 1.)
 
             tuple(mesh_ref)
             for meshes in range(0, len(mesh_ref)):
@@ -2911,21 +2458,10 @@ class GLWidget(QtOpenGL.QGLWidget):
 
     #TODO: Fix
     def zoomin(self):
-#        self.cameraLookAt = [3.,3.,3.,0.,0.,0.,0.,1.,0]
         self.scale = [self.scale[0]*1.1,self.scale[1]*1.1,self.scale[2]*1.1]
         self.updateGL()
-        #gluLookAt(3.,3.,3.,0.,0.,0.,0.,1.,0)
 
     def zoomout(self):
-#        self.cameraLookAt = [self.cameraLookAt[0],  # ???
-#                             self.cameraLookAt[1],  # ???
-#                             self.cameraLookAt[2],  # ???
-#                             self.cameraLookAt[3] - .2,  # move X
-#                             self.cameraLookAt[4] - .2,  # move Y
-#                             self.cameraLookAt[5] - .2,  # move Z (-(x/2 + y/2))
-#                             self.cameraLookAt[6],  # facing v[0] (x) DEF: 0
-#                             self.cameraLookAt[7],  # facing v[1] (y) DEF: 1
-#                             self.cameraLookAt[8]]  # facing v[2] (z) DEF: 0
         self.scale = [self.scale[0]/1.1,self.scale[1]/1.1,self.scale[2]/1.1]
         self.updateGL()
 
@@ -2949,198 +2485,10 @@ class MyPopupSupport(QtGui.QMainWindow, QtGui.QWidget, Ui_MainWindow):
     def closeDialog(self):
         self.hide()
 
-#class GLWidget(QtOpenGL.QGLWidget):
-#    xRotationChanged = QtCore.pyqtSignal(int)
-#    yRotationChanged = QtCore.pyqtSignal(int)
-#    zRotationChanged = QtCore.pyqtSignal(int)
-#
-#    def __init__(self, parent=None):
-#        super(GLWidget, self).__init__(parent)
-#
-#        self.object = 0
-#        self.xRot = 0
-#        self.yRot = 0
-#        self.zRot = 0
-#
-#        self.lastPos = QtCore.QPoint()
-#
-#        self.trolltechGreen = QtGui.QColor.fromCmykF(0.40, 0.0, 1.0, 0.0)
-#        self.trolltechPurple = QtGui.QColor.fromCmykF(0.39, 0.39, 0.0, 0.0)
-#
-#    def minimumSizeHint(self):
-#        return QtCore.QSize(50, 50)
-#
-#    def sizeHint(self):
-#        return QtCore.QSize(400, 400)
-#
-#    def setXRotation(self, angle):
-#        angle = self.normalizeAngle(angle)
-#        print angle
-#        if angle != self.xRot:
-#            self.xRot = angle
-#            self.xRotationChanged.emit(angle)
-#            self.updateGL()
-#
-#    def setYRotation(self, angle):
-#        angle = self.normalizeAngle(angle)
-#        print angle
-#        if angle != self.yRot:
-#            self.yRot = angle
-#            self.yRotationChanged.emit(angle)
-#            self.updateGL()
-#
-#    def setZRotation(self, angle):
-#        angle = self.normalizeAngle(angle)
-#        print angle
-#        if angle != self.zRot:
-#            self.zRot = angle
-#            self.zRotationChanged.emit(angle)
-#            self.updateGL()
-#
-#    def initializeGL(self):
-#        self.qglClearColor(self.trolltechPurple.dark())
-#        self.object = self.makeObject()
-#        GL.glShadeModel(GL.GL_FLAT)
-#        GL.glEnable(GL.GL_DEPTH_TEST)
-#        GL.glEnable(GL.GL_CULL_FACE)
-#
-#    def paintGL(self):
-#        GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
-#        GL.glLoadIdentity()
-#        GL.glTranslated(0.0, 0.0, -10.0)
-#        GL.glRotated(self.xRot / 16.0, 1.0, 0.0, 0.0)
-#        GL.glRotated(self.yRot / 16.0, 0.0, 1.0, 0.0)
-#        GL.glRotated(self.zRot / 16.0, 0.0, 0.0, 1.0)
-#        GL.glCallList(self.object)
-#
-#    def resizeGL(self, width, height):
-#        side = min(width, height)
-#        if side < 0:
-#            return
-#
-#        GL.glViewport((width - side) / 2, (height - side) / 2, side, side)
-#
-#        GL.glMatrixMode(GL.GL_PROJECTION)
-#        GL.glLoadIdentity()
-#        GL.glOrtho(-0.5, +0.5, +0.5, -0.5, 4.0, 15.0)
-#        GL.glMatrixMode(GL.GL_MODELVIEW)
-#
-#    def mousePressEvent(self, event):
-#        self.lastPos = event.pos()
-#
-#    def mouseMoveEvent(self, event):
-#        dx = event.x() - self.lastPos.x()
-#        dy = 0 - (event.y() - self.lastPos.y())
-#
-#        if event.buttons() & QtCore.Qt.LeftButton:
-#            self.setXRotation(self.xRot + 8 * dy)
-#            self.setYRotation(self.yRot + 8 * dx)
-#        elif event.buttons() & QtCore.Qt.RightButton:
-#            self.setXRotation(self.xRot + 8 * dy)
-#            self.setZRotation(self.zRot + 8 * dx)
-#
-#        self.lastPos = event.pos()
-#
-#    def makeObject(self):
-#        genList = GL.glGenLists(1)
-#        GL.glNewList(genList, GL.GL_COMPILE)
-#
-#        GL.glBegin(GL.GL_QUADS)
-#
-#
-#        x1 = +0.06
-#        y1 = -0.14
-#        x2 = +0.14
-#        y2 = -0.06
-#        x3 = +0.08
-#        y3 = +0.00
-#        x4 = +0.30
-#        y4 = +0.22
-#
-#        self.quad(x1, y1, x2, y2, y2, x2, y1, x1)
-#        self.quad(x3, y3, x4, y4, y4, x4, y3, x3)
-#
-#        self.extrude(x1, y1, x2, y2)
-#        self.extrude(x2, y2, y2, x2)
-#        self.extrude(y2, x2, y1, x1)
-#        self.extrude(y1, x1, x1, y1)
-#        self.extrude(x3, y3, x4, y4)
-#        self.extrude(x4, y4, y4, x4)
-#        self.extrude(y4, x4, y3, x3)
-#
-#        NumSectors = 200
-#
-#        for i in range(NumSectors):
-#            angle1 = (i * 2 * math.pi) / NumSectors
-#            val1 = 0.3
-#            val2 = 0.2
-#            x5 = val1 * math.sin(angle1)
-#            y5 = val1 * math.cos(angle1)
-#            x6 = val2 * math.sin(angle1)
-#            y6 = val2 * math.cos(angle1)
-#
-#            angle2 = ((i + 1) * 2 * math.pi) / NumSectors
-#            x7 = val2 * math.sin(angle2)
-#            y7 = val2 * math.cos(angle2)
-#            x8 = val1 * math.sin(angle2)
-#            y8 = val1 * math.cos(angle2)
-#
-#            self.quad(x5, y5, x6, y6, x7, y7, x8, y8)
-#
-#            self.extrude(x6, y6, x7, y7)
-#            self.extrude(x8, y8, x5, y5)
-#
-#        GL.glEnd()
-#        GL.glEndList()
-#
-#        return genList
-#
-#    def quad(self, x1, y1, x2, y2, x3, y3, x4, y4):
-#        self.qglColor(self.trolltechGreen)
-#
-#        GL.glVertex3d(x1, y1, -0.05)
-#        GL.glVertex3d(x2, y2, -0.05)
-#        GL.glVertex3d(x3, y3, -0.05)
-#        GL.glVertex3d(x4, y4, -0.05)
-#
-#        GL.glVertex3d(x4, y4, +0.05)
-#        GL.glVertex3d(x3, y3, +0.05)
-#        GL.glVertex3d(x2, y2, +0.05)
-#        GL.glVertex3d(x1, y1, +0.05)
-#
-#    def extrude(self, x1, y1, x2, y2):
-#        self.qglColor(self.trolltechGreen.dark(250 + int(100 * x1)))
-#
-#        GL.glVertex3d(x1, y1, +0.05)
-#        GL.glVertex3d(x2, y2, +0.05)
-#        GL.glVertex3d(x2, y2, -0.05)
-#        GL.glVertex3d(x1, y1, -0.05)
-#
-#    def normalizeAngle(self, angle):
-#        while angle < 0:
-#            angle += 360 * 16
-#        while angle > 360 * 16:
-#            angle -= 360 * 16
-#        return angle
-
-#print 'test 1'
 global app
-#print 'test 2'
 out = -1
 while out == -1:
     app = QtGui.QApplication(sys.argv)
-    #print 'test 3'
     window = PyQtLink()
-    #print 'test 4'
     window.show()
-    #print 'test 5'
     out = app.exec_()
-#    print out
-    #sys.exit(app.exec_())
-
-#if __name__ == '__main__':
-#    global app
-#    app = QtGui.QApplication(sys.argv)
-#    window = PyQtLink()
-#    window.show()
-#    sys.exit(app.exec_())
