@@ -396,7 +396,7 @@
          </rect>
         </property>
         <property name="currentIndex">
-         <number>1</number>
+         <number>0</number>
         </property>
         <widget class="QWidget" name="page_15"/>
         <widget class="QWidget" name="page_20">
@@ -1561,6 +1561,22 @@
               <string>Delete Entry</string>
              </property>
             </widget>
+            <widget class="QCheckBox" name="chk_dumpmesh">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>90</y>
+               <width>101</width>
+               <height>23</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>Dump Mesh</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
            </widget>
           </widget>
           <widget class="QCheckBox" name="chk_meshes_cm">
@@ -1574,22 +1590,6 @@
            </property>
            <property name="text">
             <string>Contact Model</string>
-           </property>
-           <property name="checked">
-            <bool>true</bool>
-           </property>
-          </widget>
-          <widget class="QCheckBox" name="chk_dumpmesh">
-           <property name="geometry">
-            <rect>
-             <x>380</x>
-             <y>40</y>
-             <width>101</width>
-             <height>23</height>
-            </rect>
-           </property>
-           <property name="text">
-            <string>Dump Mesh</string>
            </property>
            <property name="checked">
             <bool>true</bool>
@@ -1617,7 +1617,6 @@
           <zorder>stack_meshes_sv</zorder>
           <zorder>stack_meshes_sav</zorder>
           <zorder>chk_meshes_cm</zorder>
-          <zorder>chk_dumpmesh</zorder>
           <zorder>chk_meshes_sw</zorder>
          </widget>
         </widget>

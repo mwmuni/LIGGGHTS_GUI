@@ -642,7 +642,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             self.renewparticlenames()
 
     def btn_edit_script_clicked(self):
-        os.system('gedit script.s')
+        os.system('gedit script.py')
 
     def btn_import_ins_mesh_clicked(self):
         global ins_mesh_ref
@@ -652,7 +652,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
 #                                   ('All Files', '.*')))
         self.fileName = QtGui.QFileDialog.getOpenFileName(self,
                                                           'Single File',
-                                                          ".",
+                                                          (self.currentDir if self.currentDir != None else '.'),
                                                           '*.stl')
         self.fileName = str(self.fileName)
         
@@ -906,7 +906,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         return False
 
     def fileGen(self):
-        f = open(self.currentDir+'script.s', 'w')
+        f = open(self.currentDir+'script.py', 'w')
         f.write('# TUNRA BULK SOLIDS LIGGGHTS DEM Simulation File\n')
         f.write('# For technical support, please contact\n')
         f.write('# Wei Chen: W.Chen@newcastle.edu.au\n\n')
@@ -1069,18 +1069,15 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         for n in range(0, len(self.insertionList)):
             f.write('variable\tt'+str(n+1)+'\t\tequal\t${tfill'+str(n+1)+'}\t\t\t\t# Time for inserting particles\n')
             f.write('variable\tsteps'+str(n+1)+'\tequal\t${t'+str(n+1)+'}*${factor}\t\t# Convert time to computational steps\n')
-        addTempStr = '('
+        addTempStr = ''
         for n in range(0, len(self.insertionList)):
             if n > 0:
-                addTempStr += ' + ${tsteps' + str(n+1) + '}'
+                addTempStr += ' + ${t' + str(n+1) + '}'
             else:
-                addTempStr += '${tsteps' + str(n+1) + '}'
-        if addTempStr != '(':
-            addTempStr += ')'
-        else:
-            addTempStr = ''
+                addTempStr += '${t' + str(n+1) + '}'
+        f.write('variable\ttall\t\tequal\t'+(addTempStr if addTempStr != '' else '0')+'\n')
         if not self.line_totaltime.text().isEmpty():
-            f.write('variable\tt'+str(len(self.insertionList)+1)+'\t\tequal\t'+self.line_totaltime.text()+('- ' + addTempStr if addTempStr != '' else '')+'\n')
+            f.write('variable\tt'+str(len(self.insertionList)+1)+'\t\tequal\t'+self.line_totaltime.text()+'- tall'+'\n')
             f.write('variable\tsteps'+str(len(self.insertionList)+1)+'\tequal\t${t'+str(len(self.insertionList)+1)+'}*${factor}\n\n')
 
         f.write('######################################################################################################################\n\n')
@@ -1289,7 +1286,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                         str(self.meshProperties[n][8]) + ' ' +
                         str(self.meshProperties[n][9]) + ' ' +
                         str(self.meshProperties[n][10]) + ' ')
-            f.write('curvature 1e-6 ')
+            f.write('curvature 1e-8 ')
             if self.meshProperties[n][14]:
                 f.write('wear finnie ')
             f.write('\n\n')
@@ -1351,10 +1348,11 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             f.write('\n')
 
         # TODO: Change this when Insertion Face has been implemented
-        self.insertionList[self.spnbox_insertionindex.value()-1][1][0] = 0
-        self.insertionList[self.spnbox_insertionindex.value()-1][1][1] = \
-            self.fileName
+#        self.insertionList[self.spnbox_insertionindex.value()-1][1][0] = 0
+#        self.insertionList[self.spnbox_insertionindex.value()-1][1][1] = \
+#            self.fileName
         f.write('#######NEEDS TESTING########\n\n')
+        print self.insertionList
         for n in range(0, len(self.insertionList)):
 #            relDir2 = self.relDirSolver([self.insertionList[n][1][1]])
 #            f.write('fix\t\tins_mesh'+str(n+1)+' all mesh/surface file '+relDir2[0]+' type '+
@@ -1384,18 +1382,17 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         f.write('thermo_modify\tlost ignore norm no\n')
 #        f.write('compute_modify\tthermo_temp dynamic yes\n\n')
 
-        f.write('shell rm post\n')
-        f.write('shell mkdir post\n\n')
+        f.write('shell rm '+ self.currentDir +'post\n')
+        f.write('shell mkdir '+ self.currentDir +'post\n\n')
 
         f.write('dump\t\tdmpstl1 all mesh/stl 1 '+ self.currentDir +'post/static*.stl')
 #        for n in range(0, len(relDir)):
 #            f.write(' ' + os.path.splitext(os.path.basename(relDir[n]))[0])
-        print self.insertionList
+#        print self.insertionList
         for n in range(0, len(self.insertionList)):
             f.write(' ' + os.path.splitext(os.path.basename(self.insertionList[n][1][1]))[0])
         for i in self.meshProperties:
-            if i[13]:
-                f.write(' ' + os.path.splitext(i[0])[0])
+            f.write(' ' + os.path.splitext(i[0])[0])
         f.write('\n\n')
 
         f.write('dump\t\tdmp_m all custom ${dumpstep} '+ self.currentDir +'post/dump_*.liggghts '+
@@ -1410,7 +1407,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                 ('radius' if self.chk_radius.checkState() == 2 else '') + '\n\n')
 
         for i in self.meshProperties:
-            if i[13]:
+            if i[14]:
                 tempstr = os.path.splitext(i[0])[0]
                 f.write('dump\t\tdumpstress_'+tempstr)
                 f.write(' all mesh/gran/VTK ${dumpstep} '+ self.currentDir +'post/dump_')
@@ -1466,7 +1463,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                                    '\n')
             f.write('\n')
 
-        f.write('undump\t\tdumpstl1\n\n')
+        f.write('undump\t\tdmpstl1\n\n')
 
         for n in range(0, len(self.insertionList)):
             f.write('run\t\t${steps'+str(n+1)+'}\n\n')
@@ -1808,8 +1805,8 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
 
         inFile = QtGui.QFileDialog.getOpenFileName(self,
                                                    'Single File',
-                                                   ".",
-                                                   '*')
+                                                   (self.currentDir if self.currentDir != None else '.'),
+                                                   'MoleculeX GUI File (*.mlx)')
         inFile = str(inFile)
         if os.path.exists(inFile):
             self.new_button_clicked(True)
@@ -1994,7 +1991,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         if fileName is None:
             self.fileName = QtGui.QFileDialog.getOpenFileNames(self,
                                                               'Multiple File',
-                                                              ".",
+                                                              (self.currentDir if self.currentDir != None else '.'),
                                                               'STL Files (*.stl)')
             self.fileName = [str(item) for item in self.fileName]
         else:
@@ -2172,7 +2169,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         subprocess.call('mpirun -np ' + str(self.num_proc_x.value() *
                                       self.num_proc_y.value() *
                                       self.num_proc_z.value()) +
-                        ' LIGGGHTS <' + self.currentDir + 'script.s', shell=True)
+                        ' LIGGGHTS <' + self.currentDir + 'script.py', shell=True)
 
     def save(self, outFile=None):
         if self.currentFile is None:
@@ -2240,7 +2237,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             pickle.dump(storage, outFile)
 
     def saveas(self, fromSave=False):
-        outFile = QtGui.QFileDialog.getSaveFileName(self, 'Save As')
+        outFile = QtGui.QFileDialog.getSaveFileName(self, 'Save As', (self.currentDir if self.currentDir != None else '.'), 'MoleculeX GUI File (*.mlx)')
         outFile = str(outFile)
         if outFile != '':
             self.currentFile = outFile
