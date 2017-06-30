@@ -583,7 +583,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             self.renewparticlenames()
 
     def btn_solve_paraview_clicked(self):
-        os.system("gnome-terminal -e 'bash -c \"paraview; exec bash\"'")
+        os.system("gnome-terminal -e 'bash -c \"cd "+self.currentDir+"; paraview; exec bash\"' --title=Paraview")
 
     def btn_sphere_clicked(self):
         self.stack_geometry_meshes.setCurrentIndex(3)
@@ -1848,7 +1848,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                                     self.num_proc_z.value()) + \
                         ' LIGGGHTS <' + self.currentDir + 'script.py'
 
-        os.system("gnome-terminal -e 'bash -c \" "+cmmmd+"; exec bash\"'")
+        os.system("gnome-terminal -e 'bash -c \" "+cmmmd+"; exec bash\"' --title=Simulation")
 
     def save(self, outFile=None):
         if self.currentFile is None:
@@ -2012,7 +2012,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             self.lbl_PSDFractionTotal.setText(str(adding))
 
     def terminal(self):
-        subprocess.Popen(['gnome-terminal'], shell=True)
+        os.system("gnome-terminal -e 'bash -c \" cd "+self.currentDir+"; exec bash\"' --title='Current Project Terminal'")
 
     def tree_remove(self, item):
         global mesh_ref
