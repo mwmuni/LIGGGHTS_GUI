@@ -76,9 +76,6 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         self.btn_plane.clicked.connect(self.btn_plane_clicked)
         self.btn_addinsertion.clicked.connect(self.btn_addinsertion_clicked)
         self.btn_addPSD.clicked.connect(self.btn_addPSD_clicked)
-        self.btn_insertion_loadstl.clicked.connect(self.btn_insertion_loadstl_clicked)
-        self.btn_insertion_rect.clicked.connect(self.btn_insertion_rect_clicked)
-        self.btn_insertion_circle.clicked.connect(self.btn_insertion_circle_clicked)
         self.btn_removePSD.clicked.connect(self.btn_removePSD_clicked)
         self.btn_zoom_in.clicked.connect(self.btn_zoom_in_clicked)
         self.btn_zoom_out.clicked.connect(self.btn_zoom_out_clicked)
@@ -130,38 +127,6 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                 self.loadInsertionSettings)
         self.spnbox_psd.valueChanged.connect(
                 self.updateparticletypelist)
-
-        self.spnbox_insertion_rect_centre_x.valueChanged.connect(
-                self.insertionrectsave)
-        self.spnbox_insertion_rect_centre_y.valueChanged.connect(
-                self.insertionrectsave)
-        self.spnbox_insertion_rect_centre_z.valueChanged.connect(
-                self.insertionrectsave)
-        self.spnbox_insertion_length.valueChanged.connect(
-                self.insertionrectsave)
-        self.spnbox_insertion_width.valueChanged.connect(
-                self.insertionrectsave)
-        self.spnbox_insertion_rect_normal_x.valueChanged.connect(
-                self.insertionrectsave)
-        self.spnbox_insertion_rect_normal_y.valueChanged.connect(
-                self.insertionrectsave)
-        self.spnbox_insertion_rect_normal_z.valueChanged.connect(
-                self.insertionrectsave)
-
-        self.spnbox_insertion_circle_centre_x.valueChanged.connect(
-                self.insertioncirclesave)
-        self.spnbox_insertion_circle_centre_y.valueChanged.connect(
-                self.insertioncirclesave)
-        self.spnbox_insertion_circle_centre_z.valueChanged.connect(
-                self.insertioncirclesave)
-        self.spnbox_insertion_diameter.valueChanged.connect(
-                self.insertioncirclesave)
-        self.spnbox_insertion_circle_normal_x.valueChanged.connect(
-                self.insertioncirclesave)
-        self.spnbox_insertion_circle_normal_y.valueChanged.connect(
-                self.insertioncirclesave)
-        self.spnbox_insertion_circle_normal_z.valueChanged.connect(
-                self.insertioncirclesave)
 
         self.spnbox_totalmass.valueChanged.connect(
                 self.insertionmasssave)
@@ -547,7 +512,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             self.renewparticlenames()
 
     def btn_edit_script_clicked(self):
-        os.system('gedit script.py')
+        os.system('gedit '+self.currentDir+'script.py')
 
     def btn_import_ins_mesh_clicked(self):
         global ins_mesh_ref
@@ -579,17 +544,6 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                     toKeep.append(m)
                     break
         ins_mesh_ref = toKeep
-
-    def btn_insertion_circle_clicked(self):
-        self.stack_insertion_face.setCurrentIndex(3)
-        self.insertioncirclesave()
-
-    def btn_insertion_loadstl_clicked(self):
-        self.stack_insertion_face.setCurrentIndex(1)
-
-    def btn_insertion_rect_clicked(self):
-        self.stack_insertion_face.setCurrentIndex(2)
-        self.insertionrectsave()
 
     def btn_log_file_clicked(self):
         os.system('gedit log.liggghts')
@@ -629,7 +583,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             self.renewparticlenames()
 
     def btn_solve_paraview_clicked(self):
-        subprocess.call('paraview', shell=True)
+        os.system("gnome-terminal -e 'bash -c \"paraview; exec bash\"'")
 
     def btn_sphere_clicked(self):
         self.stack_geometry_meshes.setCurrentIndex(3)
@@ -938,7 +892,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                 addTempStr += '${t' + str(n+1) + '}'
         f.write('variable\ttall\t\tequal\t'+(addTempStr if addTempStr != '' else '0')+'\n')
         if not self.line_totaltime.text().isEmpty():
-            f.write('variable\tt'+str(len(self.insertionList)+1)+'\t\tequal\t'+self.line_totaltime.text()+'- tall'+'\n')
+            f.write('variable\tt'+str(len(self.insertionList)+1)+'\t\tequal\t'+self.line_totaltime.text()+'-${tall}'+'\n')
             f.write('variable\tsteps'+str(len(self.insertionList)+1)+'\tequal\t${t'+str(len(self.insertionList)+1)+'}*${factor}\n\n')
 
         f.write('######################################################################################################################\n\n')
@@ -1202,7 +1156,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                         f.write(str(numParticles) + strbuild + '\n')
             f.write('\n')
         for n in range(0, len(self.insertionList)):
-            f.write('fix\t\tins_mesh'+str(n+1)+' all mesh/surface file '+self.insertionList[n][1][1]+' type '+
+            f.write('fix\t\t'+os.path.splitext(os.path.basename(self.insertionList[n][1][1]))[0]+' all mesh/surface file '+self.insertionList[n][1][1]+' type '+
                     str(1+self.spnbox_geometry_contacttypes_totalgranulartypes.value())+
                     ' curvature 1e-6\n\n')
             f.write('fix\t\tins'+str(n+1)+' all insert/stream seed ' +
@@ -1211,7 +1165,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                     str(self.insertionList[n][2][2])+' '+
                     str(self.insertionList[n][2][3])+' '+
                     str(self.insertionList[n][2][4])+' '+'&\n')
-            f.write('\t\tinsertion_face ins_mesh'+str(n+1)+' extrude_length '+
+            f.write('\t\tinsertion_face '+os.path.splitext(os.path.basename(self.insertionList[n][1][1]))[0]+' extrude_length '+
                     str(self.insertionList[n][2][5])+'\n\n')
 
         f.write('fix\t\tintegr all nve/sphere\n\n')
@@ -1312,17 +1266,6 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         
         f.write('write_restart	anyname.restart\n')
 
-    def insertioncirclesave(self):
-        if not self.loading:
-            self.insertionList[self.spnbox_insertionindex.value()-1][1] = [2,
-                    [self.spnbox_insertion_circle_centre_x.value(),
-                    self.spnbox_insertion_circle_centre_y.value(),
-                    self.spnbox_insertion_circle_centre_z.value(),
-                    self.spnbox_insertion_diameter.value(),
-                    self.spnbox_insertion_circle_normal_x.value(),
-                    self.spnbox_insertion_circle_normal_y.value(),
-                    self.spnbox_insertion_circle_normal_z.value()]]
-
     def insertionmasssave(self):
         if not self.loading:
             self.insertionList[self.spnbox_insertionindex.value()-1][2] = [
@@ -1332,18 +1275,6 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                     self.spnbox_insertion_mass_y.value(),
                     self.spnbox_insertion_mass_z.value(),
                     self.spnbox_insertion_extrude.value()]
-
-    def insertionrectsave(self):
-        if not self.loading:
-            self.insertionList[self.spnbox_insertionindex.value()-1][1] = [1,
-                    [self.spnbox_insertion_rect_centre_x.value(),
-                    self.spnbox_insertion_rect_centre_y.value(),
-                    self.spnbox_insertion_rect_centre_z.value(),
-                    self.spnbox_insertion_length.value(),
-                    self.spnbox_insertion_width.value(),
-                    self.spnbox_insertion_rect_normal_x.value(),
-                    self.spnbox_insertion_rect_normal_y.value(),
-                    self.spnbox_insertion_rect_normal_z.value()]]
 
     def listcedupdate(self):
         self.line_ced.setText(str(self.contactParams[3][
@@ -1912,10 +1843,12 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         self.loading = False
 
     def run_prog_clicked(self):
-        subprocess.call('mpirun -np ' + str(self.num_proc_x.value() *
-                                      self.num_proc_y.value() *
-                                      self.num_proc_z.value()) +
-                        ' LIGGGHTS <' + self.currentDir + 'script.py', shell=True)
+        cmmmd = 'mpirun -np ' + str(self.num_proc_x.value() *
+                                    self.num_proc_y.value() *
+                                    self.num_proc_z.value()) + \
+                        ' LIGGGHTS <' + self.currentDir + 'script.py'
+
+        os.system("gnome-terminal -e 'bash -c \" "+cmmmd+"; exec bash\"'")
 
     def save(self, outFile=None):
         if self.currentFile is None:
