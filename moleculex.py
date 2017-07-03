@@ -395,8 +395,6 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                                   self.spnbox_granulartypeindex.value()-1][n][1]
         self.lbl_PSDFractionTotal.setText(str(adding))
         self.loading = True
-        self.resetinsertionface()
-        self.loading = True
         self.resetmassproperties()
         self.loading = False
 
@@ -676,7 +674,6 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
 
     def clearinsertionface(self):
         temp = self.insertionList[self.spnbox_insertionindex.value()][1]
-        self.resetinsertionface()
         self.insertionList[self.spnbox_insertionindex.value()][1] = temp
 
     def  clearmeshproperties(self):
@@ -1378,53 +1375,13 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                 self.spnbox_psd.setValue(1)  # Will call valueChanged
             else:
                 self.spnbox_psd.setValue(0)
-            self.resetinsertionface()
             self.loading = True
-            if currSettings[1][0] == -1:
-                self.stack_insertion_face.setCurrentIndex(0)
-            elif currSettings[1][0] == 0:
-                self.stack_insertion_face.setCurrentIndex(1)
+            if currSettings[1][0] == 0:
                 if currSettings[1][1] is not None:
                     self.lbl_loaded_insertion.setText(
                             basename(currSettings[1][1]))
                 else:
                     self.lbl_loaded_insertion.setText('...')
-            elif currSettings[1][0] == 1:
-                self.loading = True
-                self.stack_insertion_face.setCurrentIndex(2)
-                self.spnbox_insertion_rect_centre_x.setValue(
-                        currSettings[1][1][0])
-                self.spnbox_insertion_rect_centre_y.setValue(
-                        currSettings[1][1][1])
-                self.spnbox_insertion_rect_centre_z.setValue(
-                        currSettings[1][1][2])
-                self.spnbox_insertion_length.setValue(
-                        currSettings[1][1][3])
-                self.spnbox_insertion_width.setValue(
-                        currSettings[1][1][4])
-                self.spnbox_insertion_rect_normal_x.setValue(
-                        currSettings[1][1][5])
-                self.spnbox_insertion_rect_normal_y.setValue(
-                        currSettings[1][1][6])
-                self.spnbox_insertion_rect_normal_z.setValue(
-                        currSettings[1][1][7])
-            elif currSettings[1][0] == 2:
-                self.loading = True
-                self.stack_insertion_face.setCurrentIndex(3)
-                self.spnbox_insertion_circle_centre_x.setValue(
-                        currSettings[1][1][0])
-                self.spnbox_insertion_circle_centre_y.setValue(
-                        currSettings[1][1][1])
-                self.spnbox_insertion_circle_centre_z.setValue(
-                        currSettings[1][1][2])
-                self.spnbox_insertion_diameter.setValue(
-                        currSettings[1][1][3])
-                self.spnbox_insertion_circle_normal_x.setValue(
-                        currSettings[1][1][4])
-                self.spnbox_insertion_circle_normal_y.setValue(
-                        currSettings[1][1][5])
-                self.spnbox_insertion_circle_normal_z.setValue(
-                        currSettings[1][1][6])
             self.spnbox_totalmass.setValue(
                     currSettings[2][0])
             self.spnbox_massrate.setValue(
@@ -1801,36 +1758,6 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                                     str(n+1)+'_'+str(x+1)+ \
                                     '_p'+str(y+1)+'_'+str(z+1)
         self.updateparticlelist()
-
-    def resetinsertionface(self):
-        # Store old values
-        temp = self.insertionList[self.spnbox_insertionindex.value()-1][1]
-
-        self.loading = True
-
-        # Reset rectangle field
-        self.spnbox_insertion_rect_centre_x.setValue(0.00)
-        self.spnbox_insertion_rect_centre_y.setValue(0.00)
-        self.spnbox_insertion_rect_centre_z.setValue(0.00)
-        self.spnbox_insertion_length.setValue(0.00)
-        self.spnbox_insertion_width.setValue(0.00)
-        self.spnbox_insertion_rect_normal_x.setValue(0.00)
-        self.spnbox_insertion_rect_normal_y.setValue(0.00)
-        self.spnbox_insertion_rect_normal_z.setValue(0.00)
-
-        # Reset circle field
-        self.spnbox_insertion_circle_centre_x.setValue(0.00)
-        self.spnbox_insertion_circle_centre_y.setValue(0.00)
-        self.spnbox_insertion_circle_centre_z.setValue(0.00)
-        self.spnbox_insertion_diameter.setValue(0.00)
-        self.spnbox_insertion_circle_normal_x.setValue(0.00)
-        self.spnbox_insertion_circle_normal_y.setValue(0.00)
-        self.spnbox_insertion_circle_normal_z.setValue(0.00)
-
-        self.loading = False
-
-        # Load old values
-        self.insertionList[self.spnbox_insertionindex.value()-1][1] = temp
 
     def resetmassproperties(self):
         self.loading = True
