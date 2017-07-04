@@ -123,7 +123,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             .valueChanged.connect(self.addContactTypes)
         self.spnbox_insertion_fraction.valueChanged.connect(self.savePSD)
 
-        self.spnbox_insertionindex.valueChanged.connect(
+        self.combo_insertionindex.currentIndexChanged.connect(
                 self.loadInsertionSettings)
         self.spnbox_psd.valueChanged.connect(
                 self.updateparticletypelist)
@@ -152,7 +152,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                 self.savePSD)
         self.spnbox_diameter.valueChanged.connect(
                 self.savePSD)
-        
+
         self.mm_riggle_origin_x.valueChanged.connect(
                 self.savemeshproperties)
         self.mm_riggle_origin_y.valueChanged.connect(
@@ -311,7 +311,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         self.contactParams.append([0.0 for x in range(0, self.totalTypes**2)])  # CED
         self.contactParams.append([1.0 for x in range(0, self.totalTypes**2)])  # KWear
         self.insertionList = []
-        self.spnbox_insertionindex.setValue(0)
+        self.combo_insertionindex.setCurrentIndex(0)
         self.stack_insertionsettings.setCurrentIndex(0)
         self.listcedupdate()
         self.listcorupdate()
@@ -365,32 +365,33 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
 
     def btn_addinsertion_clicked(self):
         self.loading = True
+        self.combo_insertionindex.addItem(str(len(self.insertionList)+1))
         self.stack_insertionsettings.setCurrentIndex(1)
         self.insertionList.append([[[]], [-1, None],
                                     [0.00, 0.00, 0.00, 0.00, 0.00, 0.00]])
-        self.spnbox_insertionindex.setValue(len(self.insertionList))
+        self.combo_insertionindex.setCurrentIndex(len(self.insertionList)-1)
         self.loading = True
         self.spnbox_granulartypeindex.setValue(1)
         for n in range(0, self.spnbox_geometry_contacttypes_totalgranulartypes.value()):
-            self.insertionList[self.spnbox_insertionindex.value()-1][0][
+            self.insertionList[self.combo_insertionindex.currentIndex()][0][
                      self.spnbox_psd.value()-1].append(
-                        [[str(self.spnbox_insertionindex.value())+'_'+
+                        [[str(self.combo_insertionindex.currentIndex()+1)+'_'+
                           str(self.spnbox_psd.value())+'_'+'p'+str(n+1)+
                          '_1', 0.0, 0.0, 0.0]])
         self.combo_particlelist.clear()
         for n in range(0, len(self.insertionList[
-                self.spnbox_insertionindex.value()-1][
+                self.combo_insertionindex.currentIndex()][
                         0][self.spnbox_psd.value()-1][0])):
             self.combo_particlelist.addItem(
                     self.insertionList[
-                            self.spnbox_insertionindex.value()-1][
+                            self.combo_insertionindex.currentIndex()][
                                     0][self.spnbox_psd.value()-1][0][n][0])
         self.spnbox_psd.setValue(1)
         adding = 0
-        for n in range(0, len(self.insertionList[self.spnbox_insertionindex.value()-1
+        for n in range(0, len(self.insertionList[self.combo_insertionindex.currentIndex()
                           ][0][self.spnbox_psd.value()-1][
                                   self.spnbox_granulartypeindex.value()-1])):
-            adding += self.insertionList[self.spnbox_insertionindex.value()-1
+            adding += self.insertionList[self.combo_insertionindex.currentIndex()
                           ][0][self.spnbox_psd.value()-1][
                                   self.spnbox_granulartypeindex.value()-1][n][1]
         self.lbl_PSDFractionTotal.setText(str(adding))
@@ -453,24 +454,24 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         if not self.loading:
             self.loading = True
             self.spnbox_psd.setValue(len(self.insertionList[
-                    self.spnbox_insertionindex.value()-1][0])+1)
+                    self.combo_insertionindex.currentIndex()][0])+1)
             self.spnbox_granulartypeindex.setValue(1)
-            self.insertionList[self.spnbox_insertionindex.value()-1][0].append(
+            self.insertionList[self.combo_insertionindex.currentIndex()][0].append(
                     [])
             for n in range(0, self.spnbox_geometry_contacttypes_totalgranulartypes.value()):
-                    self.insertionList[self.spnbox_insertionindex.value()-1][0][
+                    self.insertionList[self.combo_insertionindex.currentIndex()][0][
                          self.spnbox_psd.value()-1].append(
-                            [[str(self.spnbox_insertionindex.value())+'_'+
+                            [[str(self.combo_insertionindex.currentIndex()+1)+'_'+
                               str(self.spnbox_psd.value())+'_'+'p'+str(n+1)+
                              '_1', 0.0, 0.0, 0.0]])
             self.combo_particlelist.clear()
             for n in range(0, len(self.insertionList[
-                    self.spnbox_insertionindex.value()-1][
+                    self.combo_insertionindex.currentIndex()][
                             0][self.spnbox_psd.value()-1][
                                     self.spnbox_granulartypeindex.value()-1])):
                 self.combo_particlelist.addItem(
                         self.insertionList[
-                                self.spnbox_insertionindex.value()-1][0][
+                                self.combo_insertionindex.currentIndex()][0][
                                         self.spnbox_psd.value()-1][
                                                 self.spnbox_granulartypeindex.value()-1][n][0])
             self.loading = False
@@ -483,14 +484,14 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
 
     def btn_addptcl_clicked(self):
         self.insertionList[
-                self.spnbox_insertionindex.value()-1][0][
+                self.combo_insertionindex.currentIndex()][0][
                 self.spnbox_psd.value()-1][
                 self.spnbox_granulartypeindex.value()-1
-                ].append([str(self.spnbox_insertionindex.value())+'_'+
+                ].append([str(self.combo_insertionindex.currentIndex()+1)+'_'+
                     str(self.spnbox_psd.value())+
                     '_p'+str(self.spnbox_granulartypeindex.value())+
                     '_'+str(len(self.insertionList[
-                    self.spnbox_insertionindex.value()-1][0][
+                    self.combo_insertionindex.currentIndex()][0][
                     self.spnbox_psd.value()-1][
                     self.spnbox_granulartypeindex.value()-1])+1), 0.0, 0.0, 0.0])
         self.updateparticlelist()
@@ -499,11 +500,11 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
 
     def btn_delptcl_clicked(self):
         if len(self.insertionList[
-                self.spnbox_insertionindex.value()-1][0][
+                self.combo_insertionindex.currentIndex()][0][
                 self.spnbox_psd.value()-1][
                 self.spnbox_granulartypeindex.value()-1]) > 1:
             del self.insertionList[
-                self.spnbox_insertionindex.value()-1][0][
+                self.combo_insertionindex.currentIndex()][0][
                 self.spnbox_psd.value()-1][
                 self.spnbox_granulartypeindex.value()-1][
                 self.combo_particlelist.currentIndex()]
@@ -524,8 +525,8 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                         os.path.exists(self.fileName):
             tempVar = load_mesh(self.fileName)
             ins_mesh_ref.append([self.fileName, tempVar, [.4, .4, .4, 1.0]])
-            self.insertionList[self.spnbox_insertionindex.value()-1][1][0] = 0
-            self.insertionList[self.spnbox_insertionindex.value()-1][1][1] = \
+            self.insertionList[self.combo_insertionindex.currentIndex()][1][0] = 0
+            self.insertionList[self.combo_insertionindex.currentIndex()][1][1] = \
                 self.fileName
             self.lbl_loaded_insertion.setText(basename(self.fileName))
             self.remove_unused_insertion_faces()
@@ -572,10 +573,10 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
 
     def btn_removePSD_clicked(self):
         if len(self.insertionList[
-                self.spnbox_insertionindex.value()-1][0]) > 1:
+                self.combo_insertionindex.currentIndex()][0]) > 1:
             tempInt = self.spnbox_psd.value()
             del self.insertionList[
-                self.spnbox_insertionindex.value()-1][0][
+                self.combo_insertionindex.currentIndex()][0][
                         self.spnbox_psd.value()-1]
             self.spnbox_psd.setValue(tempInt-1)
             self.renewparticlenames()
@@ -673,8 +674,8 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         self.savemeshproperties()
 
     def clearinsertionface(self):
-        temp = self.insertionList[self.spnbox_insertionindex.value()][1]
-        self.insertionList[self.spnbox_insertionindex.value()][1] = temp
+        temp = self.insertionList[self.combo_insertionindex.currentIndex()+1][1]
+        self.insertionList[self.combo_insertionindex.currentIndex()+1][1] = temp
 
     def  clearmeshproperties(self):
         self.loading = True
@@ -1265,7 +1266,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
 
     def insertionmasssave(self):
         if not self.loading:
-            self.insertionList[self.spnbox_insertionindex.value()-1][2] = [
+            self.insertionList[self.combo_insertionindex.currentIndex()][2] = [
                     self.spnbox_totalmass.value(),
                     self.spnbox_massrate.value(),
                     self.spnbox_insertion_mass_x.value(),
@@ -1361,15 +1362,15 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         self.loading = False
 
     def loadInsertionSettings(self):
-        if self.spnbox_insertionindex.value() > len(self.insertionList):
-            self.spnbox_insertionindex.setValue(len(self.insertionList))
+        if self.combo_insertionindex.currentIndex()+1 > len(self.insertionList):
+            self.combo_insertionindex.setCurrentIndex(len(self.insertionList)-1)
             return -1
-        elif self.spnbox_insertionindex.value() < 1 and \
+        elif self.combo_insertionindex.currentIndex()+1 < 1 and \
                 len(self.insertionList) > 0:
-            self.spnbox_insertionindex.setValue(1)
+            self.combo_insertionindex.currentIndex(0)
             return -1
         if len(self.insertionList) > 0:
-            currSettings = self.insertionList[self.spnbox_insertionindex.value()-1]
+            currSettings = self.insertionList[self.combo_insertionindex.currentIndex()]
             if len(currSettings[0]) > 0:
                 self.spnbox_psd.setValue(0)
                 self.spnbox_psd.setValue(1)  # Will call valueChanged
@@ -1539,12 +1540,16 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             self.rad_gravity_y.setChecked(storage[7][10][1])
             self.rad_gravity_z.setChecked(storage[7][10][2])
             self.contactParams = storage[8]
-            self.insertionList = storage[9]
+            self.insertionList = storage[9][0]
+            self.combo_insertionindex.clear()
+            for i in range(storage[9][1]):
+                self.combo_insertionindex.addItem(str(i+1))
+            self.combo_insertionindex.setCurrentIndex(storage[9][2])
             if len(self.insertionList) > 0:
                 self.stack_insertionsettings.setCurrentIndex(1)
-                self.spnbox_insertionindex.setValue(1)
+                self.combo_insertionindex.setCurrentIndex(0)
             else:
-                self.spnbox_insertionindex.setValue(0)
+                self.combo_insertionindex.setCurrentIndex(0)
                 self.stack_insertionsettings.setCurrentIndex(0)
             self.chk_coordinates.setChecked(storage[10][0])
             self.chk_velocity.setChecked(storage[10][1])
@@ -1623,6 +1628,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             self.num_proc_x.setValue(1)
             self.num_proc_y.setValue(1)
             self.num_proc_z.setValue(1)
+            self.combo_insertionindex.clear()
             self.stack_geometry.setCurrentIndex(0)
             self.testPage.setCurrentIndex(0)
             self.testPage.setEnabled(True)
@@ -1811,7 +1817,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                              self.rad_gravity_y.isChecked(),
                              self.rad_gravity_z.isChecked(),)])
             storage.append(self.contactParams)
-            storage.append(self.insertionList)
+            storage.append([self.insertionList, len(self.insertionList), self.combo_insertionindex.currentIndex()])
             storage.append((self.chk_coordinates.isChecked(),
                             self.chk_velocity.isChecked(),
                             self.chk_force.isChecked(),
@@ -1921,7 +1927,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
 
     def savePSD(self):
         if self.spnbox_psd.value() is not 0 and self.loading is not True:
-            self.insertionList[self.spnbox_insertionindex.value()-1][0][
+            self.insertionList[self.combo_insertionindex.currentIndex()][0][
                     self.spnbox_psd.value()-1][
                             self.spnbox_granulartypeindex.value()-1][
                             self.combo_particlelist.currentIndex()] = \
@@ -1930,10 +1936,10 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                                     self.spnbox_density.value(),
                                     self.spnbox_diameter.value()]
             adding = 0
-            for n in range(0, len(self.insertionList[self.spnbox_insertionindex.value()-1
+            for n in range(0, len(self.insertionList[self.combo_insertionindex.currentIndex()
                               ][0][self.spnbox_psd.value()-1][
                                       self.spnbox_granulartypeindex.value()-1])):
-                adding += self.insertionList[self.spnbox_insertionindex.value()-1
+                adding += self.insertionList[self.combo_insertionindex.currentIndex()
                               ][0][self.spnbox_psd.value()-1][
                                       self.spnbox_granulartypeindex.value()-1][n][1]
             self.lbl_PSDFractionTotal.setText(str(adding))
@@ -1993,20 +1999,20 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                     self.spnbox_geometry_contacttypes_totalgranulartypes.value())
             self.combo_particlelist.clear()
             for n in range(0, len(
-                    self.insertionList[self.spnbox_insertionindex.value()-1][
+                    self.insertionList[self.combo_insertionindex.currentIndex()][
                             0][self.spnbox_psd.value()-1][
                                     self.spnbox_granulartypeindex.value()-1])):
                 self.combo_particlelist.addItem(
                         self.insertionList[
-                                self.spnbox_insertionindex.value()-1][
+                                self.combo_insertionindex.currentIndex()][
                             0][self.spnbox_psd.value()-1][
                                     self.spnbox_granulartypeindex.value()-1][
                                             n][0])
             adding = 0
-            for n in range(0, len(self.insertionList[self.spnbox_insertionindex.value()-1
+            for n in range(0, len(self.insertionList[self.combo_insertionindex.currentIndex()
                               ][0][self.spnbox_psd.value()-1][
                                       self.spnbox_granulartypeindex.value()-1])):
-                adding += self.insertionList[self.spnbox_insertionindex.value()-1
+                adding += self.insertionList[self.combo_insertionindex.currentIndex()
                               ][0][self.spnbox_psd.value()-1][
                                       self.spnbox_granulartypeindex.value()-1][n][1]
             self.lbl_PSDFractionTotal.setText(str(adding))
@@ -2018,19 +2024,19 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             self.loading = True
             self.spnbox_insertion_fraction.setValue(
                     self.insertionList[
-                                self.spnbox_insertionindex.value()-1][
+                                self.combo_insertionindex.currentIndex()][
                             0][self.spnbox_psd.value()-1][
                                     self.spnbox_granulartypeindex.value()-1][
                                             self.combo_particlelist.currentIndex()][1])
             self.spnbox_density.setValue(
                     self.insertionList[
-                                self.spnbox_insertionindex.value()-1][
+                                self.combo_insertionindex.currentIndex()][
                             0][self.spnbox_psd.value()-1][
                                     self.spnbox_granulartypeindex.value()-1][
                                             self.combo_particlelist.currentIndex()][2])
             self.spnbox_diameter.setValue(
                     self.insertionList[
-                                self.spnbox_insertionindex.value()-1][
+                                self.combo_insertionindex.currentIndex()][
                             0][self.spnbox_psd.value()-1][
                                     self.spnbox_granulartypeindex.value()-1][
                                             self.combo_particlelist.currentIndex()][3])
@@ -2040,11 +2046,11 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         if not self.loading:
             self.loading = True
             if self.spnbox_psd.value() > len(self.insertionList[
-                    self.spnbox_insertionindex.value()-1][0]):
+                    self.combo_insertionindex.currentIndex()][0]):
                 self.spnbox_psd.setValue(len(self.insertionList[
-                    self.spnbox_insertionindex.value()-1][0]))
+                    self.combo_insertionindex.currentIndex()][0]))
             if self.spnbox_psd.value() == 0 and len(self.insertionList[
-                    self.spnbox_insertionindex.value()-1][0]) > 0:
+                    self.combo_insertionindex.currentIndex()][0]) > 0:
                     self.spnbox_psd.setValue(1)
             if self.spnbox_granulartypeindex.value() == 0:
                 self.spnbox_granulartypeindex.setValue(1)
