@@ -67,7 +67,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -92,7 +92,7 @@
        </sizepolicy>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="page_14">
        <widget class="QLabel" name="label_28">
@@ -2932,7 +2932,7 @@
        </rect>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="page_3">
        <widget class="QLabel" name="label_12">
@@ -4210,6 +4210,19 @@
           <width>79</width>
           <height>25</height>
          </rect>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="btn_delete_insertion">
+        <property name="geometry">
+         <rect>
+          <x>210</x>
+          <y>40</y>
+          <width>111</width>
+          <height>25</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Delete Insertion</string>
         </property>
        </widget>
       </widget>

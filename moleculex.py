@@ -75,6 +75,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         self.btn_cylinder.clicked.connect(self.btn_cylinder_clicked)
         self.btn_plane.clicked.connect(self.btn_plane_clicked)
         self.btn_addinsertion.clicked.connect(self.btn_addinsertion_clicked)
+        self.btn_delete_insertion.clicked.connect(self.btn_delete_insertion_clicked)
         self.btn_addPSD.clicked.connect(self.btn_addPSD_clicked)
         self.btn_removePSD.clicked.connect(self.btn_removePSD_clicked)
         self.btn_zoom_in.clicked.connect(self.btn_zoom_in_clicked)
@@ -398,6 +399,20 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         self.loading = True
         self.resetmassproperties()
         self.loading = False
+        self.updateparticletype()
+
+    def btn_delete_insertion_clicked(self):
+        if len(self.insertionList) == 0:
+            return 0
+        else:
+            del self.insertionList[self.combo_insertionindex.currentIndex()]
+            self.combo_insertionindex.clear()
+            if len(self.insertionList) > 0:
+                for i in range(len(self.insertionList)):
+                    self.combo_insertionindex.addItem(str(i+1))
+                self.renewparticlenames()
+            else:
+                self.stack_insertionsettings.setCurrentIndex(0)
 
     def btn_add_mm_type_clicked(self):
         LINEAR = 0
@@ -474,7 +489,9 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                                 self.combo_insertionindex.currentIndex()][0][
                                         self.spnbox_psd.value()-1][
                                                 self.spnbox_granulartypeindex.value()-1][n][0])
+            self.lbl_PSDFractionTotal.setText("0.0")
             self.loading = False
+            self.updateparticletype()
 
     def btn_cube_clicked(self):
         self.stack_geometry_meshes.setCurrentIndex(2)
@@ -1367,7 +1384,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             return -1
         elif self.combo_insertionindex.currentIndex()+1 < 1 and \
                 len(self.insertionList) > 0:
-            self.combo_insertionindex.currentIndex(0)
+            self.combo_insertionindex.setCurrentIndex(0)
             return -1
         if len(self.insertionList) > 0:
             currSettings = self.insertionList[self.combo_insertionindex.currentIndex()]
