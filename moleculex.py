@@ -330,7 +330,6 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             for meshes in range(0, len(mesh_ref)):
                 v = mesh_ref[meshes][1].vertices
                 for index in range(0, len(v)):
-    
                     if min_x > v[index][0] or min_x is None:
                         min_x = v[index][0]
                     if min_y > v[index][1] or min_y is None:
@@ -566,6 +565,8 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
 
     def btn_mm_del_clicked(self):
         n = self.currentMeshType
+        if len(self.mmList[n]) == 0:
+            return 0
         index = self.list_mm_type.indexFromItem(self.list_mm_type.currentItem()).row()
         del self.mmList[n][index]
         del self.meshProperties[n][19][index]
@@ -579,11 +580,14 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                 self.list_mm_type.addItem('Item_'+str(x+1)+'_Rotate')
             else:
                 self.list_mm_type.addItem('Item_'+str(x+1)+'_Wiggle')
-        if index > len(self.mmList[self.currentMeshType]):
-            index -= 1
-        item = self.list_mm_type.item(index)
-        self.list_mm_type.setCurrentItem(item)
-        self.list_mm_type_clicked(item)
+        if len(self.mmList[n]) > 0:
+            if index > len(self.mmList[self.currentMeshType]):
+                index -= 1
+            item = self.list_mm_type.item(index)
+            self.list_mm_type.setCurrentItem(item)
+            self.list_mm_type_clicked(item)
+        else:
+            self.stack_mm.setCurrentIndex(0)
 
     def btn_plane_clicked(self):
         self.stack_geometry_meshes.setCurrentIndex(5)
