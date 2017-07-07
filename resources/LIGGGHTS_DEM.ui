@@ -396,7 +396,7 @@
          </rect>
         </property>
         <property name="currentIndex">
-         <number>1</number>
+         <number>0</number>
         </property>
         <widget class="QWidget" name="page_15"/>
         <widget class="QWidget" name="page_20">
@@ -440,12 +440,12 @@
             <rect>
              <x>20</x>
              <y>90</y>
-             <width>121</width>
+             <width>161</width>
              <height>23</height>
             </rect>
            </property>
            <property name="text">
-            <string>Surface Velocity</string>
+            <string>Surface Velocity (m/s)</string>
            </property>
           </widget>
           <widget class="QCheckBox" name="chk_meshes_sav">
@@ -453,12 +453,12 @@
             <rect>
              <x>20</x>
              <y>130</y>
-             <width>171</width>
+             <width>211</width>
              <height>23</height>
             </rect>
            </property>
            <property name="text">
-            <string>Surface Angular Velocity</string>
+            <string>Surface Angular Velocity (m/s)</string>
            </property>
           </widget>
           <widget class="QCheckBox" name="chk_meshes_mm">
@@ -477,7 +477,7 @@
           <widget class="QStackedWidget" name="stack_meshes_sv">
            <property name="geometry">
             <rect>
-             <x>210</x>
+             <x>240</x>
              <y>80</y>
              <width>271</width>
              <height>41</height>
@@ -602,7 +602,7 @@
           <widget class="QStackedWidget" name="stack_meshes_sav">
            <property name="geometry">
             <rect>
-             <x>210</x>
+             <x>240</x>
              <y>130</y>
              <width>271</width>
              <height>101</height>
@@ -2932,7 +2932,7 @@
        </rect>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="page_3">
        <widget class="QLabel" name="label_12">
@@ -4677,7 +4677,7 @@
       </font>
      </property>
      <attribute name="title">
-      <string>Solve</string>
+      <string>Simulation Tools</string>
      </attribute>
      <widget class="QLabel" name="label_326">
       <property name="geometry">
@@ -4708,7 +4708,7 @@
        <rect>
         <x>30</x>
         <y>70</y>
-        <width>315</width>
+        <width>341</width>
         <height>124</height>
        </rect>
       </property>
@@ -4716,55 +4716,34 @@
        <string/>
       </property>
       <layout class="QGridLayout" name="gridLayout_3">
-       <item row="0" column="6">
-        <widget class="QLabel" name="label_328">
-         <property name="text">
-          <string>z</string>
-         </property>
-        </widget>
-       </item>
        <item row="0" column="2">
-        <widget class="QSpinBox" name="num_proc_x">
+        <widget class="QSpinBox" name="num_proc">
          <property name="enabled">
           <bool>true</bool>
          </property>
          <property name="minimum">
           <number>1</number>
          </property>
-        </widget>
-       </item>
-       <item row="0" column="4" colspan="2">
-        <widget class="QSpinBox" name="num_proc_y">
-         <property name="enabled">
-          <bool>true</bool>
-         </property>
-         <property name="minimum">
-          <number>1</number>
+         <property name="maximum">
+          <number>99999999</number>
          </property>
         </widget>
        </item>
-       <item row="0" column="7">
-        <widget class="QSpinBox" name="num_proc_z">
-         <property name="minimum">
-          <number>1</number>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="3">
-        <widget class="QLabel" name="label_324">
+       <item row="0" column="6">
+        <widget class="QPushButton" name="run_prog">
          <property name="text">
-          <string>y</string>
+          <string>Run</string>
          </property>
         </widget>
        </item>
-       <item row="2" column="0">
-        <widget class="QPushButton" name="btn_log_file">
+       <item row="0" column="5">
+        <widget class="QPushButton" name="btn_makefile">
          <property name="text">
-          <string>Open Log File</string>
+          <string>Make File</string>
          </property>
         </widget>
        </item>
-       <item row="1" column="5" colspan="3">
+       <item row="1" column="5">
         <widget class="QPushButton" name="btn_edit_script">
          <property name="enabled">
           <bool>true</bool>
@@ -4774,38 +4753,24 @@
          </property>
         </widget>
        </item>
-       <item row="1" column="2" colspan="3">
-        <widget class="QPushButton" name="run_prog">
-         <property name="text">
-          <string>Run</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <widget class="QPushButton" name="btn_makefile">
-         <property name="text">
-          <string>Make File</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1">
-        <widget class="QLabel" name="label_325">
-         <property name="text">
-          <string>x</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="0">
-        <widget class="QLabel" name="label_327">
-         <property name="text">
-          <string>Processors</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="2" colspan="3">
+       <item row="1" column="6">
         <widget class="QPushButton" name="btn_solve_paraview">
          <property name="text">
           <string>Paraview</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0" colspan="2">
+        <widget class="QLabel" name="label_327">
+         <property name="text">
+          <string>Processors:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1" colspan="2">
+        <widget class="QPushButton" name="btn_log_file">
+         <property name="text">
+          <string>Open Log File</string>
          </property>
         </widget>
        </item>

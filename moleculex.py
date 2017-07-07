@@ -963,10 +963,6 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                 str(self.boundary_max_z.value()) + ' ')
         f.write('units box\t\t# Defines rectangular boundaries in x y z [m]\n\n')
 
-        f.write('processors ' + str(self.num_proc_x.value()) + ' ' +
-                                str(self.num_proc_y.value()) + ' ' +
-                                str(self.num_proc_z.value()) + '\n\n')
-
         f.write('create_box\t\t'+str(self.totalTypes)+' reg\t\t# Number of atom (particle / wall) types\n')
         f.write('\t\t\t\t\t\t\t# type 1: inserted particles\n')
         f.write('\t\t\t\t\t\t\t# type 2: belts and walls\n\n')
@@ -1214,7 +1210,6 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                 ('vx vy vz ' if self.chk_velocity.checkState() == 2 else '') +
                 ('fx fy fz ' if self.chk_force.checkState() == 2 else '') +
                 ('omegax omegay omegaz ' if self.chk_angularvelocity.checkState() == 2 else '') +
-                'radius ' +
                 ('mass ' if self.chk_mass.checkState() == 2 else '') +
                 ('radius' if self.chk_radius.checkState() == 2 else '') + '\n\n')
 
@@ -1584,9 +1579,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             self.line_dumpstep.setText(storage[11][2])
             self.chk_timestep.setChecked(storage[11][3])
             self.combo_writeformat.setCurrentIndex(storage[11][4])
-            self.num_proc_x.setValue(storage[12][0])
-            self.num_proc_y.setValue(storage[12][1])
-            self.num_proc_z.setValue(storage[12][2])
+            self.num_proc.setValue(storage[12])
             self.gmt = storage[13]
             self.combo_conty.setCurrentIndex(storage[14])
             
@@ -1646,9 +1639,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             self.line_timestep.setText('')
             self.chk_timestep.setCheckState(0)
             self.line_dumpstep.setText('')
-            self.num_proc_x.setValue(1)
-            self.num_proc_y.setValue(1)
-            self.num_proc_z.setValue(1)
+            self.num_proc.setValue(1)
             self.combo_insertionindex.clear()
             self.stack_geometry.setCurrentIndex(0)
             self.testPage.setCurrentIndex(0)
@@ -1797,9 +1788,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         self.loading = False
 
     def run_prog_clicked(self):
-        cmmmd = 'mpirun -np ' + str(self.num_proc_x.value() *
-                                    self.num_proc_y.value() *
-                                    self.num_proc_z.value()) + \
+        cmmmd = 'mpirun -np ' + str(self.num_proc.value()) + \
                         ' LIGGGHTS <' + self.currentDir + 'script.py'
 
         os.system("gnome-terminal -e 'bash -c \" "+cmmmd+"; exec bash\"' --title=Simulation")
@@ -1851,9 +1840,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                            str(self.line_dumpstep.text()),
                            self.chk_timestep.isChecked(),
                            self.combo_writeformat.currentIndex()))
-            storage.append((int(self.num_proc_x.value()),
-                           int(self.num_proc_y.value()),
-                           int(self.num_proc_z.value())))
+            storage.append(int(self.num_proc.value()))
             storage.append(self.gmt)
             storage.append(self.combo_conty.currentIndex())
             
