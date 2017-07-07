@@ -110,7 +110,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         self.chk_meshes_mm.stateChanged.connect(self.chk_meshes_mm_clicked)
         self.chk_meshes_sw.stateChanged.connect(self.savemeshproperties)
         
-        self.radio_mpi.stateChanged.connect(self.flip_mpi)
+        self.radio_mpi.toggled.connect(self.flip_mpi)
         
         self.actionSupport.triggered.connect(self.popupSupport)
         self.actionAbout.triggered.connect(self.popupAbout)
