@@ -110,6 +110,8 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         self.chk_meshes_mm.stateChanged.connect(self.chk_meshes_mm_clicked)
         self.chk_meshes_sw.stateChanged.connect(self.savemeshproperties)
         
+        self.radio_mpi.stateChanged.connect(self.flip_mpi)
+        
         self.actionSupport.triggered.connect(self.popupSupport)
         self.actionAbout.triggered.connect(self.popupAbout)
 
@@ -768,6 +770,9 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         f.write('# For technical support, please contact\n')
         f.write('# Wei Chen: W.Chen@newcastle.edu.au\n\n')
         f.write('#-------------------------------------------------------------------------------------------------\n')
+        if self.radio_omp.isChecked():        
+            f.write('variable\tNTHREADS equal '+str(self.num_threads.value())+'\t\t# OpenMP Threads\n')
+            f.write('package\tomp ${NTHREADS} force/neigh thread-binding verbose\t# OpenMP Threads binding\n\n')
         f.write('# Variables - Declaration & Pass on to Simulations\n')
         f.write('variable\tpi\t\tequal\t\t3.141592654\t\t# PI\n')
         f.write('variable\ta\t\tequal\t\t1\t\t\t\t# Test number\n\n')
@@ -917,7 +922,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         f.write('######################################################################################################################\n\n')
 
         f.write('# Granular Model and Computational Setting\n')
-        f.write('atom_style\t\tgranular\t\t# Granular style for LIGGGHTS\n\n')
+        f.write('atom_style\t\tgranular'+('/omp' if self.radio_omp.isChecked() else '')+'\t\t# Granular style for LIGGGHTS\n\n')
         f.write('atom_modify\t\tmap array\t\t# The map keyword determines how atom ID lookup is done for molecular problems.\n')
         f.write('\t\t\t\t\t\t\t\t# When the array value is used, each processor stores a lookup table of length N,\n')
         f.write('\t\t\t\t\t\t\t\t# where N is the total # of atoms in the system. This is the fastest method,\n')
@@ -1059,7 +1064,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
 
         f.write('# New pair style\n')
 
-        f.write('pair_style gran model hertz tangential history')
+        f.write('pair_style gran'+('/omp' if self.radio_omp.isChecked() else '')+' model hertz tangential history')
         if self.cbox_ptcl_cohesionmodel.currentIndex() == 1:
             f.write(' cohesion sjkr')
         elif self.cbox_ptcl_cohesionmodel.currentIndex() == 2:
@@ -1080,7 +1085,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
 
         f.write('timestep\t${dt}\n\n')
 
-        f.write('fix\t\tgravi all gravity 9.81 vector ')
+        f.write('fix\t\tgravi all gravity'+('/omp' if self.radio_omp.isChecked() else '')+' 9.81 vector ')
         if self.rad_gravity_x.isChecked():
             f.write('-1.0 0.0 0.0')
         elif self.rad_gravity_y.isChecked():
@@ -1089,12 +1094,16 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             f.write('0.0 0.0 -1.0')
         f.write('\n\n')
 
+        if self.radio_omp.isChecked():
+            f.write('# Load Balancing Setting\n')
+            f.write('partitioner_style\tzoltan OBJ_WEIGHT_DIM 1')
+
         for n in range(0, len(self.stlFilesLoaded)):
             f.write('fix\t\t' +
                     os.path.splitext(os.path.basename(self.stlFilesLoaded[n]))[0] +
-                    ' all mesh/surface')
+                    ' all mesh/surface'+('/omp' if self.radio_omp.isChecked() and not self.meshProperties[n][14] else ''))
             if self.meshProperties[n][14]:
-                f.write('/stress')
+                f.write('/stress'+('/omp' if self.radio_omp.isChecked() else ''))
             f.write(' file ' +
                     self.stlFilesLoaded[n] +
                     ' type '+ str(self.meshProperties[n][1]+
@@ -1115,7 +1124,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                 f.write('wear finnie ')
             f.write('\n\n')
 
-        f.write('fix\t\twall all wall/gran model hertz tangential history')
+        f.write('fix\t\twall all wall/gran'+('/omp' if self.radio_omp.isChecked() else '')+' model hertz tangential history')
         if self.cbox_mesh_cohesionmodel.currentIndex() == 1:
             f.write(' cohesion sjkr')
         elif self.cbox_mesh_cohesionmodel.currentIndex() == 2:
@@ -1171,7 +1180,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                         f.write(str(numParticles) + strbuild + '\n')
             f.write('\n')
         for n in range(0, len(self.insertionList)):
-            f.write('fix\t\t'+os.path.splitext(os.path.basename(self.insertionList[n][1][1]))[0]+' all mesh/surface file '+self.insertionList[n][1][1]+' type '+
+            f.write('fix\t\t'+os.path.splitext(os.path.basename(self.insertionList[n][1][1]))[0]+' all mesh/surface'+('/omp' if self.radio_omp.isChecked() else '')+' file '+self.insertionList[n][1][1]+' type '+
                     str(1+self.spnbox_geometry_contacttypes_totalgranulartypes.value())+
                     ' curvature 1e-6\n\n')
             f.write('fix\t\tins'+str(n+1)+' all insert/stream seed ' +
@@ -1183,7 +1192,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             f.write('\t\tinsertion_face '+os.path.splitext(os.path.basename(self.insertionList[n][1][1]))[0]+' extrude_length '+
                     str(self.insertionList[n][2][5])+'\n\n')
 
-        f.write('fix\t\tintegr all nve/sphere\n\n')
+        f.write('fix\t\tintegr all nve/sphere'+('/omp' if self.radio_omp.isChecked() else '')+'\n\n')
 
         f.write('# Output settings, include total thermal energy\n')
         f.write('fix\t\t\t\tts all check/timestep/gran 1000 0.1 0.1\n')
@@ -1279,6 +1288,14 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             f.write('run\t\t${steps'+str(len(self.insertionList)+1)+'}\n\n')
         
         f.write('write_restart	anyname.restart\n')
+
+    def flip_mpi(self):
+        if self.stack_mpi.currentIndex() == 1:
+            self.stack_mpi.setCurrentIndex(0)
+            self.stack_omp.setCurrentIndex(1)
+        else:
+            self.stack_mpi.setCurrentIndex(1)
+            self.stack_omp.setCurrentIndex(0)
 
     def insertionmasssave(self):
         if not self.loading:
@@ -1579,9 +1596,14 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             self.line_dumpstep.setText(storage[11][2])
             self.chk_timestep.setChecked(storage[11][3])
             self.combo_writeformat.setCurrentIndex(storage[11][4])
-            self.num_proc.setValue(storage[12])
+            self.num_proc.setValue(storage[12][0])
+            self.num_cpu.setValue(storage[12][1])
+            self.num_threads.setValue(storage[12][2])
             self.gmt = storage[13]
             self.combo_conty.setCurrentIndex(storage[14])
+            if storage[15]:
+                if not self.radio_mpi.isChecked():
+                    self.radio_mpi.setChecked(True)
             
             self.listcedupdate()
             self.listcorupdate()
@@ -1840,9 +1862,12 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                            str(self.line_dumpstep.text()),
                            self.chk_timestep.isChecked(),
                            self.combo_writeformat.currentIndex()))
-            storage.append(int(self.num_proc.value()))
+            storage.append((int(self.num_proc.value()),
+                            int(self.num_cpu.value()),
+                            int(self.num_threads.value())))
             storage.append(self.gmt)
             storage.append(self.combo_conty.currentIndex())
+            storage.append(self.radio_mpi.isChecked())
             
             outFile = open(self.currentFile, 'wb')
             pickle.dump(storage, outFile)

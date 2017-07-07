@@ -67,7 +67,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -4708,18 +4708,115 @@
        <rect>
         <x>30</x>
         <y>70</y>
-        <width>341</width>
-        <height>124</height>
+        <width>431</width>
+        <height>381</height>
        </rect>
       </property>
       <property name="title">
        <string/>
       </property>
-      <layout class="QGridLayout" name="gridLayout_3">
-       <item row="0" column="2">
+      <widget class="QPushButton" name="btn_edit_script">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="geometry">
+        <rect>
+         <x>253</x>
+         <y>346</y>
+         <width>80</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Edit Script</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="btn_solve_paraview">
+       <property name="geometry">
+        <rect>
+         <x>339</x>
+         <y>346</y>
+         <width>80</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Paraview</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="btn_log_file">
+       <property name="geometry">
+        <rect>
+         <x>156</x>
+         <y>346</y>
+         <width>91</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Open Log File</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="btn_makefile">
+       <property name="geometry">
+        <rect>
+         <x>253</x>
+         <y>317</y>
+         <width>80</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Make File</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="run_prog">
+       <property name="geometry">
+        <rect>
+         <x>339</x>
+         <y>317</y>
+         <width>80</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Run</string>
+       </property>
+      </widget>
+      <widget class="QStackedWidget" name="stack_mpi">
+       <property name="geometry">
+        <rect>
+         <x>12</x>
+         <y>30</y>
+         <width>251</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <widget class="QWidget" name="page_63">
+        <widget class="QLabel" name="label_327">
+         <property name="geometry">
+          <rect>
+           <x>8</x>
+           <y>10</y>
+           <width>136</width>
+           <height>24</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Total Processors:</string>
+         </property>
+        </widget>
         <widget class="QSpinBox" name="num_proc">
          <property name="enabled">
           <bool>true</bool>
+         </property>
+         <property name="geometry">
+          <rect>
+           <x>150</x>
+           <y>10</y>
+           <width>93</width>
+           <height>24</height>
+          </rect>
          </property>
          <property name="minimum">
           <number>1</number>
@@ -4728,53 +4825,131 @@
           <number>99999999</number>
          </property>
         </widget>
-       </item>
-       <item row="0" column="6">
-        <widget class="QPushButton" name="run_prog">
+       </widget>
+       <widget class="QWidget" name="page_64"/>
+      </widget>
+      <widget class="QStackedWidget" name="stackedWidget">
+       <property name="geometry">
+        <rect>
+         <x>270</x>
+         <y>30</y>
+         <width>131</width>
+         <height>131</height>
+        </rect>
+       </property>
+       <widget class="QWidget" name="page_65">
+        <widget class="QRadioButton" name="radio_mpi">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>10</y>
+           <width>100</width>
+           <height>23</height>
+          </rect>
+         </property>
          <property name="text">
-          <string>Run</string>
+          <string>MPI</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
          </property>
         </widget>
-       </item>
-       <item row="0" column="5">
-        <widget class="QPushButton" name="btn_makefile">
+        <widget class="QRadioButton" name="radio_omp">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>50</y>
+           <width>100</width>
+           <height>23</height>
+          </rect>
+         </property>
          <property name="text">
-          <string>Make File</string>
+          <string>MPI/OMP</string>
          </property>
         </widget>
-       </item>
-       <item row="1" column="5">
-        <widget class="QPushButton" name="btn_edit_script">
+       </widget>
+       <widget class="QWidget" name="page_66"/>
+      </widget>
+      <widget class="QStackedWidget" name="stack_omp">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>80</y>
+         <width>251</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="currentIndex">
+        <number>1</number>
+       </property>
+       <widget class="QWidget" name="page_67">
+        <widget class="QLabel" name="label_275">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>5</y>
+           <width>41</width>
+           <height>17</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>CPUs:</string>
+         </property>
+        </widget>
+        <widget class="QSpinBox" name="num_cpu">
          <property name="enabled">
           <bool>true</bool>
          </property>
-         <property name="text">
-          <string>Edit Script</string>
+         <property name="geometry">
+          <rect>
+           <x>50</x>
+           <y>0</y>
+           <width>41</width>
+           <height>24</height>
+          </rect>
+         </property>
+         <property name="minimum">
+          <number>1</number>
+         </property>
+         <property name="maximum">
+          <number>99999999</number>
          </property>
         </widget>
-       </item>
-       <item row="1" column="6">
-        <widget class="QPushButton" name="btn_solve_paraview">
+        <widget class="QLabel" name="label_276">
+         <property name="geometry">
+          <rect>
+           <x>110</x>
+           <y>5</y>
+           <width>61</width>
+           <height>17</height>
+          </rect>
+         </property>
          <property name="text">
-          <string>Paraview</string>
+          <string>Threads:</string>
          </property>
         </widget>
-       </item>
-       <item row="0" column="0" colspan="2">
-        <widget class="QLabel" name="label_327">
-         <property name="text">
-          <string>Processors:</string>
+        <widget class="QSpinBox" name="num_threads">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <property name="geometry">
+          <rect>
+           <x>170</x>
+           <y>0</y>
+           <width>41</width>
+           <height>24</height>
+          </rect>
+         </property>
+         <property name="minimum">
+          <number>1</number>
+         </property>
+         <property name="maximum">
+          <number>99999999</number>
          </property>
         </widget>
-       </item>
-       <item row="1" column="1" colspan="2">
-        <widget class="QPushButton" name="btn_log_file">
-         <property name="text">
-          <string>Open Log File</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
+       </widget>
+       <widget class="QWidget" name="page_68"/>
+      </widget>
      </widget>
     </widget>
    </widget>
