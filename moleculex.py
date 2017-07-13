@@ -1119,7 +1119,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                         str(self.meshProperties[n][8]) + ' ' +
                         str(self.meshProperties[n][9]) + ' ' +
                         str(self.meshProperties[n][10]) + ' ')
-            f.write('curvature 1e-8 ')
+            f.write('heal auto_remove_duplicates curvature 1e-8 ')
             if self.meshProperties[n][14]:
                 f.write('wear finnie ')
             f.write('\n\n')
@@ -1614,6 +1614,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
 
     def new_button_clicked(self, fromOpen=False):
         confirmation = None
+        confirmation_new = None
         if not fromOpen:
             if self.currentDir != None and self.currentFile != None:
                 confirmation = QtGui.QMessageBox.question(None, "New Project",
@@ -1624,15 +1625,21 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                                      (confirmation == QtGui.QMessageBox.Yes):
                 result = self.saveas(False)
                 if result != 0:
-                    confirmation = QtGui.QMessageBox.Yes
+                    confirmation_new = QtGui.QMessageBox.Yes
                 else:
-                    confirmation = QtGui.QMessageBox.No
-        if fromOpen or confirmation == QtGui.QMessageBox.Yes:
-            self.currentFile = None
+                    confirmation_new = QtGui.QMessageBox.No
+        print confirmation == QtGui.QMessageBox.Yes
+        if fromOpen or confirmation == QtGui.QMessageBox.Yes or confirmation_new == QtGui.QMessageBox.Yes:
+            if not confirmation_new == QtGui.QMessageBox.Yes:
+                self.currentFile = None
             self.spnbox_geometry_contacttypes_totalgranulartypes.setValue(1)
             self.spnbox_geometry_contacttypes_totalmeshtypes.setValue(1)
             self.loading = True
+            temp_cf = self.currentFile
+            temp_cd = self.currentDir
             self.ini_vars()
+            self.currentFile = temp_cf
+            self.currentDir = temp_cd
             while self.objHolder.childCount() > 0:
                 self.objHolder.removeChild(self.objHolder.child(0))
             self.stack_geometry_meshes.setCurrentIndex(0)
@@ -1875,8 +1882,10 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
     def saveas(self, fromSave=False):
         outFile = QtGui.QFileDialog.getSaveFileName(self, 'Save As', (self.currentDir if self.currentDir != None else '.'), 'MoleculeX GUI File (*.mlx)')
         outFile = str(outFile)
+        print (outFile, self.currentFile)
         if outFile != '':
             self.currentFile = outFile
+            print self.currentFile
             self.currentDir = os.path.dirname(outFile) + "/"
             if not fromSave:
                 self.save(outFile)

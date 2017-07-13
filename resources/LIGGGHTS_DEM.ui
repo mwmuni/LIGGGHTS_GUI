@@ -2755,6 +2755,9 @@
            <height>26</height>
           </rect>
          </property>
+         <property name="decimals">
+          <number>4</number>
+         </property>
          <property name="minimum">
           <double>-5000.000000000000000</double>
          </property>
@@ -2773,6 +2776,9 @@
            <width>91</width>
            <height>26</height>
           </rect>
+         </property>
+         <property name="decimals">
+          <number>4</number>
          </property>
          <property name="minimum">
           <double>-5000.000000000000000</double>
@@ -2793,6 +2799,9 @@
            <height>26</height>
           </rect>
          </property>
+         <property name="decimals">
+          <number>4</number>
+         </property>
          <property name="minimum">
           <double>-5000.000000000000000</double>
          </property>
@@ -2811,6 +2820,9 @@
            <width>91</width>
            <height>26</height>
           </rect>
+         </property>
+         <property name="decimals">
+          <number>4</number>
          </property>
          <property name="minimum">
           <double>-5000.000000000000000</double>
@@ -2831,6 +2843,9 @@
            <height>26</height>
           </rect>
          </property>
+         <property name="decimals">
+          <number>4</number>
+         </property>
          <property name="minimum">
           <double>-5000.000000000000000</double>
          </property>
@@ -2849,6 +2864,9 @@
            <width>91</width>
            <height>26</height>
           </rect>
+         </property>
+         <property name="decimals">
+          <number>4</number>
          </property>
          <property name="minimum">
           <double>-5000.000000000000000</double>
