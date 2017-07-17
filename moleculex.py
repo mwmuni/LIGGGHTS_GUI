@@ -345,6 +345,18 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                     if max_z < v[index][2] or max_z is None:
                         max_z = v[index][2]
 
+            shift_x = (max_x - min_x)*0.05
+            min_x -= shift_x
+            max_x += shift_x
+
+            shift_y = (max_y - min_y)*0.05
+            min_y -= shift_y
+            max_y += shift_y
+
+            shift_z = (max_z - min_z)*0.05
+            min_z -= shift_z
+            max_z += shift_z
+
             self.boundary_min_x.setValue(min_x)
             self.boundary_min_y.setValue(min_y)
             self.boundary_min_z.setValue(min_z)
