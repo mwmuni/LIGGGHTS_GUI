@@ -1253,14 +1253,14 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             for y in range(0, len(self.meshProperties[x][19])):
                 if self.mmList[x][y] == 0:
                     f.write('fix move all move/mesh mesh ' +
-                            self.meshProperties[x][0] +
+                            os.path.splitext(self.meshProperties[x][0])[0] +
                             ' linear ' + str(self.meshProperties[x][19][y][0]) +
                                    ' ' + str(self.meshProperties[x][19][y][1]) +
                                    ' ' + str(self.meshProperties[x][19][y][2]) +
                                    '\n')
                 elif self.mmList[x][y] == 1:
                     f.write('fix move all move/mesh mesh ' +
-                            self.meshProperties[x][0] +
+                            os.path.splitext(self.meshProperties[x][0])[0] +
                      ' riggle origin ' + str(self.meshProperties[x][19][y][0]) +
                                    ' ' + str(self.meshProperties[x][19][y][1]) +
                                    ' ' + str(self.meshProperties[x][19][y][2]) +
@@ -1272,7 +1272,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                                    '\n')
                 elif self.mmList[x][y] == 2:
                     f.write('fix move all move/mesh mesh ' +
-                            self.meshProperties[x][0] +
+                            os.path.splitext(self.meshProperties[x][0])[0] +
                      ' rotate origin ' + str(self.meshProperties[x][19][y][0]) +
                                    ' ' + str(self.meshProperties[x][19][y][1]) +
                                    ' ' + str(self.meshProperties[x][19][y][2]) +
@@ -1283,7 +1283,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                                    '\n')
                 else:
                     f.write('fix move all move/mesh mesh ' +
-                            self.meshProperties[x][0] +
+                            os.path.splitext(self.meshProperties[x][0])[0] +
                   ' wiggle amplitude ' + str(self.meshProperties[x][19][y][0]) +
                                    ' ' + str(self.meshProperties[x][19][y][1]) +
                                    ' ' + str(self.meshProperties[x][19][y][2]) +
