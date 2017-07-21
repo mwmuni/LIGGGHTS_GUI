@@ -1561,22 +1561,6 @@
               <string>Delete Entry</string>
              </property>
             </widget>
-            <widget class="QCheckBox" name="chk_dumpmesh">
-             <property name="geometry">
-              <rect>
-               <x>10</x>
-               <y>90</y>
-               <width>101</width>
-               <height>23</height>
-              </rect>
-             </property>
-             <property name="text">
-              <string>Dump Mesh</string>
-             </property>
-             <property name="checked">
-              <bool>true</bool>
-             </property>
-            </widget>
            </widget>
           </widget>
           <widget class="QCheckBox" name="chk_meshes_cm">
@@ -2935,6 +2919,28 @@
        </property>
       </item>
      </widget>
+     <widget class="QCheckBox" name="chk_dumpmesh">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>80</x>
+        <y>530</y>
+        <width>101</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Dump Mesh</string>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <zorder>chk_dumpmesh</zorder>
+     <zorder>stack_geometry</zorder>
+     <zorder>tree_geometry</zorder>
     </widget>
     <widget class="QWidget" name="tab_2">
      <attribute name="title">

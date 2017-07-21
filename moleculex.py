@@ -1216,13 +1216,16 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
 
         f.write('shell rm '+ self.currentDir +'post\n')
         f.write('shell mkdir '+ self.currentDir +'post\n\n')
-
-        f.write('dump\t\tdmpstl1 all mesh/stl 1 '+ self.currentDir +'post/static*.stl')
-        for n in range(0, len(self.insertionList)):
-            f.write(' ' + os.path.splitext(os.path.basename(self.insertionList[n][1][1]))[0])
+        bool stat_exists = False
         for i in self.meshProperties:
-            f.write(' ' + os.path.splitext(i[0])[0])
-        f.write('\n\n')
+            if i[11] == 0:
+                stat_exists = True
+                f.write('dump\t\tdmpstl1 all mesh/stl 1 '+ self.currentDir +'post/static*.stl')
+                for i in self.meshProperties:
+                    if i[11] == 0:
+                        f.write(' ' + os.path.splitext(i[0])[0])
+                f.write('\n\n')
+                break
 
         f.write('dump\t\tdmp_m all custom ${dumpstep} '+ self.currentDir +'post/dump_*.liggghts '+
                 'id type '+
@@ -1242,24 +1245,30 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                 f.write(tempstr + '_*.vtk stress wear ')
                 f.write(tempstr + '\n\n')
 
+        for i in self.meshProperties:
+            if i[11] == 2:
+                f.write('dump\t\tdmpstl2 all mesh/stl ${dumpstep} '+ self.currentDir +'post/move*.stl')
+                for i in self.meshProperties:
+                    if i[11] == 2:
+                        f.write(' ' + os.path.splitext(i[0])[0])
+                f.write('\n\n')
+                break
+
         f.write('run\t\t1\n\n')
 
+        move_counter = 0
         for x in range(0, len(self.meshProperties)):
-            if len(self.meshProperties[x][19]) > 0:
-                f.write('run\t'+(str(self.meshProperties[x][12]/1e-4) if
-                        self.line_timestep.text().isEmpty() else
-                        str(self.meshProperties[x][12] /
-                        float(self.line_timestep.text()))) + '\n\n')
             for y in range(0, len(self.meshProperties[x][19])):
+                move_counter += 1
                 if self.mmList[x][y] == 0:
-                    f.write('fix move all move/mesh mesh ' +
+                    f.write('fix move'+str(move_counter)+' all move/mesh mesh ' +
                             os.path.splitext(self.meshProperties[x][0])[0] +
                             ' linear ' + str(self.meshProperties[x][19][y][0]) +
                                    ' ' + str(self.meshProperties[x][19][y][1]) +
                                    ' ' + str(self.meshProperties[x][19][y][2]) +
                                    '\n')
                 elif self.mmList[x][y] == 1:
-                    f.write('fix move all move/mesh mesh ' +
+                    f.write('fix move'+str(move_counter)+' all move/mesh mesh ' +
                             os.path.splitext(self.meshProperties[x][0])[0] +
                      ' riggle origin ' + str(self.meshProperties[x][19][y][0]) +
                                    ' ' + str(self.meshProperties[x][19][y][1]) +
@@ -1271,7 +1280,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                          ' amplitude ' + str(self.meshProperties[x][19][y][7]) +
                                    '\n')
                 elif self.mmList[x][y] == 2:
-                    f.write('fix move all move/mesh mesh ' +
+                    f.write('fix move'+str(move_counter)+' all move/mesh mesh ' +
                             os.path.splitext(self.meshProperties[x][0])[0] +
                      ' rotate origin ' + str(self.meshProperties[x][19][y][0]) +
                                    ' ' + str(self.meshProperties[x][19][y][1]) +
@@ -1282,7 +1291,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                             ' period ' + str(self.meshProperties[x][19][y][6]) +
                                    '\n')
                 else:
-                    f.write('fix move all move/mesh mesh ' +
+                    f.write('fix move'+str(move_counter)+' all move/mesh mesh ' +
                             os.path.splitext(self.meshProperties[x][0])[0] +
                   ' wiggle amplitude ' + str(self.meshProperties[x][19][y][0]) +
                                    ' ' + str(self.meshProperties[x][19][y][1]) +
@@ -1291,10 +1300,22 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                                    '\n')
             f.write('\n')
 
-        f.write('undump\t\tdmpstl1\n\n')
+        if len(self.meshProperties[x][19]) > 0:
+            f.write('run\t'+(str(self.meshProperties[x][12]/1e-4) if
+                    self.line_timestep.text().isEmpty() else
+                    str(self.meshProperties[x][12] /
+                    float(self.line_timestep.text()))) + '\n\n')
+
+        if stat_exists:
+            f.write('undump\t\tdmpstl1\n\n')
 
         for n in range(0, len(self.insertionList)):
             f.write('run\t\t${steps'+str(n+1)+'}\n\n')
+
+        for n in range(move_counter):
+            f.write('unfix\tmove'+str(n+1)+'\n')
+            if n+1==move_counter:
+                f.write('\n')
 
         if not self.line_totaltime.text().isEmpty():
             f.write('run\t\t${steps'+str(len(self.insertionList)+1)+'}\n\n')
