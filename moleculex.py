@@ -1216,7 +1216,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
 
         f.write('shell rm '+ self.currentDir +'post\n')
         f.write('shell mkdir '+ self.currentDir +'post\n\n')
-        bool stat_exists = False
+        stat_exists = False
         for i in self.meshProperties:
             if i[11] == 0:
                 stat_exists = True
