@@ -4,7 +4,6 @@
     <file>resources/img/sphere.png</file>
     <file>resources/img/cube.png</file>
     <file>resources/img/stl.png</file>
-    <file>resources/img/main_icon.png</file>
     <file>resources/img/support.png</file>
     <file>resources/img/browse.png</file>
     <file>resources/img/terminal.png</file>
@@ -12,11 +11,5 @@
     <file>resources/img/Save.png</file>
     <file>resources/img/open.png</file>
     <file>resources/img/new.png</file>
-	<file>resources/img/CBSPT4.png</file>
-	<file>resources/img/UON_ALT_MONO-v10.jpg</file>
-    <file>resources/img/wearx.png</file>
-    <file>resources/img/wearx_icon.png</file>
-    <file>resources/img/wearx_logo.png</file>
-    <file>resources/img/moleculex_logo.png</file>
   </qresource>
 </RCC>

@@ -247,7 +247,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
 
         self.testPage.setEnabled(False)
 
-        self.setWindowTitle('MoleculeX')
+        self.setWindowTitle('Liggghts GUI')
 
     def ini_vars(self):
         self.gmt = []
@@ -1569,7 +1569,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         inFile = QtGui.QFileDialog.getOpenFileName(self,
                                                    'Single File',
                                                    (self.currentDir if self.currentDir != None else '.'),
-                                                   'MoleculeX GUI File (*.mlx)')
+                                                   'GUI File (*.mlx)')
         inFile = str(inFile)
         if os.path.exists(inFile):
             self.new_button_clicked(True)
@@ -1661,7 +1661,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                     confirmation_new = QtGui.QMessageBox.Yes
                 else:
                     confirmation_new = QtGui.QMessageBox.No
-        print confirmation == QtGui.QMessageBox.Yes
+        #print confirmation == QtGui.QMessageBox.Yes
         if fromOpen or confirmation == QtGui.QMessageBox.Yes or confirmation_new == QtGui.QMessageBox.Yes:
             if not confirmation_new == QtGui.QMessageBox.Yes:
                 self.currentFile = None
@@ -1913,12 +1913,12 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             pickle.dump(storage, outFile)
 
     def saveas(self, fromSave=False):
-        outFile = QtGui.QFileDialog.getSaveFileName(self, 'Save As', (self.currentDir if self.currentDir != None else '.'), 'MoleculeX GUI File (*.mlx)')
+        outFile = QtGui.QFileDialog.getSaveFileName(self, 'Save As', (self.currentDir if self.currentDir != None else '.'), 'GUI File (*.mlx)')
         outFile = str(outFile)
-        print (outFile, self.currentFile)
+        #print (outFile, self.currentFile)
         if outFile != '':
             self.currentFile = outFile
-            print self.currentFile
+            #print self.currentFile
             self.currentDir = os.path.dirname(outFile) + "/"
             if not fromSave:
                 self.save(outFile)
@@ -2411,7 +2411,7 @@ class MyPopupAbout(QtGui.QMainWindow, QtGui.QWidget, Ui_MainWindow):
         super(QtGui.QMainWindow, self).__init__()
         uic.loadUi('resources/About_page_Form.ui', self)
         self.btn_ok.clicked.connect(self.closeDialog)
-        self.setWindowTitle('About; MoleculeX')
+        self.setWindowTitle('About')
 
     def closeDialog(self):
         self.hide()
@@ -2421,7 +2421,7 @@ class MyPopupSupport(QtGui.QMainWindow, QtGui.QWidget, Ui_MainWindow):
         super(QtGui.QMainWindow, self).__init__()
         uic.loadUi('resources/Support_page_Form.ui', self)
         self.btn_ok.clicked.connect(self.closeDialog)
-        self.setWindowTitle('Support; MoleculeX')
+        self.setWindowTitle('Support')
 
     def closeDialog(self):
         self.hide()

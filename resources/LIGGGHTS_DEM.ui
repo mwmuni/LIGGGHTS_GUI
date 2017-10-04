@@ -41,7 +41,7 @@
    <bool>true</bool>
   </property>
   <property name="windowTitle">
-   <string>MoleculeX</string>
+   <string>liggghts_gui</string>
   </property>
   <property name="windowIcon">
    <iconset resource="Icons.qrc">
