@@ -1,3 +1,7 @@
+Requirements:
+  python 2.7
+  PyQt4 (http://www.lfd.uci.edu/~gohlke/pythonlibs/#pyqt4)
+
 LIGGGHTS_GUI® Graphical User interface for DEM Engine which is currently based on LIGGGHTS® DEM Engine.
 
 Core Developer: Mr Matthew Muller
