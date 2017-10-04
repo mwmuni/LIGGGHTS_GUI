@@ -1,5 +1,5 @@
 <RCC>
-  <qresource prefix="newPrefix">
+  <qresource prefix="Images">
     <file>resources/img/cylinder.png</file>
     <file>resources/img/sphere.png</file>
     <file>resources/img/cube.png</file>

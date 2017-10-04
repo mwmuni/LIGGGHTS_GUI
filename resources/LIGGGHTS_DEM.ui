@@ -43,10 +43,6 @@
   <property name="windowTitle">
    <string>liggghts_gui</string>
   </property>
-  <property name="windowIcon">
-   <iconset resource="Icons.qrc">
-    <normaloff>:/newPrefix/img/moleculex_logo.png</normaloff>:/newPrefix/img/moleculex_logo.png</iconset>
-  </property>
   <property name="dockOptions">
    <set>QMainWindow::AllowTabbedDocks|QMainWindow::AnimatedDocks</set>
   </property>
@@ -236,8 +232,8 @@
          <string/>
         </property>
         <property name="icon">
-         <iconset resource="Icons.qrc">
-          <normaloff>:/newPrefix/img/cylinder.png</normaloff>:/newPrefix/img/cylinder.png</iconset>
+         <iconset resource="../Icons.qrc">
+          <normaloff>:/Images/resources/img/cylinder.png</normaloff>:/Images/resources/img/cylinder.png</iconset>
         </property>
         <property name="iconSize">
          <size>
@@ -265,8 +261,8 @@
          <string/>
         </property>
         <property name="icon">
-         <iconset resource="Icons.qrc">
-          <normaloff>:/newPrefix/img/sphere.png</normaloff>:/newPrefix/img/sphere.png</iconset>
+         <iconset resource="../Icons.qrc">
+          <normaloff>:/Images/resources/img/sphere.png</normaloff>:/Images/resources/img/sphere.png</iconset>
         </property>
         <property name="iconSize">
          <size>
@@ -291,8 +287,8 @@
          <string/>
         </property>
         <property name="icon">
-         <iconset resource="Icons.qrc">
-          <normaloff>:/newPrefix/img/stl.png</normaloff>:/newPrefix/img/stl.png</iconset>
+         <iconset resource="../Icons.qrc">
+          <normaloff>:/Images/resources/img/stl.png</normaloff>:/Images/resources/img/stl.png</iconset>
         </property>
         <property name="iconSize">
          <size>
@@ -352,8 +348,8 @@
          <string/>
         </property>
         <property name="icon">
-         <iconset resource="Icons.qrc">
-          <normaloff>:/newPrefix/img/cube.png</normaloff>:/newPrefix/img/cube.png</iconset>
+         <iconset resource="../Icons.qrc">
+          <normaloff>:/Images/resources/img/cube.png</normaloff>:/Images/resources/img/cube.png</iconset>
         </property>
         <property name="iconSize">
          <size>
@@ -4993,8 +4989,8 @@
      <string>New</string>
     </property>
     <property name="icon">
-     <iconset resource="Icons.qrc">
-      <normaloff>:/newPrefix/img/new.png</normaloff>:/newPrefix/img/new.png</iconset>
+     <iconset resource="../Icons.qrc">
+      <normaloff>:/Images/resources/img/new.png</normaloff>:/Images/resources/img/new.png</iconset>
     </property>
    </widget>
    <widget class="QPushButton" name="btn_open">
@@ -5013,8 +5009,8 @@
      <string>Open</string>
     </property>
     <property name="icon">
-     <iconset resource="Icons.qrc">
-      <normaloff>:/newPrefix/img/open.png</normaloff>:/newPrefix/img/open.png</iconset>
+     <iconset resource="../Icons.qrc">
+      <normaloff>:/Images/resources/img/open.png</normaloff>:/Images/resources/img/open.png</iconset>
     </property>
    </widget>
    <widget class="QPushButton" name="pushButton_Save">
@@ -5033,8 +5029,8 @@
      <string>Save</string>
     </property>
     <property name="icon">
-     <iconset resource="Icons.qrc">
-      <normaloff>:/newPrefix/img/Save.png</normaloff>:/newPrefix/img/Save.png</iconset>
+     <iconset resource="../Icons.qrc">
+      <normaloff>:/Images/resources/img/Save.png</normaloff>:/Images/resources/img/Save.png</iconset>
     </property>
    </widget>
    <widget class="QPushButton" name="btn_saveas">
@@ -5053,8 +5049,8 @@
      <string>Save As</string>
     </property>
     <property name="icon">
-     <iconset resource="Icons.qrc">
-      <normaloff>:/newPrefix/img/save_as.png</normaloff>:/newPrefix/img/save_as.png</iconset>
+     <iconset resource="../Icons.qrc">
+      <normaloff>:/Images/resources/img/save_as.png</normaloff>:/Images/resources/img/save_as.png</iconset>
     </property>
    </widget>
    <widget class="QPushButton" name="btn_terminal">
@@ -5073,8 +5069,8 @@
      <string>Terminal</string>
     </property>
     <property name="icon">
-     <iconset resource="Icons.qrc">
-      <normaloff>:/newPrefix/img/terminal.png</normaloff>:/newPrefix/img/terminal.png</iconset>
+     <iconset resource="../Icons.qrc">
+      <normaloff>:/Images/resources/img/terminal.png</normaloff>:/Images/resources/img/terminal.png</iconset>
     </property>
    </widget>
    <widget class="QPushButton" name="pushButton_Browse">
@@ -5093,8 +5089,8 @@
      <string>Browse</string>
     </property>
     <property name="icon">
-     <iconset resource="Icons.qrc">
-      <normaloff>:/newPrefix/img/browse.png</normaloff>:/newPrefix/img/browse.png</iconset>
+     <iconset resource="../Icons.qrc">
+      <normaloff>:/Images/resources/img/browse.png</normaloff>:/Images/resources/img/browse.png</iconset>
     </property>
    </widget>
    <widget class="QPushButton" name="pushButton_Support">
@@ -5113,8 +5109,8 @@
      <string>Support</string>
     </property>
     <property name="icon">
-     <iconset resource="Icons.qrc">
-      <normaloff>:/newPrefix/img/support.png</normaloff>:/newPrefix/img/support.png</iconset>
+     <iconset resource="../Icons.qrc">
+      <normaloff>:/Images/resources/img/support.png</normaloff>:/Images/resources/img/support.png</iconset>
     </property>
    </widget>
    <widget class="Line" name="line_2">
@@ -5345,7 +5341,7 @@
   </action>
  </widget>
  <resources>
-  <include location="Icons.qrc"/>
+  <include location="../Icons.qrc"/>
  </resources>
  <connections/>
 </ui>
