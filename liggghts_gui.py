@@ -75,10 +75,8 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         self.btn_cylinder.clicked.connect(self.btn_cylinder_clicked)
         self.btn_plane.clicked.connect(self.btn_plane_clicked)
         self.btn_addinsertion.clicked.connect(self.btn_addinsertion_clicked)
+        self.btn_delete_insertion.clicked.connect(self.btn_delete_insertion_clicked)
         self.btn_addPSD.clicked.connect(self.btn_addPSD_clicked)
-        self.btn_insertion_loadstl.clicked.connect(self.btn_insertion_loadstl_clicked)
-        self.btn_insertion_rect.clicked.connect(self.btn_insertion_rect_clicked)
-        self.btn_insertion_circle.clicked.connect(self.btn_insertion_circle_clicked)
         self.btn_removePSD.clicked.connect(self.btn_removePSD_clicked)
         self.btn_zoom_in.clicked.connect(self.btn_zoom_in_clicked)
         self.btn_zoom_out.clicked.connect(self.btn_zoom_out_clicked)
@@ -112,6 +110,8 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         self.chk_meshes_mm.stateChanged.connect(self.chk_meshes_mm_clicked)
         self.chk_meshes_sw.stateChanged.connect(self.savemeshproperties)
         
+        self.radio_mpi.toggled.connect(self.flip_mpi)
+        
         self.actionSupport.triggered.connect(self.popupSupport)
         self.actionAbout.triggered.connect(self.popupAbout)
 
@@ -126,42 +126,10 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             .valueChanged.connect(self.addContactTypes)
         self.spnbox_insertion_fraction.valueChanged.connect(self.savePSD)
 
-        self.spnbox_insertionindex.valueChanged.connect(
+        self.combo_insertionindex.currentIndexChanged.connect(
                 self.loadInsertionSettings)
         self.spnbox_psd.valueChanged.connect(
                 self.updateparticletypelist)
-
-        self.spnbox_insertion_rect_centre_x.valueChanged.connect(
-                self.insertionrectsave)
-        self.spnbox_insertion_rect_centre_y.valueChanged.connect(
-                self.insertionrectsave)
-        self.spnbox_insertion_rect_centre_z.valueChanged.connect(
-                self.insertionrectsave)
-        self.spnbox_insertion_length.valueChanged.connect(
-                self.insertionrectsave)
-        self.spnbox_insertion_width.valueChanged.connect(
-                self.insertionrectsave)
-        self.spnbox_insertion_rect_normal_x.valueChanged.connect(
-                self.insertionrectsave)
-        self.spnbox_insertion_rect_normal_y.valueChanged.connect(
-                self.insertionrectsave)
-        self.spnbox_insertion_rect_normal_z.valueChanged.connect(
-                self.insertionrectsave)
-
-        self.spnbox_insertion_circle_centre_x.valueChanged.connect(
-                self.insertioncirclesave)
-        self.spnbox_insertion_circle_centre_y.valueChanged.connect(
-                self.insertioncirclesave)
-        self.spnbox_insertion_circle_centre_z.valueChanged.connect(
-                self.insertioncirclesave)
-        self.spnbox_insertion_diameter.valueChanged.connect(
-                self.insertioncirclesave)
-        self.spnbox_insertion_circle_normal_x.valueChanged.connect(
-                self.insertioncirclesave)
-        self.spnbox_insertion_circle_normal_y.valueChanged.connect(
-                self.insertioncirclesave)
-        self.spnbox_insertion_circle_normal_z.valueChanged.connect(
-                self.insertioncirclesave)
 
         self.spnbox_totalmass.valueChanged.connect(
                 self.insertionmasssave)
@@ -187,7 +155,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                 self.savePSD)
         self.spnbox_diameter.valueChanged.connect(
                 self.savePSD)
-        
+
         self.mm_riggle_origin_x.valueChanged.connect(
                 self.savemeshproperties)
         self.mm_riggle_origin_y.valueChanged.connect(
@@ -346,7 +314,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         self.contactParams.append([0.0 for x in range(0, self.totalTypes**2)])  # CED
         self.contactParams.append([1.0 for x in range(0, self.totalTypes**2)])  # KWear
         self.insertionList = []
-        self.spnbox_insertionindex.setValue(0)
+        self.combo_insertionindex.setCurrentIndex(0)
         self.stack_insertionsettings.setCurrentIndex(0)
         self.listcedupdate()
         self.listcorupdate()
@@ -364,7 +332,6 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             for meshes in range(0, len(mesh_ref)):
                 v = mesh_ref[meshes][1].vertices
                 for index in range(0, len(v)):
-    
                     if min_x > v[index][0] or min_x is None:
                         min_x = v[index][0]
                     if min_y > v[index][1] or min_y is None:
@@ -377,6 +344,18 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                         max_y = v[index][1]
                     if max_z < v[index][2] or max_z is None:
                         max_z = v[index][2]
+
+            shift_x = (max_x - min_x)*0.05
+            min_x -= shift_x
+            max_x += shift_x
+
+            shift_y = (max_y - min_y)*0.05
+            min_y -= shift_y
+            max_y += shift_y
+
+            shift_z = (max_z - min_z)*0.05
+            min_z -= shift_z
+            max_z += shift_z
 
             self.boundary_min_x.setValue(min_x)
             self.boundary_min_y.setValue(min_y)
@@ -400,40 +379,53 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
 
     def btn_addinsertion_clicked(self):
         self.loading = True
+        self.combo_insertionindex.addItem(str(len(self.insertionList)+1))
         self.stack_insertionsettings.setCurrentIndex(1)
         self.insertionList.append([[[]], [-1, None],
                                     [0.00, 0.00, 0.00, 0.00, 0.00, 0.00]])
-        self.spnbox_insertionindex.setValue(len(self.insertionList))
+        self.combo_insertionindex.setCurrentIndex(len(self.insertionList)-1)
         self.loading = True
         self.spnbox_granulartypeindex.setValue(1)
         for n in range(0, self.spnbox_geometry_contacttypes_totalgranulartypes.value()):
-            self.insertionList[self.spnbox_insertionindex.value()-1][0][
+            self.insertionList[self.combo_insertionindex.currentIndex()][0][
                      self.spnbox_psd.value()-1].append(
-                        [[str(self.spnbox_insertionindex.value())+'_'+
+                        [[str(self.combo_insertionindex.currentIndex()+1)+'_'+
                           str(self.spnbox_psd.value())+'_'+'p'+str(n+1)+
                          '_1', 0.0, 0.0, 0.0]])
         self.combo_particlelist.clear()
         for n in range(0, len(self.insertionList[
-                self.spnbox_insertionindex.value()-1][
+                self.combo_insertionindex.currentIndex()][
                         0][self.spnbox_psd.value()-1][0])):
             self.combo_particlelist.addItem(
                     self.insertionList[
-                            self.spnbox_insertionindex.value()-1][
+                            self.combo_insertionindex.currentIndex()][
                                     0][self.spnbox_psd.value()-1][0][n][0])
         self.spnbox_psd.setValue(1)
         adding = 0
-        for n in range(0, len(self.insertionList[self.spnbox_insertionindex.value()-1
+        for n in range(0, len(self.insertionList[self.combo_insertionindex.currentIndex()
                           ][0][self.spnbox_psd.value()-1][
                                   self.spnbox_granulartypeindex.value()-1])):
-            adding += self.insertionList[self.spnbox_insertionindex.value()-1
+            adding += self.insertionList[self.combo_insertionindex.currentIndex()
                           ][0][self.spnbox_psd.value()-1][
                                   self.spnbox_granulartypeindex.value()-1][n][1]
         self.lbl_PSDFractionTotal.setText(str(adding))
         self.loading = True
-        self.resetinsertionface()
-        self.loading = True
         self.resetmassproperties()
         self.loading = False
+        self.updateparticletype()
+
+    def btn_delete_insertion_clicked(self):
+        if len(self.insertionList) == 0:
+            return 0
+        else:
+            del self.insertionList[self.combo_insertionindex.currentIndex()]
+            self.combo_insertionindex.clear()
+            if len(self.insertionList) > 0:
+                for i in range(len(self.insertionList)):
+                    self.combo_insertionindex.addItem(str(i+1))
+                self.renewparticlenames()
+            else:
+                self.stack_insertionsettings.setCurrentIndex(0)
 
     def btn_add_mm_type_clicked(self):
         LINEAR = 0
@@ -490,27 +482,29 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         if not self.loading:
             self.loading = True
             self.spnbox_psd.setValue(len(self.insertionList[
-                    self.spnbox_insertionindex.value()-1][0])+1)
+                    self.combo_insertionindex.currentIndex()][0])+1)
             self.spnbox_granulartypeindex.setValue(1)
-            self.insertionList[self.spnbox_insertionindex.value()-1][0].append(
+            self.insertionList[self.combo_insertionindex.currentIndex()][0].append(
                     [])
             for n in range(0, self.spnbox_geometry_contacttypes_totalgranulartypes.value()):
-                    self.insertionList[self.spnbox_insertionindex.value()-1][0][
+                    self.insertionList[self.combo_insertionindex.currentIndex()][0][
                          self.spnbox_psd.value()-1].append(
-                            [[str(self.spnbox_insertionindex.value())+'_'+
+                            [[str(self.combo_insertionindex.currentIndex()+1)+'_'+
                               str(self.spnbox_psd.value())+'_'+'p'+str(n+1)+
                              '_1', 0.0, 0.0, 0.0]])
             self.combo_particlelist.clear()
             for n in range(0, len(self.insertionList[
-                    self.spnbox_insertionindex.value()-1][
+                    self.combo_insertionindex.currentIndex()][
                             0][self.spnbox_psd.value()-1][
                                     self.spnbox_granulartypeindex.value()-1])):
                 self.combo_particlelist.addItem(
                         self.insertionList[
-                                self.spnbox_insertionindex.value()-1][0][
+                                self.combo_insertionindex.currentIndex()][0][
                                         self.spnbox_psd.value()-1][
                                                 self.spnbox_granulartypeindex.value()-1][n][0])
+            self.lbl_PSDFractionTotal.setText("0.0")
             self.loading = False
+            self.updateparticletype()
 
     def btn_cube_clicked(self):
         self.stack_geometry_meshes.setCurrentIndex(2)
@@ -520,14 +514,14 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
 
     def btn_addptcl_clicked(self):
         self.insertionList[
-                self.spnbox_insertionindex.value()-1][0][
+                self.combo_insertionindex.currentIndex()][0][
                 self.spnbox_psd.value()-1][
                 self.spnbox_granulartypeindex.value()-1
-                ].append([str(self.spnbox_insertionindex.value())+'_'+
+                ].append([str(self.combo_insertionindex.currentIndex()+1)+'_'+
                     str(self.spnbox_psd.value())+
                     '_p'+str(self.spnbox_granulartypeindex.value())+
                     '_'+str(len(self.insertionList[
-                    self.spnbox_insertionindex.value()-1][0][
+                    self.combo_insertionindex.currentIndex()][0][
                     self.spnbox_psd.value()-1][
                     self.spnbox_granulartypeindex.value()-1])+1), 0.0, 0.0, 0.0])
         self.updateparticlelist()
@@ -536,18 +530,18 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
 
     def btn_delptcl_clicked(self):
         if len(self.insertionList[
-                self.spnbox_insertionindex.value()-1][0][
+                self.combo_insertionindex.currentIndex()][0][
                 self.spnbox_psd.value()-1][
                 self.spnbox_granulartypeindex.value()-1]) > 1:
             del self.insertionList[
-                self.spnbox_insertionindex.value()-1][0][
+                self.combo_insertionindex.currentIndex()][0][
                 self.spnbox_psd.value()-1][
                 self.spnbox_granulartypeindex.value()-1][
                 self.combo_particlelist.currentIndex()]
             self.renewparticlenames()
 
     def btn_edit_script_clicked(self):
-        os.system('gedit script.py')
+        os.system('gedit '+self.currentDir+'script.py')
 
     def btn_import_ins_mesh_clicked(self):
         global ins_mesh_ref
@@ -561,8 +555,8 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                         os.path.exists(self.fileName):
             tempVar = load_mesh(self.fileName)
             ins_mesh_ref.append([self.fileName, tempVar, [.4, .4, .4, 1.0]])
-            self.insertionList[self.spnbox_insertionindex.value()-1][1][0] = 0
-            self.insertionList[self.spnbox_insertionindex.value()-1][1][1] = \
+            self.insertionList[self.combo_insertionindex.currentIndex()][1][0] = 0
+            self.insertionList[self.combo_insertionindex.currentIndex()][1][1] = \
                 self.fileName
             self.lbl_loaded_insertion.setText(basename(self.fileName))
             self.remove_unused_insertion_faces()
@@ -580,22 +574,13 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                     break
         ins_mesh_ref = toKeep
 
-    def btn_insertion_circle_clicked(self):
-        self.stack_insertion_face.setCurrentIndex(3)
-        self.insertioncirclesave()
-
-    def btn_insertion_loadstl_clicked(self):
-        self.stack_insertion_face.setCurrentIndex(1)
-
-    def btn_insertion_rect_clicked(self):
-        self.stack_insertion_face.setCurrentIndex(2)
-        self.insertionrectsave()
-
     def btn_log_file_clicked(self):
         os.system('gedit log.liggghts')
 
     def btn_mm_del_clicked(self):
         n = self.currentMeshType
+        if len(self.mmList[n]) == 0:
+            return 0
         index = self.list_mm_type.indexFromItem(self.list_mm_type.currentItem()).row()
         del self.mmList[n][index]
         del self.meshProperties[n][19][index]
@@ -609,27 +594,30 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                 self.list_mm_type.addItem('Item_'+str(x+1)+'_Rotate')
             else:
                 self.list_mm_type.addItem('Item_'+str(x+1)+'_Wiggle')
-        if index > len(self.mmList[self.currentMeshType]):
-            index -= 1
-        item = self.list_mm_type.item(index)
-        self.list_mm_type.setCurrentItem(item)
-        self.list_mm_type_clicked(item)
+        if len(self.mmList[n]) > 0:
+            if index > len(self.mmList[self.currentMeshType]):
+                index -= 1
+            item = self.list_mm_type.item(index)
+            self.list_mm_type.setCurrentItem(item)
+            self.list_mm_type_clicked(item)
+        else:
+            self.stack_mm.setCurrentIndex(0)
 
     def btn_plane_clicked(self):
         self.stack_geometry_meshes.setCurrentIndex(5)
 
     def btn_removePSD_clicked(self):
         if len(self.insertionList[
-                self.spnbox_insertionindex.value()-1][0]) > 1:
+                self.combo_insertionindex.currentIndex()][0]) > 1:
             tempInt = self.spnbox_psd.value()
             del self.insertionList[
-                self.spnbox_insertionindex.value()-1][0][
+                self.combo_insertionindex.currentIndex()][0][
                         self.spnbox_psd.value()-1]
             self.spnbox_psd.setValue(tempInt-1)
             self.renewparticlenames()
 
     def btn_solve_paraview_clicked(self):
-        subprocess.call('paraview', shell=True)
+        os.system("gnome-terminal -e 'bash -c \"cd "+self.currentDir+"; paraview; exec bash\"' --title=Paraview")
 
     def btn_sphere_clicked(self):
         self.stack_geometry_meshes.setCurrentIndex(3)
@@ -721,9 +709,8 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         self.savemeshproperties()
 
     def clearinsertionface(self):
-        temp = self.insertionList[self.spnbox_insertionindex.value()][1]
-        self.resetinsertionface()
-        self.insertionList[self.spnbox_insertionindex.value()][1] = temp
+        temp = self.insertionList[self.combo_insertionindex.currentIndex()+1][1]
+        self.insertionList[self.combo_insertionindex.currentIndex()+1][1] = temp
 
     def  clearmeshproperties(self):
         self.loading = True
@@ -795,6 +782,9 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         f.write('# For technical support, please contact\n')
         f.write('# Wei Chen: W.Chen@newcastle.edu.au\n\n')
         f.write('#-------------------------------------------------------------------------------------------------\n')
+        if self.radio_omp.isChecked():        
+            f.write('variable\tNTHREADS equal '+str(self.num_threads.value())+'\t\t# OpenMP Threads\n')
+            f.write('package\tomp ${NTHREADS} force/neigh thread-binding verbose\t# OpenMP Threads binding\n\n')
         f.write('# Variables - Declaration & Pass on to Simulations\n')
         f.write('variable\tpi\t\tequal\t\t3.141592654\t\t# PI\n')
         f.write('variable\ta\t\tequal\t\t1\t\t\t\t# Test number\n\n')
@@ -938,13 +928,13 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                 addTempStr += '${t' + str(n+1) + '}'
         f.write('variable\ttall\t\tequal\t'+(addTempStr if addTempStr != '' else '0')+'\n')
         if not self.line_totaltime.text().isEmpty():
-            f.write('variable\tt'+str(len(self.insertionList)+1)+'\t\tequal\t'+self.line_totaltime.text()+'- tall'+'\n')
+            f.write('variable\tt'+str(len(self.insertionList)+1)+'\t\tequal\t'+self.line_totaltime.text()+'-${tall}'+'\n')
             f.write('variable\tsteps'+str(len(self.insertionList)+1)+'\tequal\t${t'+str(len(self.insertionList)+1)+'}*${factor}\n\n')
 
         f.write('######################################################################################################################\n\n')
 
         f.write('# Granular Model and Computational Setting\n')
-        f.write('atom_style\t\tgranular\t\t# Granular style for LIGGGHTS\n\n')
+        f.write('atom_style\t\tgranular'+('/omp' if self.radio_omp.isChecked() else '')+'\t\t# Granular style for LIGGGHTS\n\n')
         f.write('atom_modify\t\tmap array\t\t# The map keyword determines how atom ID lookup is done for molecular problems.\n')
         f.write('\t\t\t\t\t\t\t\t# When the array value is used, each processor stores a lookup table of length N,\n')
         f.write('\t\t\t\t\t\t\t\t# where N is the total # of atoms in the system. This is the fastest method,\n')
@@ -989,10 +979,6 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                 str(self.boundary_min_z.value()) + ' ' +
                 str(self.boundary_max_z.value()) + ' ')
         f.write('units box\t\t# Defines rectangular boundaries in x y z [m]\n\n')
-
-        f.write('processors ' + str(self.num_proc_x.value()) + ' ' +
-                                str(self.num_proc_y.value()) + ' ' +
-                                str(self.num_proc_z.value()) + '\n\n')
 
         f.write('create_box\t\t'+str(self.totalTypes)+' reg\t\t# Number of atom (particle / wall) types\n')
         f.write('\t\t\t\t\t\t\t# type 1: inserted particles\n')
@@ -1090,7 +1076,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
 
         f.write('# New pair style\n')
 
-        f.write('pair_style gran model hertz tangential history')
+        f.write('pair_style gran'+('/omp' if self.radio_omp.isChecked() else '')+' model hertz tangential history')
         if self.cbox_ptcl_cohesionmodel.currentIndex() == 1:
             f.write(' cohesion sjkr')
         elif self.cbox_ptcl_cohesionmodel.currentIndex() == 2:
@@ -1111,7 +1097,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
 
         f.write('timestep\t${dt}\n\n')
 
-        f.write('fix\t\tgravi all gravity 9.81 vector ')
+        f.write('fix\t\tgravi all gravity'+('/omp' if self.radio_omp.isChecked() else '')+' 9.81 vector ')
         if self.rad_gravity_x.isChecked():
             f.write('-1.0 0.0 0.0')
         elif self.rad_gravity_y.isChecked():
@@ -1120,12 +1106,16 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             f.write('0.0 0.0 -1.0')
         f.write('\n\n')
 
+        if self.radio_omp.isChecked():
+            f.write('# Load Balancing Setting\n')
+            f.write('partitioner_style\tzoltan OBJ_WEIGHT_DIM 1')
+
         for n in range(0, len(self.stlFilesLoaded)):
             f.write('fix\t\t' +
                     os.path.splitext(os.path.basename(self.stlFilesLoaded[n]))[0] +
-                    ' all mesh/surface')
+                    ' all mesh/surface'+('/omp' if self.radio_omp.isChecked() and not self.meshProperties[n][14] else ''))
             if self.meshProperties[n][14]:
-                f.write('/stress')
+                f.write('/stress'+('/omp' if self.radio_omp.isChecked() else ''))
             f.write(' file ' +
                     self.stlFilesLoaded[n] +
                     ' type '+ str(self.meshProperties[n][1]+
@@ -1141,12 +1131,12 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                         str(self.meshProperties[n][8]) + ' ' +
                         str(self.meshProperties[n][9]) + ' ' +
                         str(self.meshProperties[n][10]) + ' ')
-            f.write('curvature 1e-8 ')
+            f.write('heal auto_remove_duplicates curvature 1e-8 ')
             if self.meshProperties[n][14]:
                 f.write('wear finnie ')
             f.write('\n\n')
 
-        f.write('fix\t\twall all wall/gran model hertz tangential history')
+        f.write('fix\t\twall all wall/gran'+('/omp' if self.radio_omp.isChecked() else '')+' model hertz tangential history')
         if self.cbox_mesh_cohesionmodel.currentIndex() == 1:
             f.write(' cohesion sjkr')
         elif self.cbox_mesh_cohesionmodel.currentIndex() == 2:
@@ -1202,7 +1192,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                         f.write(str(numParticles) + strbuild + '\n')
             f.write('\n')
         for n in range(0, len(self.insertionList)):
-            f.write('fix\t\tins_mesh'+str(n+1)+' all mesh/surface file '+self.insertionList[n][1][1]+' type '+
+            f.write('fix\t\t'+os.path.splitext(os.path.basename(self.insertionList[n][1][1]))[0]+' all mesh/surface'+('/omp' if self.radio_omp.isChecked() else '')+' file '+self.insertionList[n][1][1]+' type '+
                     str(1+self.spnbox_geometry_contacttypes_totalgranulartypes.value())+
                     ' curvature 1e-6\n\n')
             f.write('fix\t\tins'+str(n+1)+' all insert/stream seed ' +
@@ -1211,10 +1201,10 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                     str(self.insertionList[n][2][2])+' '+
                     str(self.insertionList[n][2][3])+' '+
                     str(self.insertionList[n][2][4])+' '+'&\n')
-            f.write('\t\tinsertion_face ins_mesh'+str(n+1)+' extrude_length '+
+            f.write('\t\tinsertion_face '+os.path.splitext(os.path.basename(self.insertionList[n][1][1]))[0]+' extrude_length '+
                     str(self.insertionList[n][2][5])+'\n\n')
 
-        f.write('fix\t\tintegr all nve/sphere\n\n')
+        f.write('fix\t\tintegr all nve/sphere'+('/omp' if self.radio_omp.isChecked() else '')+'\n\n')
 
         f.write('# Output settings, include total thermal energy\n')
         f.write('fix\t\t\t\tts all check/timestep/gran 1000 0.1 0.1\n')
@@ -1226,13 +1216,16 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
 
         f.write('shell rm '+ self.currentDir +'post\n')
         f.write('shell mkdir '+ self.currentDir +'post\n\n')
-
-        f.write('dump\t\tdmpstl1 all mesh/stl 1 '+ self.currentDir +'post/static*.stl')
-        for n in range(0, len(self.insertionList)):
-            f.write(' ' + os.path.splitext(os.path.basename(self.insertionList[n][1][1]))[0])
+        stat_exists = False
         for i in self.meshProperties:
-            f.write(' ' + os.path.splitext(i[0])[0])
-        f.write('\n\n')
+            if i[11] == 0:
+                stat_exists = True
+                f.write('dump\t\tdmpstl1 all mesh/stl 1 '+ self.currentDir +'post/static*.stl')
+                for i in self.meshProperties:
+                    if i[11] == 0:
+                        f.write(' ' + os.path.splitext(i[0])[0])
+                f.write('\n\n')
+                break
 
         f.write('dump\t\tdmp_m all custom ${dumpstep} '+ self.currentDir +'post/dump_*.liggghts '+
                 'id type '+
@@ -1241,7 +1234,6 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                 ('vx vy vz ' if self.chk_velocity.checkState() == 2 else '') +
                 ('fx fy fz ' if self.chk_force.checkState() == 2 else '') +
                 ('omegax omegay omegaz ' if self.chk_angularvelocity.checkState() == 2 else '') +
-                'radius ' +
                 ('mass ' if self.chk_mass.checkState() == 2 else '') +
                 ('radius' if self.chk_radius.checkState() == 2 else '') + '\n\n')
 
@@ -1253,25 +1245,31 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                 f.write(tempstr + '_*.vtk stress wear ')
                 f.write(tempstr + '\n\n')
 
+        for i in self.meshProperties:
+            if i[11] == 2:
+                f.write('dump\t\tdmpstl2 all mesh/stl ${dumpstep} '+ self.currentDir +'post/move*.stl')
+                for i in self.meshProperties:
+                    if i[11] == 2:
+                        f.write(' ' + os.path.splitext(i[0])[0])
+                f.write('\n\n')
+                break
+
         f.write('run\t\t1\n\n')
 
+        move_counter = 0
         for x in range(0, len(self.meshProperties)):
-            if len(self.meshProperties[x][19]) > 0:
-                f.write('run\t'+(str(self.meshProperties[x][12]/1e-4) if
-                        self.line_timestep.text().isEmpty() else
-                        str(self.meshProperties[x][12] /
-                        float(self.line_timestep.text()))) + '\n\n')
             for y in range(0, len(self.meshProperties[x][19])):
+                move_counter += 1
                 if self.mmList[x][y] == 0:
-                    f.write('fix move all move/mesh mesh ' +
-                            self.meshProperties[x][0] +
+                    f.write('fix move'+str(move_counter)+' all move/mesh mesh ' +
+                            os.path.splitext(self.meshProperties[x][0])[0] +
                             ' linear ' + str(self.meshProperties[x][19][y][0]) +
                                    ' ' + str(self.meshProperties[x][19][y][1]) +
                                    ' ' + str(self.meshProperties[x][19][y][2]) +
                                    '\n')
                 elif self.mmList[x][y] == 1:
-                    f.write('fix move all move/mesh mesh ' +
-                            self.meshProperties[x][0] +
+                    f.write('fix move'+str(move_counter)+' all move/mesh mesh ' +
+                            os.path.splitext(self.meshProperties[x][0])[0] +
                      ' riggle origin ' + str(self.meshProperties[x][19][y][0]) +
                                    ' ' + str(self.meshProperties[x][19][y][1]) +
                                    ' ' + str(self.meshProperties[x][19][y][2]) +
@@ -1282,8 +1280,8 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                          ' amplitude ' + str(self.meshProperties[x][19][y][7]) +
                                    '\n')
                 elif self.mmList[x][y] == 2:
-                    f.write('fix move all move/mesh mesh ' +
-                            self.meshProperties[x][0] +
+                    f.write('fix move'+str(move_counter)+' all move/mesh mesh ' +
+                            os.path.splitext(self.meshProperties[x][0])[0] +
                      ' rotate origin ' + str(self.meshProperties[x][19][y][0]) +
                                    ' ' + str(self.meshProperties[x][19][y][1]) +
                                    ' ' + str(self.meshProperties[x][19][y][2]) +
@@ -1293,8 +1291,8 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                             ' period ' + str(self.meshProperties[x][19][y][6]) +
                                    '\n')
                 else:
-                    f.write('fix move all move/mesh mesh ' +
-                            self.meshProperties[x][0] +
+                    f.write('fix move'+str(move_counter)+' all move/mesh mesh ' +
+                            os.path.splitext(self.meshProperties[x][0])[0] +
                   ' wiggle amplitude ' + str(self.meshProperties[x][19][y][0]) +
                                    ' ' + str(self.meshProperties[x][19][y][1]) +
                                    ' ' + str(self.meshProperties[x][19][y][2]) +
@@ -1302,48 +1300,45 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                                    '\n')
             f.write('\n')
 
-        f.write('undump\t\tdmpstl1\n\n')
+        if len(self.meshProperties[x][19]) > 0:
+            f.write('run\t'+(str(self.meshProperties[x][12]/1e-4) if
+                    self.line_timestep.text().isEmpty() else
+                    str(self.meshProperties[x][12] /
+                    float(self.line_timestep.text()))) + '\n\n')
+
+        if stat_exists:
+            f.write('undump\t\tdmpstl1\n\n')
 
         for n in range(0, len(self.insertionList)):
             f.write('run\t\t${steps'+str(n+1)+'}\n\n')
+
+        for n in range(move_counter):
+            f.write('unfix\tmove'+str(n+1)+'\n')
+            if n+1==move_counter:
+                f.write('\n')
 
         if not self.line_totaltime.text().isEmpty():
             f.write('run\t\t${steps'+str(len(self.insertionList)+1)+'}\n\n')
         
         f.write('write_restart	anyname.restart\n')
 
-    def insertioncirclesave(self):
-        if not self.loading:
-            self.insertionList[self.spnbox_insertionindex.value()-1][1] = [2,
-                    [self.spnbox_insertion_circle_centre_x.value(),
-                    self.spnbox_insertion_circle_centre_y.value(),
-                    self.spnbox_insertion_circle_centre_z.value(),
-                    self.spnbox_insertion_diameter.value(),
-                    self.spnbox_insertion_circle_normal_x.value(),
-                    self.spnbox_insertion_circle_normal_y.value(),
-                    self.spnbox_insertion_circle_normal_z.value()]]
+    def flip_mpi(self):
+        if self.stack_mpi.currentIndex() == 1:
+            self.stack_mpi.setCurrentIndex(0)
+            self.stack_omp.setCurrentIndex(1)
+        else:
+            self.stack_mpi.setCurrentIndex(1)
+            self.stack_omp.setCurrentIndex(0)
 
     def insertionmasssave(self):
         if not self.loading:
-            self.insertionList[self.spnbox_insertionindex.value()-1][2] = [
+            self.insertionList[self.combo_insertionindex.currentIndex()][2] = [
                     self.spnbox_totalmass.value(),
                     self.spnbox_massrate.value(),
                     self.spnbox_insertion_mass_x.value(),
                     self.spnbox_insertion_mass_y.value(),
                     self.spnbox_insertion_mass_z.value(),
                     self.spnbox_insertion_extrude.value()]
-
-    def insertionrectsave(self):
-        if not self.loading:
-            self.insertionList[self.spnbox_insertionindex.value()-1][1] = [1,
-                    [self.spnbox_insertion_rect_centre_x.value(),
-                    self.spnbox_insertion_rect_centre_y.value(),
-                    self.spnbox_insertion_rect_centre_z.value(),
-                    self.spnbox_insertion_length.value(),
-                    self.spnbox_insertion_width.value(),
-                    self.spnbox_insertion_rect_normal_x.value(),
-                    self.spnbox_insertion_rect_normal_y.value(),
-                    self.spnbox_insertion_rect_normal_z.value()]]
 
     def listcedupdate(self):
         self.line_ced.setText(str(self.contactParams[3][
@@ -1433,67 +1428,27 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         self.loading = False
 
     def loadInsertionSettings(self):
-        if self.spnbox_insertionindex.value() > len(self.insertionList):
-            self.spnbox_insertionindex.setValue(len(self.insertionList))
+        if self.combo_insertionindex.currentIndex()+1 > len(self.insertionList):
+            self.combo_insertionindex.setCurrentIndex(len(self.insertionList)-1)
             return -1
-        elif self.spnbox_insertionindex.value() < 1 and \
+        elif self.combo_insertionindex.currentIndex()+1 < 1 and \
                 len(self.insertionList) > 0:
-            self.spnbox_insertionindex.setValue(1)
+            self.combo_insertionindex.setCurrentIndex(0)
             return -1
         if len(self.insertionList) > 0:
-            currSettings = self.insertionList[self.spnbox_insertionindex.value()-1]
+            currSettings = self.insertionList[self.combo_insertionindex.currentIndex()]
             if len(currSettings[0]) > 0:
                 self.spnbox_psd.setValue(0)
                 self.spnbox_psd.setValue(1)  # Will call valueChanged
             else:
                 self.spnbox_psd.setValue(0)
-            self.resetinsertionface()
             self.loading = True
-            if currSettings[1][0] == -1:
-                self.stack_insertion_face.setCurrentIndex(0)
-            elif currSettings[1][0] == 0:
-                self.stack_insertion_face.setCurrentIndex(1)
+            if currSettings[1][0] == 0:
                 if currSettings[1][1] is not None:
                     self.lbl_loaded_insertion.setText(
                             basename(currSettings[1][1]))
                 else:
                     self.lbl_loaded_insertion.setText('...')
-            elif currSettings[1][0] == 1:
-                self.loading = True
-                self.stack_insertion_face.setCurrentIndex(2)
-                self.spnbox_insertion_rect_centre_x.setValue(
-                        currSettings[1][1][0])
-                self.spnbox_insertion_rect_centre_y.setValue(
-                        currSettings[1][1][1])
-                self.spnbox_insertion_rect_centre_z.setValue(
-                        currSettings[1][1][2])
-                self.spnbox_insertion_length.setValue(
-                        currSettings[1][1][3])
-                self.spnbox_insertion_width.setValue(
-                        currSettings[1][1][4])
-                self.spnbox_insertion_rect_normal_x.setValue(
-                        currSettings[1][1][5])
-                self.spnbox_insertion_rect_normal_y.setValue(
-                        currSettings[1][1][6])
-                self.spnbox_insertion_rect_normal_z.setValue(
-                        currSettings[1][1][7])
-            elif currSettings[1][0] == 2:
-                self.loading = True
-                self.stack_insertion_face.setCurrentIndex(3)
-                self.spnbox_insertion_circle_centre_x.setValue(
-                        currSettings[1][1][0])
-                self.spnbox_insertion_circle_centre_y.setValue(
-                        currSettings[1][1][1])
-                self.spnbox_insertion_circle_centre_z.setValue(
-                        currSettings[1][1][2])
-                self.spnbox_insertion_diameter.setValue(
-                        currSettings[1][1][3])
-                self.spnbox_insertion_circle_normal_x.setValue(
-                        currSettings[1][1][4])
-                self.spnbox_insertion_circle_normal_y.setValue(
-                        currSettings[1][1][5])
-                self.spnbox_insertion_circle_normal_z.setValue(
-                        currSettings[1][1][6])
             self.spnbox_totalmass.setValue(
                     currSettings[2][0])
             self.spnbox_massrate.setValue(
@@ -1651,12 +1606,16 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             self.rad_gravity_y.setChecked(storage[7][10][1])
             self.rad_gravity_z.setChecked(storage[7][10][2])
             self.contactParams = storage[8]
-            self.insertionList = storage[9]
+            self.insertionList = storage[9][0]
+            self.combo_insertionindex.clear()
+            for i in range(storage[9][1]):
+                self.combo_insertionindex.addItem(str(i+1))
+            self.combo_insertionindex.setCurrentIndex(storage[9][2])
             if len(self.insertionList) > 0:
                 self.stack_insertionsettings.setCurrentIndex(1)
-                self.spnbox_insertionindex.setValue(1)
+                self.combo_insertionindex.setCurrentIndex(0)
             else:
-                self.spnbox_insertionindex.setValue(0)
+                self.combo_insertionindex.setCurrentIndex(0)
                 self.stack_insertionsettings.setCurrentIndex(0)
             self.chk_coordinates.setChecked(storage[10][0])
             self.chk_velocity.setChecked(storage[10][1])
@@ -1670,11 +1629,14 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             self.line_dumpstep.setText(storage[11][2])
             self.chk_timestep.setChecked(storage[11][3])
             self.combo_writeformat.setCurrentIndex(storage[11][4])
-            self.num_proc_x.setValue(storage[12][0])
-            self.num_proc_y.setValue(storage[12][1])
-            self.num_proc_z.setValue(storage[12][2])
+            self.num_proc.setValue(storage[12][0])
+            self.num_cpu.setValue(storage[12][1])
+            self.num_threads.setValue(storage[12][2])
             self.gmt = storage[13]
             self.combo_conty.setCurrentIndex(storage[14])
+            if storage[15]:
+                if not self.radio_mpi.isChecked():
+                    self.radio_mpi.setChecked(True)
             
             self.listcedupdate()
             self.listcorupdate()
@@ -1685,6 +1647,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
 
     def new_button_clicked(self, fromOpen=False):
         confirmation = None
+        confirmation_new = None
         if not fromOpen:
             if self.currentDir != None and self.currentFile != None:
                 confirmation = QtGui.QMessageBox.question(None, "New Project",
@@ -1695,15 +1658,21 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                                      (confirmation == QtGui.QMessageBox.Yes):
                 result = self.saveas(False)
                 if result != 0:
-                    confirmation = QtGui.QMessageBox.Yes
+                    confirmation_new = QtGui.QMessageBox.Yes
                 else:
-                    confirmation = QtGui.QMessageBox.No
-        if fromOpen or confirmation == QtGui.QMessageBox.Yes:
-            self.currentFile = None
+                    confirmation_new = QtGui.QMessageBox.No
+        print confirmation == QtGui.QMessageBox.Yes
+        if fromOpen or confirmation == QtGui.QMessageBox.Yes or confirmation_new == QtGui.QMessageBox.Yes:
+            if not confirmation_new == QtGui.QMessageBox.Yes:
+                self.currentFile = None
             self.spnbox_geometry_contacttypes_totalgranulartypes.setValue(1)
             self.spnbox_geometry_contacttypes_totalmeshtypes.setValue(1)
             self.loading = True
+            temp_cf = self.currentFile
+            temp_cd = self.currentDir
             self.ini_vars()
+            self.currentFile = temp_cf
+            self.currentDir = temp_cd
             while self.objHolder.childCount() > 0:
                 self.objHolder.removeChild(self.objHolder.child(0))
             self.stack_geometry_meshes.setCurrentIndex(0)
@@ -1732,9 +1701,8 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             self.line_timestep.setText('')
             self.chk_timestep.setCheckState(0)
             self.line_dumpstep.setText('')
-            self.num_proc_x.setValue(1)
-            self.num_proc_y.setValue(1)
-            self.num_proc_z.setValue(1)
+            self.num_proc.setValue(1)
+            self.combo_insertionindex.clear()
             self.stack_geometry.setCurrentIndex(0)
             self.testPage.setCurrentIndex(0)
             self.testPage.setEnabled(True)
@@ -1871,36 +1839,6 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                                     '_p'+str(y+1)+'_'+str(z+1)
         self.updateparticlelist()
 
-    def resetinsertionface(self):
-        # Store old values
-        temp = self.insertionList[self.spnbox_insertionindex.value()-1][1]
-
-        self.loading = True
-
-        # Reset rectangle field
-        self.spnbox_insertion_rect_centre_x.setValue(0.00)
-        self.spnbox_insertion_rect_centre_y.setValue(0.00)
-        self.spnbox_insertion_rect_centre_z.setValue(0.00)
-        self.spnbox_insertion_length.setValue(0.00)
-        self.spnbox_insertion_width.setValue(0.00)
-        self.spnbox_insertion_rect_normal_x.setValue(0.00)
-        self.spnbox_insertion_rect_normal_y.setValue(0.00)
-        self.spnbox_insertion_rect_normal_z.setValue(0.00)
-
-        # Reset circle field
-        self.spnbox_insertion_circle_centre_x.setValue(0.00)
-        self.spnbox_insertion_circle_centre_y.setValue(0.00)
-        self.spnbox_insertion_circle_centre_z.setValue(0.00)
-        self.spnbox_insertion_diameter.setValue(0.00)
-        self.spnbox_insertion_circle_normal_x.setValue(0.00)
-        self.spnbox_insertion_circle_normal_y.setValue(0.00)
-        self.spnbox_insertion_circle_normal_z.setValue(0.00)
-
-        self.loading = False
-
-        # Load old values
-        self.insertionList[self.spnbox_insertionindex.value()-1][1] = temp
-
     def resetmassproperties(self):
         self.loading = True
         self.spnbox_totalmass.setValue(0.00)
@@ -1912,10 +1850,10 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         self.loading = False
 
     def run_prog_clicked(self):
-        subprocess.call('mpirun -np ' + str(self.num_proc_x.value() *
-                                      self.num_proc_y.value() *
-                                      self.num_proc_z.value()) +
-                        ' LIGGGHTS <' + self.currentDir + 'script.py', shell=True)
+        cmmmd = 'mpirun -np ' + str(self.num_proc.value()) + \
+                        ' LIGGGHTS <' + self.currentDir + 'script.py'
+
+        os.system("gnome-terminal -e 'bash -c \" "+cmmmd+"; exec bash\"' --title=Simulation")
 
     def save(self, outFile=None):
         if self.currentFile is None:
@@ -1951,7 +1889,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                              self.rad_gravity_y.isChecked(),
                              self.rad_gravity_z.isChecked(),)])
             storage.append(self.contactParams)
-            storage.append(self.insertionList)
+            storage.append([self.insertionList, len(self.insertionList), self.combo_insertionindex.currentIndex()])
             storage.append((self.chk_coordinates.isChecked(),
                             self.chk_velocity.isChecked(),
                             self.chk_force.isChecked(),
@@ -1964,11 +1902,12 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                            str(self.line_dumpstep.text()),
                            self.chk_timestep.isChecked(),
                            self.combo_writeformat.currentIndex()))
-            storage.append((int(self.num_proc_x.value()),
-                           int(self.num_proc_y.value()),
-                           int(self.num_proc_z.value())))
+            storage.append((int(self.num_proc.value()),
+                            int(self.num_cpu.value()),
+                            int(self.num_threads.value())))
             storage.append(self.gmt)
             storage.append(self.combo_conty.currentIndex())
+            storage.append(self.radio_mpi.isChecked())
             
             outFile = open(self.currentFile, 'wb')
             pickle.dump(storage, outFile)
@@ -1976,8 +1915,10 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
     def saveas(self, fromSave=False):
         outFile = QtGui.QFileDialog.getSaveFileName(self, 'Save As', (self.currentDir if self.currentDir != None else '.'), 'MoleculeX GUI File (*.mlx)')
         outFile = str(outFile)
+        print (outFile, self.currentFile)
         if outFile != '':
             self.currentFile = outFile
+            print self.currentFile
             self.currentDir = os.path.dirname(outFile) + "/"
             if not fromSave:
                 self.save(outFile)
@@ -2061,7 +2002,7 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
 
     def savePSD(self):
         if self.spnbox_psd.value() is not 0 and self.loading is not True:
-            self.insertionList[self.spnbox_insertionindex.value()-1][0][
+            self.insertionList[self.combo_insertionindex.currentIndex()][0][
                     self.spnbox_psd.value()-1][
                             self.spnbox_granulartypeindex.value()-1][
                             self.combo_particlelist.currentIndex()] = \
@@ -2070,16 +2011,16 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                                     self.spnbox_density.value(),
                                     self.spnbox_diameter.value()]
             adding = 0
-            for n in range(0, len(self.insertionList[self.spnbox_insertionindex.value()-1
+            for n in range(0, len(self.insertionList[self.combo_insertionindex.currentIndex()
                               ][0][self.spnbox_psd.value()-1][
                                       self.spnbox_granulartypeindex.value()-1])):
-                adding += self.insertionList[self.spnbox_insertionindex.value()-1
+                adding += self.insertionList[self.combo_insertionindex.currentIndex()
                               ][0][self.spnbox_psd.value()-1][
                                       self.spnbox_granulartypeindex.value()-1][n][1]
             self.lbl_PSDFractionTotal.setText(str(adding))
 
     def terminal(self):
-        subprocess.Popen(['gnome-terminal'], shell=True)
+        os.system("gnome-terminal -e 'bash -c \" cd "+self.currentDir+"; exec bash\"' --title='Current Project Terminal'")
 
     def tree_remove(self, item):
         global mesh_ref
@@ -2133,20 +2074,20 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
                     self.spnbox_geometry_contacttypes_totalgranulartypes.value())
             self.combo_particlelist.clear()
             for n in range(0, len(
-                    self.insertionList[self.spnbox_insertionindex.value()-1][
+                    self.insertionList[self.combo_insertionindex.currentIndex()][
                             0][self.spnbox_psd.value()-1][
                                     self.spnbox_granulartypeindex.value()-1])):
                 self.combo_particlelist.addItem(
                         self.insertionList[
-                                self.spnbox_insertionindex.value()-1][
+                                self.combo_insertionindex.currentIndex()][
                             0][self.spnbox_psd.value()-1][
                                     self.spnbox_granulartypeindex.value()-1][
                                             n][0])
             adding = 0
-            for n in range(0, len(self.insertionList[self.spnbox_insertionindex.value()-1
+            for n in range(0, len(self.insertionList[self.combo_insertionindex.currentIndex()
                               ][0][self.spnbox_psd.value()-1][
                                       self.spnbox_granulartypeindex.value()-1])):
-                adding += self.insertionList[self.spnbox_insertionindex.value()-1
+                adding += self.insertionList[self.combo_insertionindex.currentIndex()
                               ][0][self.spnbox_psd.value()-1][
                                       self.spnbox_granulartypeindex.value()-1][n][1]
             self.lbl_PSDFractionTotal.setText(str(adding))
@@ -2158,19 +2099,19 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
             self.loading = True
             self.spnbox_insertion_fraction.setValue(
                     self.insertionList[
-                                self.spnbox_insertionindex.value()-1][
+                                self.combo_insertionindex.currentIndex()][
                             0][self.spnbox_psd.value()-1][
                                     self.spnbox_granulartypeindex.value()-1][
                                             self.combo_particlelist.currentIndex()][1])
             self.spnbox_density.setValue(
                     self.insertionList[
-                                self.spnbox_insertionindex.value()-1][
+                                self.combo_insertionindex.currentIndex()][
                             0][self.spnbox_psd.value()-1][
                                     self.spnbox_granulartypeindex.value()-1][
                                             self.combo_particlelist.currentIndex()][2])
             self.spnbox_diameter.setValue(
                     self.insertionList[
-                                self.spnbox_insertionindex.value()-1][
+                                self.combo_insertionindex.currentIndex()][
                             0][self.spnbox_psd.value()-1][
                                     self.spnbox_granulartypeindex.value()-1][
                                             self.combo_particlelist.currentIndex()][3])
@@ -2180,11 +2121,11 @@ class PyQtLink(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         if not self.loading:
             self.loading = True
             if self.spnbox_psd.value() > len(self.insertionList[
-                    self.spnbox_insertionindex.value()-1][0]):
+                    self.combo_insertionindex.currentIndex()][0]):
                 self.spnbox_psd.setValue(len(self.insertionList[
-                    self.spnbox_insertionindex.value()-1][0]))
+                    self.combo_insertionindex.currentIndex()][0]))
             if self.spnbox_psd.value() == 0 and len(self.insertionList[
-                    self.spnbox_insertionindex.value()-1][0]) > 0:
+                    self.combo_insertionindex.currentIndex()][0]) > 0:
                     self.spnbox_psd.setValue(1)
             if self.spnbox_granulartypeindex.value() == 0:
                 self.spnbox_granulartypeindex.setValue(1)

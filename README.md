@@ -9,8 +9,7 @@ www.moleculex.tech
 moleculex@newcastle.edu.au
 
 Core Developer:
-Mr Matthew Muller, 
-Dr Wei Chen
+Mr Matthew Muller
 
 LIGGGHTS® is open-source, distributed under the terms of the GNU Public 
 License, version 2 or later.
